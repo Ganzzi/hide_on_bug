@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id();
+            $table->id('subscription_id');
+            $table->integer('user_id');
+            $table->integer('service_id');
+            $table->date('subscription_start');
+            $table->date('subscription_end');
+            $table->float('billing_amount');
             $table->timestamps();
         });
     }

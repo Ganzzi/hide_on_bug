@@ -13,7 +13,8 @@ class FilmController extends Controller
      */
     public function index()
     {
-        //
+        $films = Film::all();
+        return response()->json($films);
     }
 
     /**
@@ -21,7 +22,16 @@ class FilmController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'Service_Id' => 'required|int',
+            'Film_Category_Id' => 'required|int',
+            'Film_Name' => 'required|string',
+            'Film_Thumbnail' => 'nullable|string',
+            'Film_Desc' => 'nullable|string',
+        ]);
+
+        $film = Film::create($data);
+        return response()->json($film, 201);
     }
 
     /**
@@ -29,7 +39,7 @@ class FilmController extends Controller
      */
     public function show(Film $film)
     {
-        //
+        return response()->json($film);
     }
 
     /**
@@ -37,7 +47,16 @@ class FilmController extends Controller
      */
     public function update(Request $request, Film $film)
     {
-        //
+        $data = $request->validate([
+            'Service_Id' => 'int',
+            'Film_Category_Id' => 'int',
+            'Film_Name' => 'string',
+            'Film_Thumbnail' => 'nullable|string',
+            'Film_Desc' => 'nullable|string',
+        ]);
+
+        $film->update($data);
+        return response()->json($film);
     }
 
     /**
@@ -45,6 +64,7 @@ class FilmController extends Controller
      */
     public function destroy(Film $film)
     {
-        //
+        $film->delete();
+        return response()->json(null, 204);
     }
 }

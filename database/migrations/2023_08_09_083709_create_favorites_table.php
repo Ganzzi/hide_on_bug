@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('favorites', function (Blueprint $table) {
-            $table->id();
+            $table->id('favorite_id');
+            $table->integer('user_id');
+            $table->integer('film_id');
             $table->timestamps();
         });
     }
