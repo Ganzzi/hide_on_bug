@@ -6,7 +6,7 @@ import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 
 export default function UserForm() {
     const navigate = useNavigate();
-    let { id } = useParams();
+    let { userId } = useParams();
     const [user, setUser] = useState({
         id: null,
         name: "",
@@ -27,12 +27,12 @@ export default function UserForm() {
         setSlectedImage(file);
     };
 
-    if (id) {
+    if (userId) {
         useEffect(() => {
             setLoading(true);
             const getUserData = async () => {
                 await axiosClient
-                    .get(`/admin/users/${id}`)
+                    .get(`/admin/users/${userId}`)
                     .then(({ data }) => {
                         setLoading(false);
                         const tempData = { ...data };
@@ -49,9 +49,9 @@ export default function UserForm() {
 
     const onSubmit = async (ev) => {
         ev.preventDefault();
-        if (id) {
+        if (userId) {
             await axiosClient
-                .put(`/admin/users/${id}`, user)
+                .put(`/admin/users/${userId}`, user)
                 .then(() => {
                     setAlerts({
                         type: "info",

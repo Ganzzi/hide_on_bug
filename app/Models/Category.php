@@ -11,6 +11,6 @@ class Category extends Model
 
     public function films()
     {
-        return $this->BelongsToMany(Film::class)->withPivot()->onDelete('cascade');
+        return $this->BelongsToMany(Film::class)->withPivot('')->onDelete('cascade');
     }
 }

@@ -1,6 +1,21 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { Login, NotFound, Signup, Users, UserForm } from "./components";
+import {
+    Login,
+    NotFound,
+    Signup,
+    Users,
+    UserForm,
+    Home,
+    History,
+    WatchList,
+    Profile,
+    Subcribed,
+    Providers,
+    ProviderForm,
+    FilmForm,
+} from "./components";
 import { Dashboard, GuestPage, HomePage } from "./pages";
+import Films from "./components/admin/films/Films";
 
 const router = createBrowserRouter([
     {
@@ -27,23 +42,23 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/home",
-                element: <>noneeee</>,
+                element: <Home />,
             },
             {
                 path: "/history",
-                element: <>his</>,
+                element: <History />,
             },
             {
                 path: "/watchList",
-                element: <>WL</>,
+                element: <WatchList />,
             },
             {
                 path: "/profile",
-                element: <>prof</>,
+                element: <Profile />,
             },
             {
                 path: "/subcribed",
-                element: <>sub</>,
+                element: <Subcribed />,
             },
             {
                 path: "/video/:videoId",
@@ -68,8 +83,32 @@ const router = createBrowserRouter([
                 element: <UserForm key={"userCreate"} />,
             },
             {
-                path: "/admin/users/:id",
+                path: "/admin/users/:userId",
                 element: <UserForm key={"userUpdate"} />,
+            },
+            {
+                path: "/admin/providers",
+                element: <Providers />,
+            },
+            {
+                path: "/admin/providers/new",
+                element: <ProviderForm key={"providerCreate"} />,
+            },
+            {
+                path: "/admin/providers/:providerId",
+                element: <ProviderForm key={"providerUpdate"} />,
+            },
+            {
+                path: "/admin/providers/:providerId/films",
+                element: <Films />,
+            },
+            {
+                path: "/admin/providers/:providerId/films/new",
+                element: <FilmForm key={"filmCreate"} />,
+            },
+            {
+                path: "/admin/providers/:providerId/films/:filmId",
+                element: <FilmForm key={"filmCreate"} />,
             },
         ],
     },
