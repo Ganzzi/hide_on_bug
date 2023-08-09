@@ -1,0 +1,53 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #282828; /* Dark background color similar to YouTube */
+    color: #fff; /* Text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  }
+  
+ 
+  
+  .search-container {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .search-bar {
+    border: none;
+    padding: 8px;
+    width: 500px;
+    outline: none;
+    border-radius: 5px;
+  }
+  
+  .search-button {
+    background-color: #ff0000; /* Red color for the button */
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .username {
+    font-weight: bold;
+  }
+  

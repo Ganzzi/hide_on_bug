@@ -1,14 +1,10 @@
 import React from 'react';
-import logo from '/src/assets/logo-removebg-preview.png'; // Import the image
 
-const Header = () => {
+const Profile = () => {
   return (
     <header className="header col-12 bg-black d-flex justify-content-between">
       {/* Logo */}
-      <div className='ml-10'>
-       
-        <img src={logo} alt="" width={150} height={100}/>
-      </div>
+      <div className="logo">Your Logo</div>
       
       {/* Search Bar */}
       <input type="text" className="search-bar" placeholder="Search" />
@@ -22,4 +18,4 @@ const Header = () => {
   );
 }
 
-export default Header;
+export default Profile;

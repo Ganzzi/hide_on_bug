@@ -103,7 +103,6 @@ export default function Homescreen() {
                 <div className="sideBar-Home col-3 d-flex flex-column">
                     {/* sideBar-Home  */}
                     <h1>hello</h1>
-                    
                      </div>
                 {/* Main content */} {user.role_id != 1 && <div className="col-9"><Outlet /></div>  }
             </div>

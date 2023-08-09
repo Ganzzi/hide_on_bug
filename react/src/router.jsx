@@ -1,5 +1,5 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { Login, NotFound, Signup, Users, UserForm } from "./components";
+import { Login, NotFound, Signup, Users, UserForm, Home, History, WatchList, Profile, Subcribed } from "./components";
 import { Dashboard, GuestPage, HomePage } from "./pages";
 
 const router = createBrowserRouter([
@@ -27,23 +27,23 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/home",
-                element: <>noneeee</>,
+                element: <Home/>,
             },
             {
                 path: "/history",
-                element: <>his</>,
+                element: <History/>,
             },
             {
                 path: "/watchList",
-                element: <>WL</>,
+                element: <WatchList/>,
             },
             {
                 path: "/profile",
-                element: <>prof</>,
+                element: <Profile/>,
             },
             {
                 path: "/subcribed",
-                element: <>sub</>,
+                element: <Subcribed/>,
             },
             {
                 path: "/video/:videoId",
