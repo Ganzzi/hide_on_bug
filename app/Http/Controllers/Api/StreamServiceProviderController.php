@@ -72,8 +72,20 @@ class StreamServiceProviderController extends Controller
     {
         $data = $request->validate([
             'Service_Name' => 'string',
-            'Logo' => 'nullable|string',
+            'Logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add image validation rules
         ]);
+
+        // Check if an image has been uploaded
+        if ($request->hasFile('Logo')) {
+            // Get the uploaded image from the request
+            $uploadedImage = $request->file('Logo');
+
+            // Store the uploaded image in a public storage disk
+            $imagePath = $uploadedImage->store('public/images');
+
+            // Update the Logo field in the data array with the image path
+            $data['Logo'] = $imagePath;
+        }
 
         $serviceProvider->update($data);
         return response()->json($serviceProvider);
