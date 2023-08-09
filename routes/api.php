@@ -1,23 +1,13 @@
 <?php
 
 // namespace for user page's controller
-use App\Http\Controllers\User\ActivityLogController;
-use App\Http\Controllers\User\ChatController;
-use App\Http\Controllers\User\ChatRoomController;
-use App\Http\Controllers\User\CommentController;
-use App\Http\Controllers\User\FollowController;
-use App\Http\Controllers\User\LikeChatController;
-use App\Http\Controllers\User\LikePostController;
-use App\Http\Controllers\User\NotificationController;
-use App\Http\Controllers\User\PostController;
-use App\Http\Controllers\User\LikeCommentController;
-use App\Http\Controllers\User\Auth;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Api\Auth;
+use App\Http\Controllers\Api\UserController;
 
 // namespace for admin page's controller
-use App\Http\Controllers\Admin\ChatRoomController as AdminChatRoomController;
-use App\Http\Controllers\Admin\UserController  as AdminUserController;
-use App\Http\Controllers\Admin\PostController  as AdminPostController;
+// use App\Http\Controllers\Admin\ChatRoomController as AdminChatRoomController;
+// use App\Http\Controllers\Admin\UserController  as AdminUserController;
+// use App\Http\Controllers\Admin\PostController  as AdminPostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
