@@ -23,8 +23,8 @@ class WatchlistController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'User_Id' => 'required|int',
-            'Watchlist_Name' => 'required|string',
+            'user_id' => 'required|int',
+            'watchlist_name' => 'required|string',
         ]);
 
         $watchlist = Watchlist::create($data);
@@ -46,7 +46,7 @@ class WatchlistController extends Controller
     public function update(Request $request, Watchlist $watchlist)
     {
         $data = $request->validate([
-            'Watchlist_Name' => 'string',
+            'watchlist_name' => 'string',
         ]);
 
         $watchlist->update($data);

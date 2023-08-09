@@ -24,13 +24,13 @@ class StreamServiceProviderController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'User_Id' => 'required|int',
-            'Service_Name' => [
+            'user_id' => 'required|int',
+            'service_name' => [
                 'required',
                 'string',
                 function ($attribute, $value, $fail) {
-                    $existingService = Service_Provider::where('Service_Name', $value)
-                        ->where('User_Id', request('User_Id'))
+                    $existingService = Service_Provider::where('service_name', $value)
+                        ->where('user_id', request('User_Id'))
                         ->first();
 
                     if ($existingService) {
@@ -38,7 +38,7 @@ class StreamServiceProviderController extends Controller
                     }
                 },
             ],
-            'Logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add image validation rules
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add image validation rules
         ]);
 
         // Check if an image has been uploaded
@@ -71,8 +71,8 @@ class StreamServiceProviderController extends Controller
     public function update(Request $request, Service_Provider $serviceProvider)
     {
         $data = $request->validate([
-            'Service_Name' => 'string',
-            'Logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add image validation rules
+            'service_name' => 'string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add image validation rules
         ]);
 
         // Check if an image has been uploaded

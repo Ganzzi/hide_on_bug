@@ -23,11 +23,12 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'Service_Id' => 'required|int',
-            'Film_Category_Id' => 'required|int',
-            'Film_Name' => 'required|string',
-            'Film_Thumbnail' => 'nullable|string',
-            'Film_Desc' => 'nullable|string',
+            'service_id' => 'required|int',
+            'film_category_id' => 'required|int',
+            'film_name' => 'required|string',
+            'film_thumbnail' => 'nullable|string',
+            'film_desc' => 'nullable|string',
+            'film_video' => 'nullable|string', 
         ]);
 
         $film = Film::create($data);
@@ -48,11 +49,12 @@ class FilmController extends Controller
     public function update(Request $request, Film $film)
     {
         $data = $request->validate([
-            'Service_Id' => 'int',
-            'Film_Category_Id' => 'int',
-            'Film_Name' => 'string',
-            'Film_Thumbnail' => 'nullable|string',
-            'Film_Desc' => 'nullable|string',
+            'service_id' => 'int',
+            'film_category_id' => 'int',
+            'film_name' => 'string',
+            'film_thumbnail' => 'nullable|string',
+            'film_desc' => 'nullable|string',
+            'film_video' => 'nullable|string', 
         ]);
 
         $film->update($data);

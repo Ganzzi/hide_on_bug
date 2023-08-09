@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('film_name');
             $table->text('film_thumbnail');
             $table->text('film_desc');
+            $table->text('film_video');
             $table->timestamps();
         });
     }
