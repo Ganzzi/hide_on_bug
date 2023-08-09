@@ -24,10 +24,34 @@ class StreamServiceProviderController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'User_Id' => 'required|int',
-            'Service_Name' => 'required|string',
-            'Logo' => 'nullable|string',
+            'user_id' => 'required|int',
+            'service_name' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $existingService = Service_Provider::where('service_name', $value)
+                        ->where('user_id', request('User_Id'))
+                        ->first();
+
+                    if ($existingService) {
+                        $fail('Service name is already taken.');
+                    }
+                },
+            ],
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add image validation rules
         ]);
+
+        // Check if an image has been uploaded
+        if ($request->hasFile('Logo')) {
+            // Get the uploaded image from the request
+            $uploadedImage = $request->file('Logo');
+
+            // Store the uploaded image in a public storage disk
+            $imagePath = $uploadedImage->store('public/images');
+
+            // Update the Logo field in the data array with the image path
+            $data['Logo'] = $imagePath;
+        }
 
         $serviceProvider = Service_Provider::create($data);
         return response()->json($serviceProvider, 201);
@@ -47,9 +71,21 @@ class StreamServiceProviderController extends Controller
     public function update(Request $request, Service_Provider $serviceProvider)
     {
         $data = $request->validate([
-            'Service_Name' => 'string',
-            'Logo' => 'nullable|string',
+            'service_name' => 'string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add image validation rules
         ]);
+
+        // Check if an image has been uploaded
+        if ($request->hasFile('Logo')) {
+            // Get the uploaded image from the request
+            $uploadedImage = $request->file('Logo');
+
+            // Store the uploaded image in a public storage disk
+            $imagePath = $uploadedImage->store('public/images');
+
+            // Update the Logo field in the data array with the image path
+            $data['Logo'] = $imagePath;
+        }
 
         $serviceProvider->update($data);
         return response()->json($serviceProvider);

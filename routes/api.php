@@ -2,10 +2,9 @@
 
 // namespace for user page's controller
 use App\Http\Controllers\Api\Auth;
-use App\Http\Controllers\Api\UserController;
-
-// namespace for admin page's controller
+use App\Models\StreamServiceProvider;
 use App\Http\Controllers\Admin\UserController  as AdminUserController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // api routes for admin 
     Route::apiResource('/admin/users', AdminUserController::class);
+    Route::apiResource('/admin/providers', StreamServiceProvider::class);
 });
 
 // routes for signup, login

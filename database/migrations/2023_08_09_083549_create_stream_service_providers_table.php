@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('stream_service_providers', function (Blueprint $table) {
-            $table->id();
+            $table->id('serive_id');
+            $table->integer('user_id');
+            $table->string('service_name');
+            $table->text('logo');
             $table->timestamps();
         });
     }
