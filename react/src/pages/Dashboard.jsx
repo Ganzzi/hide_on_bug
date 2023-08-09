@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../utils/axios";
-import { BiUser, BiLogOut } from "react-icons/Bi";
+import { BiUser, BiLogOut, BiUserCheck } from "react-icons/Bi";
 import { BsFillChatDotsFill, BsFillFilePostFill } from "react-icons/Bs";
 
 export default function dashboard() {
@@ -41,6 +41,7 @@ export default function dashboard() {
         <div id="dashboardLayout">
             {/* Aside place */}
             <aside>
+                {/* admin name, image */}
                 <div
                     style={{
                         fontFamily: "fantasy",
@@ -60,20 +61,10 @@ export default function dashboard() {
                     )}
                     ADMIN
                 </div>
-                <div class="w3-row">
-                    <div
-                        className="w3-col"
-                        style={{
-                            width: "100%",
-                            border: "solid thin black",
-                            borderRadius: "3rem",
-                        }}
-                    >
-                        <Link to={"/admin/users"}>
-                            {" "}
-                            <BiUser size={30} color="black" /> Users
-                        </Link>
-                    </div>
+
+                <div className="d-flex flex-column">
+                    <Link to={"/admin/users"}>Users</Link>
+                    <Link to={"/admin/providers"}>Providers</Link>
                 </div>
             </aside>
 

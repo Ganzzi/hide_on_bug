@@ -5,9 +5,7 @@ use App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Api\UserController;
 
 // namespace for admin page's controller
-// use App\Http\Controllers\Admin\ChatRoomController as AdminChatRoomController;
-// use App\Http\Controllers\Admin\UserController  as AdminUserController;
-// use App\Http\Controllers\Admin\PostController  as AdminPostController;
+use App\Http\Controllers\Admin\UserController  as AdminUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,12 +27,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post("/logout", [Auth::class, 'logout']);
+    Route::post("/update_profile", [UserController::class, 'update']);
 
     // api routes for admin 
     Route::apiResource('/admin/users', AdminUserController::class);
-    Route::apiResource('/admin/chatrooms', AdminChatRoomController::class);
-    Route::apiResource('/admin/posts', AdminPostController::class);
-    Route::post('/admin/posts', [AdminPostController::class, 'store']);
 });
 
 // routes for signup, login
