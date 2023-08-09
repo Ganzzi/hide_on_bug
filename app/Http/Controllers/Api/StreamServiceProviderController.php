@@ -25,7 +25,19 @@ class StreamServiceProviderController extends Controller
     {
         $data = $request->validate([
             'User_Id' => 'required|int',
-            'Service_Name' => 'required|string',
+            'Service_Name' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $existingService = Service_Provider::where('Service_Name', $value)
+                        ->where('User_Id', request('User_Id'))
+                        ->first();
+
+                    if ($existingService) {
+                        $fail('Service name is already taken.');
+                    }
+                },
+            ],
             'Logo' => 'nullable|string',
         ]);
 
