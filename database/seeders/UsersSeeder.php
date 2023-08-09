@@ -16,12 +16,11 @@ class UsersSeeder extends Seeder
         User::create([
             'id' => 1,
             'role_id' => 1,
+            'fullname' => 'Nguyen',
             'name' => 'admin',
             'password' => bcrypt('admin123'),
             'email' => 'admin@gmail.com',
-            'image' => '6NUvqmFzwp3Y4L7n3AXbPnptPma2mPxKpFjYEcbB.jpg',
-            'bio' => 'Lorem ipsum dolor sit amet.',
-            'gender' => 'male',
+            'balance' => 10000,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -29,12 +28,11 @@ class UsersSeeder extends Seeder
         User::create([
             'id' => 2,
             'role_id' => 2,
+            'fullname' => 'Le nguyen',
             'name' => 'Jane Smith',
             'password' => bcrypt('user123'),
             'email' => 'user1@gmail.com',
-            'image' => '6NUvqmFzwp3Y4L7n3AXbPnptPma2mPxKpFjYEcbB.jpg',
-            'bio' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            'gender' => 'male',
+            'balance' => 10000,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -42,12 +40,11 @@ class UsersSeeder extends Seeder
         User::create([
             'id' => 3,
             'role_id' => 2,
+            'fullname' => 'Tran thi',
             'name' => 'John',
             'password' => bcrypt('user123'),
             'email' => 'user2@gmail.com',
-            'image' => 'ZAUaJRZugpCligkWqoPC00PivNKZYBcoFaqubj5n.jpg',
-            'bio' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            'gender' => 'male',
+            'balance' => 10000,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -55,12 +52,11 @@ class UsersSeeder extends Seeder
         User::create([
             'id' => 4,
             'role_id' => 2,
+            'fullname' => 'Jayson',
             'name' => 'Anna',
             'password' => bcrypt('user123'),
             'email' => 'user3@gmail.com',
-            'image' => 'slH2NOdY5oFqXBz7JfKkZojyGSqhL95gKdhjnQaM.jpg',
-            'bio' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            'gender' => 'female',
+            'balance' => 10000,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -68,12 +64,11 @@ class UsersSeeder extends Seeder
         User::create([
             'id' => 5,
             'role_id' => 2,
+            'fullname' => 'Le Tran',
             'name' => 'Louis',
             'password' => bcrypt('user123'),
             'email' => 'user4@gmail.com',
-            'image' => 'JtLmhQiEh9AnKmwylLZHuWrtIyCX28uzYIwznowv.jpg',
-            'bio' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            'gender' => 'male',
+            'balance' => 10000,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

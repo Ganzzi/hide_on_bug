@@ -50,4 +50,24 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class)->onDelete('cascade');
     }
+
+    public function favoritings()
+    {
+        return $this->belongsToMany(Film::class)->withPivot('favorites')->onDelete('cascade');
+    }
+
+    public function subcribings()
+    {
+        return $this->belongsToMany(StreamProvider::class)->withPivot('billing_amount', 'expire_date')->onDelete('cascade');
+    }
+
+    public function ratings()
+    {
+        return $this->belongsToMany(Film::class)->withPivot('star')->onDelete('cascade');
+    }
+
+    public function watchLists()
+    {
+        return $this->hasMany(WatchList::class)->onDelete('cascade');
+    }
 }
