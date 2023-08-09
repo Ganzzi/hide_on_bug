@@ -1,0 +1,16 @@
+/* BASE */
+@import "./base/utilities";
+@import "./base/texts";
+
+/* COMPONENT */
+@import "./components/forms";
+@import "./components/inputs";
+@import "./components/alerts";
+@import "./components/buttons";
+@import "./components/cards";
+@import "./components/tables";
+@import "./components/modal";
+
+/* PAGE */
+@import "./pages/dashboard";
+@import "./pages/homepage";
