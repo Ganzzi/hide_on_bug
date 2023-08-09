@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('films', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('service_id');
+            $table->foreign('service_id')->references('id')->on('stream_service_providers');
+            $table->unsignedBigInteger('film_category_id');
+            $table->foreign('film_category_id')->references('id')->on('film_categories')->onDelete('cascade');
+            $table->string('film_name');
+            $table->string('film_thumbnail');
+            $table->string('film_desc');
+            $table->string('video');
             $table->timestamps();
         });
     }

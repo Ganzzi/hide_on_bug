@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('service_id');
+            $table->foreign('service_id')->references('id')->on('stream_service_providers')->onDelete('cascade');
+            $table->date('subscript_start');
+            $table->date('subscript_end');
+            $table->string('film_name');
+            $table->integer('billing_amount');
             $table->timestamps();
         });
     }
