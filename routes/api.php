@@ -82,3 +82,8 @@ Route::post('/upload-video', function (Request $request) {
         return response()->json(['message' => 'No video file uploaded'], 400);
     }
 });
+
+Route::get('/films', [FilmController::class, 'index']);
+// Route::get('/providers', [ProviderController::class, 'index']);
+// Route::post('/providers', [ProviderController::class, 'store']);
+Route::resource('/providers', ProviderController::class);
