@@ -34,6 +34,6 @@ class Film extends Model
 
     public function serviceProvider()
     {
-        return $this->belongsTo(Service_Provider::class, 'Service_Id')->onDelete('cascade');
+        return $this->belongsTo(StreamServiceProvider::class, 'Service_Id')->onDelete('cascade');
     }
 }
