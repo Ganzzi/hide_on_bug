@@ -13,8 +13,7 @@ class WatchlistController extends Controller
      */
     public function index()
     {
-        $watchlists = Watchlist::with('films')->get();
-        return response()->json($watchlists);
+        //
     }
 
     /**
@@ -22,13 +21,7 @@ class WatchlistController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'user_id' => 'required|int',
-            'watchlist_name' => 'required|string',
-        ]);
-
-        $watchlist = Watchlist::create($data);
-        return response()->json($watchlist, 201);
+        //
     }
 
     /**
@@ -36,8 +29,7 @@ class WatchlistController extends Controller
      */
     public function show(Watchlist $watchlist)
     {
-        $watchlist->load('films');
-        return response()->json($watchlist);
+        //
     }
 
     /**
@@ -45,12 +37,7 @@ class WatchlistController extends Controller
      */
     public function update(Request $request, Watchlist $watchlist)
     {
-        $data = $request->validate([
-            'watchlist_name' => 'string',
-        ]);
-
-        $watchlist->update($data);
-        return response()->json($watchlist);
+        //
     }
 
     /**
@@ -58,7 +45,6 @@ class WatchlistController extends Controller
      */
     public function destroy(Watchlist $watchlist)
     {
-        $watchlist->delete();
-        return response()->json(null, 204);
+        //
     }
 }

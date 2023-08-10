@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/logout", [Auth::class, 'logout']);
     Route::post("/update_profile", [UserController::class, 'update']);
 
-    // api routes for admin 
+    // api routes for admin
     Route::apiResource('/admin/users', UserController::class);
     Route::apiResource('/admin/providers', ProviderController::class);
     Route::apiResource('/admin/films', FilmController::class);
@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
 // routes for signup, login
 Route::post("/signup", [Auth::class, 'signup']);
 Route::post("/login", [Auth::class, 'login']);
+
+Route::apiResource('films', FilmController::class);
 
 // routes for get images in storage
 Route::get('/images/{filename}', function ($filename) {
