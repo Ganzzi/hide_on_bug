@@ -1,6 +1,9 @@
 <?php
 
 // namespace for user page's controller
+
+use App\Http\Controllers\Admin\FilmController;
+use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Api\Auth;
 use App\Models\StreamServiceProvider;
 use App\Http\Controllers\Admin\UserController  as AdminUserController;
@@ -29,8 +32,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/update_profile", [UserController::class, 'update']);
 
     // api routes for admin 
-    Route::apiResource('/admin/users', AdminUserController::class);
-    Route::apiResource('/admin/providers', StreamServiceProvider::class);
+    Route::apiResource('/admin/users', UserController::class);
+    Route::apiResource('/admin/providers', ProviderController::class);
+    Route::apiResource('/admin/films', FilmController::class);
 });
 
 // routes for signup, login

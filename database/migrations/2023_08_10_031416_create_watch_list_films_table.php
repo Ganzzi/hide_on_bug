@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('watch_list_films', function (Blueprint $table) {
-            $table->id('watchlistfilm_id');
-            $table->integer('watchlist_id');
-            $table->integer('film_id');
+            $table->id();
+            $table->unsignedBigInteger('watch_list_id');
+            $table->foreign('watch_list_id')->references('id')->on('watch_lists')->onDelete('cascade');
+            $table->unsignedBigInteger('film_id');
+            $table->foreign('film_id')->references('id')->on('films')->onDelete('cascade');
             $table->timestamps();
         });
     }

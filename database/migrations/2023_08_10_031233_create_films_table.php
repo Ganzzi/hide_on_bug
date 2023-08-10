@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('films', function (Blueprint $table) {
-            $table->id('film_id');
-            $table->integer('service_id');
-            $table->integer('film_category_id');
+            $table->id();
+            $table->unsignedBigInteger('stream_service_provider_id');
+            $table->foreign('stream_service_provider_id')->references('id')->on('stream_service_providers');
             $table->string('film_name');
-            $table->text('film_thumbnail');
-            $table->text('film_desc');
-            $table->text('film_video');
+            $table->string('film_thumbnail');
+            $table->string('film_desc');
+            $table->string('video');
             $table->timestamps();
         });
     }

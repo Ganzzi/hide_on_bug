@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('stream_service_providers', function (Blueprint $table) {
-            $table->id('serive_id');
-            $table->integer('user_id');
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('service_name');
-            $table->text('logo');
+            $table->string('logo');
             $table->timestamps();
         });
     }

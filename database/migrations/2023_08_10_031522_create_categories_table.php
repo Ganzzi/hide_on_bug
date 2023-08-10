@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('watch_lists', function (Blueprint $table) {
-            $table->id('watchlist_id');
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
             $table->string('name');
             $table->timestamps();
         });
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('watch_lists');
+        Schema::dropIfExists('categories');
     }
 };
