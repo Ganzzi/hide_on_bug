@@ -17,7 +17,6 @@ class FilmController extends Controller
         return response()->json($films);
     }
 
-
     public function store(StoreRequest $request)
     {
         $data = $request->validated();
@@ -41,11 +40,9 @@ class FilmController extends Controller
         return response()->json($film, 201);
     }
 
-
     public function update(Request $request, string $id)
     {
         $film = Film::findOrFail($id);
-
 
         // Validate the request data
         $data = $request->validate([
@@ -55,14 +52,11 @@ class FilmController extends Controller
             'film_desc' => 'required|string',
         ]);
 
-
         // Update common fields
         $data['stream_service_provider_id'] = $request->input('stream_service_provider_id');
         $data['film_name'] = $request->input('film_name');
         $data['film_thumbnail'] = $request->input('film_thumbnail');
         $data['film_desc'] = $request->input('film_desc');
-
-
 
         // Save the updated film
         $film->fill($data);
