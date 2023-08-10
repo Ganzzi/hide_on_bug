@@ -1,11 +1,18 @@
 import React from "react";
 import { logo } from "../../assets";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+    const navigate = useNavigate();
     return (
         <header className="header col-12 bg-black d-flex justify-content-between">
             {/* Logo */}
-            <div className="ml-10">
+            <div
+                className="ml-10"
+                onClick={() => {
+                    navigate("home");
+                }}
+            >
                 <img src={logo} alt="" width={150} height={100} />
             </div>
 
@@ -15,7 +22,6 @@ const Header = () => {
             {/* User Profile */}
             <div className="user-profile">
                 <img src="profile-image.jpg" alt="User Profile" />
-                <span>Username</span>
             </div>
         </header>
     );

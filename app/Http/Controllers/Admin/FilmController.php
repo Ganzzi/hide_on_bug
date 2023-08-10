@@ -1,16 +1,16 @@
 <?php
 
+namespace App\Http\Controllers\Api;
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreRequest;
 use App\Models\Film;
+use Illuminate\Http\Request;
 
 class FilmController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $films = Film::all();
@@ -29,51 +29,66 @@ class FilmController extends Controller
         return response()->json($films);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+
+    public function store(StoreRequest $request)
     {
-        $film = new Film([
-            'film_name' => $request->input('film_name'),
-            // Set other fields
-        ]);
+        $data = $request->validated();
+
+        $data['stream_service_provider_id'] = $request->input('stream_service_provider_id');
+        $data['film_name'] = $request->input('film_name');
+        $data['film_thumbnail'] = $request->input('film_thumbnail');
+        $data['film_desc'] = $request->input('film_desc');
+
+        if ($request->hasFile('video')) {
+            $uploadedVideo = $request->file('video');
+            $videoName = $uploadedVideo->getClientOriginalName();
+            $videoPath = $uploadedVideo->storeAs('public/videos', $videoName);
+            $data['video'] = $videoName;
+        }
+
+        $film = new Film;
+        $film->fill($data);
         $film->save();
 
-        // Attach categories
-        $categoryIds = $request->input('name'); // Assuming 'categories' is the field name in your form
-        $film->categories()->sync($categoryIds);
+        return response()->json($film, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $film = Film::with('categories')->findOrFail($id);
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $film = Film::findOrFail($id);
-        $film->film_name = $request->input('film_name');
-        // Update other fields
+
+
+        // Validate the request data
+        $data = $request->validate([
+            'stream_service_provider_id' => 'required',
+            'film_name' => 'required|string',
+            'film_thumbnail' => 'required|string',
+            'film_desc' => 'required|string',
+        ]);
+
+
+        // Update common fields
+        $data['stream_service_provider_id'] = $request->input('stream_service_provider_id');
+        $data['film_name'] = $request->input('film_name');
+        $data['film_thumbnail'] = $request->input('film_thumbnail');
+        $data['film_desc'] = $request->input('film_desc');
+
+
+
+        // Save the updated film
+        $film->fill($data);
+
         $film->save();
 
-        // Update categories
-        $film->categories()->sync($request->input('categories'));
+        // Return a response
+        return response()->json($film, 202);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         $film = Film::findOrFail($id);
-        $film->categories()->detach();
         $film->delete();
+        return response()->json(null, 204);
     }
 }

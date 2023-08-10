@@ -32,8 +32,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/update_profile", [UserController::class, 'update']);
 
     // api routes for admin 
-    Route::apiResource('/admin/users', UserController::class);
-    Route::apiResource('/admin/providers', ProviderController::class);
+    // Route::apiResource('/admin/users', UserController::class);
+    // Route::apiResource('/admin/providers', ProviderController::class);
+    // Route::apiResource('/admin/films', FilmController::class);
+
     Route::apiResource('/admin/films', FilmController::class);
 });
 
