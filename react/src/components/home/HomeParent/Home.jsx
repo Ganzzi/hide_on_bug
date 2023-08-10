@@ -1,10 +1,50 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { limitText } from '../../../utils';
 import VideoD from './VideoD';
 const Home = () => {
+  const menuRef = useRef(null);
+
+  const scrollLeft = () => {
+    menuRef.current.scrollBy({
+      left: -200, // Adjust the scroll distance as needed
+      behavior: 'smooth',
+    });
+  };
+
+  const scrollRight = () => {
+    menuRef.current.scrollBy({
+      left: 200, // Adjust the scroll distance as needed
+      behavior: 'smooth',
+    });
+  };
   return (
-    <div className='container-fluid'>
-<div className="row row-cols-3 g-4">
+    <div className="home-container">
+    <div className="menu-bar">
+    <button className="arrow-button" onClick={scrollLeft}>
+          &lt;
+        </button>
+      <div className="menu" ref={menuRef}>
+        <a href="#" className="menu-item">Home</a>
+        <a href="#" className="menu-item">Trending</a>
+        <a href="#" className="menu-item">Home</a>
+        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
+        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
+        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
+        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
+        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
+        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
+        <a href="#" className="menu-item">Trending</a>
+        {/* Add more menu items */}
+      </div>
+      
+        
+        <button className="arrow-button" onClick={scrollRight}>
+          &gt;
+        </button>
+      
+    </div>
+{/* card  */}
+<div className="row row-cols-3 g-3">
   <div className="col">
     <div className="card">
       <img
@@ -113,8 +153,8 @@ const Home = () => {
     </div>
   </div>
 </div>
-
- </div>
+</div>
+ 
  
 
   );

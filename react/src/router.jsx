@@ -13,6 +13,7 @@ import {
     Providers,
     ProviderForm,
     FilmForm,
+    Filmss,
 } from "./components";
 import { Dashboard, GuestPage, HomePage } from "./pages";
 import {Navigation} from 'react-minimal-side-navigation';
@@ -101,7 +102,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/admin/providers/:providerId/films",
-                element: <Films />,
+                element: <Filmss />,
             },
             {
                 path: "/admin/providers/:providerId/films/new",

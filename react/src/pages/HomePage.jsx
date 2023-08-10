@@ -99,13 +99,14 @@ export default function Homescreen() {
         <div id="homeLayout" className="">
             {/* Home Page Header */}
             <Header />
+            <div className="container-fluid"> 
             <div className="row">
                 <div className="sideBar-Home col-3 d-flex flex-column">
                     {/* sideBar-Home  */}
 
-
+ 
                     <Menu className="Menu">
-
+                    <hr />
                         <MenuItem onClick={() => {
                             navigate('home')
                         }}> <i className="m-2">  <FontAwesomeIcon icon={faHome} /></i>Home </MenuItem>
@@ -134,11 +135,11 @@ export default function Homescreen() {
                         <hr />
                         <h5 className="text-center"> Privacy & Contact </h5>
                         <div class="d-flex flex-column bd-highlight mb-3">
-                            <a href="">
-                                <div class="p-2 bd-highlight">Contact Us</div></a>
-                            <a href="">  <div class="p-2 bd-highlight">Site Map</div></a>
-                            <a href=""> <div class="p-2 bd-highlight">HotLine: +0123256789</div></a>
-                            <a href=""> <div class="p-2 bd-highlight">Address: 590 CMT8 Distric 3</div></a>
+                          
+                                <div class="p-2 bd-highlight">Contact Us</div> 
+                            <div class="p-2 bd-highlight">Site Map</div> 
+                            <div class="p-2 bd-highlight">HotLine: +0123256789</div> 
+                            <div class="p-2 bd-highlight">Address: 590 CMT8 Distric 3</div> 
 
                         </div>
 
@@ -147,8 +148,9 @@ export default function Homescreen() {
                     </Menu>
 
                 </div>
-
-                {/* Main content */} {user.role_id != 1 && <div className="col-9"><Outlet /></div>}
+                 {/* Main content */} {user.role_id != 1 && <div className="col-9"><Outlet /></div>}
+                </div>
+                
             </div>
 
             {/* Alert */}
