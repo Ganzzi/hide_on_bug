@@ -9,27 +9,23 @@ class Film extends Model
 {
     use HasFactory;
 
-    public function favoritedByUsers() 
+    public function favoritedByUsers()
     {
-        return $this->belongsToMany(User::class)->withPivot()->onDelete('cascade');
+        return $this->belongsToMany(User::class, 'Favorite', 'Film_Id', 'User_Id')->withTimestamps();
     }
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class)->withPivot()->onDelete('cascade');
+        return $this->belongsToMany(Category::class, 'Film_Category', 'Film_Id', 'Film_Category_Id')->withTimestamps();
     }
 
     public function watchlists()
     {
-        return $this->belongsToMany(WatchList::class)->withPivot()->onDelete('cascade');
+        return $this->belongsToMany(Watchlist::class, 'WatchlistFilm', 'Film_Id', 'Watchlist_Id')->withTimestamps();
     }
 
-    public function ratedByUsers()
+    public function serviceProvider()
     {
-        return $this->belongsToMany(User::class)->withPivot()->onDelete('cascade');
-    }
-
-    public function provider() {
-        return $this->belongsTo(StreamServiceProvider::class)->onDelete('cascade');
+        return $this->belongsTo(Service_Provider::class, 'Service_Id')->onDelete('cascade');
     }
 }
