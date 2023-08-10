@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\StreamServiceProvider;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProviderController extends Controller
@@ -15,18 +16,18 @@ class ProviderController extends Controller
     public function index()
     {
         $providers = StreamServiceProvider::all();
-        // if ($providers->count() > 0) {
-        //     return response()->json([
-        //         "status" => 200,
-        //         "data" => $providers,
-        //         "message" => "Get all providers successfully"
-        //     ], 200);
-        // } else {
-        //     return response()->json([
-        //         "status" => 404,
-        //         "message" => "No records found"
-        //     ], 404);
-        // }
+        if ($providers->count() > 0) {
+            return response()->json([
+                "status" => 200,
+                "data" => $providers,
+                "message" => "Get all providers successfully"
+            ], 200);
+        } else {
+            return response()->json([
+                "status" => 404,
+                "message" => "No records found"
+            ], 404);
+        }
         return response()->json($providers);
     }
 
@@ -37,7 +38,7 @@ class ProviderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'service_name' => 'required|string',
-            'logo' => 'required|string',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -47,18 +48,25 @@ class ProviderController extends Controller
             ], 400);
         }
 
-        // Kiểm tra xem đã tồn tại bản ghi nào có user_id và service_name tương tự chưa
         $existingProvider = StreamServiceProvider::where('service_name', $request->service_name)
             ->first();
 
         if ($existingProvider) {
             return response()->json([
-                "status" => 409, // Conflict status code
+                "status" => 409,
                 "message" => "Provider with the same user and service name already exists"
             ], 409);
         }
 
-        $provider = StreamServiceProvider::create($request->all());
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('public/images');
+            $logoUrl = url(Storage::url($logoPath));
+        }
+
+        $provider = StreamServiceProvider::create([
+            'service_name' => $request->service_name,
+            'logo' => $logoUrl ?? null,
+        ]);
 
         if ($provider) {
             return response()->json([
@@ -73,6 +81,7 @@ class ProviderController extends Controller
             ], 500);
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -121,7 +130,7 @@ class ProviderController extends Controller
     public function destroy($id)
     {
         $provider = StreamServiceProvider::findOrFail($id);
-        
+
         if (!$provider) {
             return response()->json([
                 'status' => 404,

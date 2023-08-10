@@ -12,6 +12,7 @@ import {
     Subcribed,
     Providers,
     ProviderForm,
+    //EditProviderForm,
     FilmForm,
     Filmss,
     Video,
@@ -97,10 +98,10 @@ const router = createBrowserRouter([
                 path: "/admin/providers/new",
                 element: <ProviderForm key={"providerCreate"} />,
             },
-            {
-                path: "/admin/providers/:providerId",
-                element: <ProviderForm key={"providerUpdate"} />,
-            },
+            // {
+            //     path: "/admin/providers/:providerId/edit",
+            //     element: <EditProviderForm key={"providerUpdate"} />,
+            // },
             {
                 path: "/admin/providers/:providerId/films",
                 element: <Filmss />,

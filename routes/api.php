@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Auth;
 use App\Models\StreamServiceProvider;
 use App\Http\Controllers\Admin\UserController  as AdminUserController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\WatchlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::apiResource('/admin/films', FilmController::class);
     Route::resource('/admin/providers', ProviderController::class);
+    Route::resource('/admin/watchlists', WatchlistController::class);
 });
 
 // routes for signup, login
