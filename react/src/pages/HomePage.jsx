@@ -1,18 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Outlet, Navigate, Link, useNavigate } from "react-router-dom";
+import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import { Header } from "../components";
 
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../utils/axios";
-import { BsChatRightText, BsFillBellFill } from "react-icons/Bs";
-import {
-    AiOutlineClose,
-    AiOutlineLogout,
-    AiOutlineMenu,
-    AiOutlineSearch,
-    AiFillHome,
-} from "react-icons/ai";
 
 import { formatDateTime } from "../utils";
 
@@ -103,22 +94,27 @@ export default function Homescreen() {
                 <div className="sideBar-Home col-3 d-flex flex-column">
                     {/* sideBar-Home  */}
                     <h1>hello</h1>
-                     </div>
-                {/* Main content */} {user.role_id != 1 && <div className="col-9"><Outlet /></div>  }
+                </div>
+                {/* Main content */}{" "}
+                {user.role_id != 1 && (
+                    <div className="col-9">
+                        <Outlet />
+                    </div>
+                )}
             </div>
-
 
             {/* Alert */}
             {showAlert && alerts.type && (
                 <div
                     className="alert-home"
                     style={{
-                        backgroundColor: `${alerts.type == "info"
+                        backgroundColor: `${
+                            alerts.type == "info"
                                 ? "#00ccff"
                                 : alerts.type == "warming"
-                                    ? "#FFCC99"
-                                    : alerts.type == "error" && "#CC0000"
-                            }`,
+                                ? "#FFCC99"
+                                : alerts.type == "error" && "#CC0000"
+                        }`,
                     }}
                 >
                     <div className="alert-content">

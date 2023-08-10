@@ -63,3 +63,18 @@ Route::get('/videos/{filename}', function ($filename) {
 
     return response($file)->header('Content-Type', $type);
 });
+
+Route::post('/upload-video', function (Request $request) {
+    $request->validate([
+        'video' => 'nullable|mimetypes:video/*|max:20480',
+    ]);
+
+    if ($request->hasFile('video')) {
+        $uploadedVideo = $request->file('video');
+        $videoPath = $uploadedVideo->store('public/videos');
+
+        return response()->json(['video' => $videoPath]);
+    } else {
+        return response()->json(['message' => 'No video file uploaded'], 400);
+    }
+});
