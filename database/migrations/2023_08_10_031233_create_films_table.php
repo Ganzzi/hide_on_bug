@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('film_name');
             $table->string('film_thumbnail');
             $table->string('film_desc');
-            $table->string('video');
+            $table->string('video')->nullable();
             $table->timestamps();
         });
     }

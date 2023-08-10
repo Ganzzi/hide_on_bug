@@ -79,8 +79,7 @@ class WatchlistController extends Controller
      */
     public function show(String $id)
     {
-        $watchlist = Watchlist::findOrFail($id);
-        return response()->json([$watchlist]);
+        //
     }
 
     /**
