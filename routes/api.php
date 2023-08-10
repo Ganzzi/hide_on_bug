@@ -35,8 +35,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::apiResource('/admin/users', UserController::class);
     // Route::apiResource('/admin/providers', ProviderController::class);
     // Route::apiResource('/admin/films', FilmController::class);
-
+    
     Route::apiResource('/admin/films', FilmController::class);
+    Route::resource('/admin/providers', ProviderController::class);
 });
 
 // routes for signup, login
@@ -88,4 +89,3 @@ Route::post('/upload-video', function (Request $request) {
 Route::get('/films', [FilmController::class, 'index']);
 // Route::get('/providers', [ProviderController::class, 'index']);
 // Route::post('/providers', [ProviderController::class, 'store']);
-Route::resource('/providers', ProviderController::class);

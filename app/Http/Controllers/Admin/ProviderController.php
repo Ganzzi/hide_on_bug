@@ -15,18 +15,18 @@ class ProviderController extends Controller
     public function index()
     {
         $providers = StreamServiceProvider::all();
-        if ($providers->count() > 0) {
-            return response()->json([
-                "status" => 200,
-                "data" => $providers,
-                "message" => "Get all providers successfully"
-            ], 200);
-        } else {
-            return response()->json([
-                "status" => 404,
-                "message" => "No records found"
-            ], 404);
-        }
+        // if ($providers->count() > 0) {
+        //     return response()->json([
+        //         "status" => 200,
+        //         "data" => $providers,
+        //         "message" => "Get all providers successfully"
+        //     ], 200);
+        // } else {
+        //     return response()->json([
+        //         "status" => 404,
+        //         "message" => "No records found"
+        //     ], 404);
+        // }
         return response()->json($providers);
     }
 
@@ -36,7 +36,6 @@ class ProviderController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
             'service_name' => 'required|string',
             'logo' => 'required|string',
         ]);
@@ -49,8 +48,7 @@ class ProviderController extends Controller
         }
 
         // Kiểm tra xem đã tồn tại bản ghi nào có user_id và service_name tương tự chưa
-        $existingProvider = StreamServiceProvider::where('user_id', $request->user_id)
-            ->where('service_name', $request->service_name)
+        $existingProvider = StreamServiceProvider::where('service_name', $request->service_name)
             ->first();
 
         if ($existingProvider) {
@@ -88,7 +86,6 @@ class ProviderController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
             'service_name' => 'required|string',
             'logo' => 'required|string',
         ]);
