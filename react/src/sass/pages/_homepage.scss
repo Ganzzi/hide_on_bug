@@ -1,7 +1,30 @@
 .homeLayout {
     position: absolute;
+    height: 100vh;
 }
+/* CSS for Scrollable Areas */
+.homeLayout {
+    max-height: 500px; /* Set a maximum height for the scrollable area */
+    overflow-y: auto; /* Add vertical scroll when content overflows */
+    margin-bottom: 20px; /* Add some spacing between the scrollable areas */
+  }
+  
+  /* Optional: If you want to remove the default horizontal scrollbar */
+  .homeLayout::-webkit-scrollbar {
+    width: 8px; /* Adjust as needed */
+  }
+  
+  .homeLayout::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
+  
+  .homeLayout::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+  
 
+  
 .home-header {
     display: flex;
     width: 100%;
@@ -31,5 +54,5 @@
 }
 
 .sideBar-Home{
-    background-color: red;
+    background-color: black;
 }

@@ -1,6 +1,8 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import { Login, NotFound, Signup, Users, UserForm, Home, History, WatchList, Profile, Subcribed } from "./components";
 import { Dashboard, GuestPage, HomePage } from "./pages";
+import {Navigation} from 'react-minimal-side-navigation';
+import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
 
 const router = createBrowserRouter([
     {
@@ -34,7 +36,7 @@ const router = createBrowserRouter([
                 element: <History/>,
             },
             {
-                path: "/watchList",
+                path: "/watchList/:watchlistId",
                 element: <WatchList/>,
             },
             {
@@ -42,7 +44,7 @@ const router = createBrowserRouter([
                 element: <Profile/>,
             },
             {
-                path: "/subcribed",
+                path: "/subcribed/:providerId",
                 element: <Subcribed/>,
             },
             {

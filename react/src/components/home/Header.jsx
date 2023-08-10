@@ -16,7 +16,7 @@ const Header = () => {
       {/* User Profile */}
       <div className="user-profile">
         <img src="profile-image.jpg" alt="User Profile" />
-        <span>Username</span>
+      
       </div>
     </header>
   );
