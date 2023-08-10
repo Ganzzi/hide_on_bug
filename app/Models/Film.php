@@ -24,7 +24,7 @@ class Film extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'Film_Category', 'Film_Id', 'Film_Category_Id')->withTimestamps();
+        return $this->belongsToMany(Category::class, 'film_Categories', 'film_id', 'category_id')->withTimestamps();
     }
 
     public function watchlists()
