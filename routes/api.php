@@ -30,14 +30,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post("/logout", [Auth::class, 'logout']);
     Route::post("/update_profile", [UserController::class, 'update']);
+    Route::post("/update_favorite", [UserController::class, 'createFavorite']);
+
+    Route::post("/update_rating", [UserController::class, 'createRating']);
+
 
     // api routes for admin
     Route::apiResource('/admin/users', UserController::class);
     Route::apiResource('/admin/providers', ProviderController::class);
     // api routes for admin
-    // Route::apiResource('/admin/users', UserController::class);
-    // Route::apiResource('/admin/providers', ProviderController::class);
-    // Route::apiResource('/admin/films', FilmController::class);
+
+
 
     Route::apiResource('/admin/films', FilmController::class);
     Route::resource('/admin/providers', ProviderController::class);
