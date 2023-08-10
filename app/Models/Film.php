@@ -9,6 +9,14 @@ class Film extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'stream_service_provider_id',
+        'film_name',
+        'film_thumbnail',
+        'film_desc',
+        'video',
+    ];
+
     public function favoritedByUsers()
     {
         return $this->belongsToMany(User::class, 'Favorite', 'Film_Id', 'User_Id')->withTimestamps();

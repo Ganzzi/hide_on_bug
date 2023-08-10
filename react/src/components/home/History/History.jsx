@@ -1,21 +1,19 @@
-import React from 'react';
+import React from "react";
+import VideoN from "../WatchList/VideoN";
 
 const History = () => {
-  return (
-    <header className="header col-12 bg-black d-flex justify-content-between">
-      {/* Logo */}
-      <div className="logo">Your Logo</div>
-      
-      {/* Search Bar */}
-      <input type="text" className="search-bar" placeholder="Search" />
-      
-      {/* User Profile */}
-      <div className="user-profile">
-        <img src="profile-image.jpg" alt="User Profile" />
-        <span>Username</span>
-      </div>
-    </header>
-  );
-}
+    return (
+        <div>
+            <h1>Your History</h1>
+            <VideoN
+                imageURL={
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNVmFP2QMAnHxPCyCH442oXwKJeT5ey44L4hMZjPeK0Wi6au6gkagBcXO_QTx4ZdQviAA&usqp=CAU"
+                }
+                content={"how to drink water"}
+                title={"news"}
+            />
+        </div>
+    );
+};
 
 export default History;

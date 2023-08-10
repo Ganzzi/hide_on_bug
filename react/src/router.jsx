@@ -14,10 +14,11 @@ import {
     ProviderForm,
     FilmForm,
     Filmss,
+    Video,
 } from "./components";
 import { Dashboard, GuestPage, HomePage } from "./pages";
-import {Navigation} from 'react-minimal-side-navigation';
-import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
+import { Navigation } from "react-minimal-side-navigation";
+import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
 
 const router = createBrowserRouter([
     {
@@ -52,7 +53,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/watchList/:watchlistId",
-                element: <WatchList/>,
+                element: <WatchList />,
             },
             {
                 path: "/profile",
@@ -60,11 +61,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/subcribed/:providerId",
-                element: <Subcribed/>,
+                element: <Subcribed />,
             },
             {
                 path: "/video/:videoId",
-                element: <>ocho</>,
+                element: <Video />,
             },
         ],
     },
