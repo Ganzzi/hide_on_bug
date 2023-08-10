@@ -34,7 +34,7 @@ export default function GuestLayout() {
             return <Navigate to={"/admin"} />;
         } else {
             console.log("navigating...");
-            return <Navigate to={"/sth"} />;
+            return <Navigate to={"/home"} />;
         }
     }
 

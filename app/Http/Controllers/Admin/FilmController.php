@@ -15,6 +15,18 @@ class FilmController extends Controller
     public function index()
     {
         $films = Film::all();
+        if ($films->count() > 0) {
+            return response()->json([
+                "status" => 200,
+                "data" => $films,
+                "message" => "Get all films successfully"
+            ], 200);
+        } else {
+            return response()->json([
+                "status" => 404,
+                "message" => "No records found"
+            ], 404);
+        }
         return response()->json($films);
     }
 

@@ -30,18 +30,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post("/logout", [Auth::class, 'logout']);
     Route::post("/update_profile", [UserController::class, 'update']);
+    Route::post("/update_favorite", [UserController::class, 'createFavorite']);
 
-    // api routes for admin 
-    // Route::apiResource('/admin/users', UserController::class);
-    // Route::apiResource('/admin/providers', ProviderController::class);
-    // Route::apiResource('/admin/films', FilmController::class);
+    Route::post("/update_rating", [UserController::class, 'createRating']);
+
+
+    // api routes for admin
+    Route::apiResource('/admin/users', UserController::class);
+    Route::apiResource('/admin/providers', ProviderController::class);
+    // api routes for admin
+
+
 
     Route::apiResource('/admin/films', FilmController::class);
+    Route::resource('/admin/providers', ProviderController::class);
 });
 
 // routes for signup, login
 Route::post("/signup", [Auth::class, 'signup']);
 Route::post("/login", [Auth::class, 'login']);
+
+Route::apiResource('films', FilmController::class);
 
 // routes for get images in storage
 Route::get('/images/{filename}', function ($filename) {
@@ -69,3 +78,22 @@ Route::get('/videos/{filename}', function ($filename) {
 
     return response($file)->header('Content-Type', $type);
 });
+
+Route::post('/upload-video', function (Request $request) {
+    $request->validate([
+        'video' => 'nullable|mimetypes:video/*|max:20480',
+    ]);
+
+    if ($request->hasFile('video')) {
+        $uploadedVideo = $request->file('video');
+        $videoPath = $uploadedVideo->store('public/videos');
+
+        return response()->json(['video' => $videoPath]);
+    } else {
+        return response()->json(['message' => 'No video file uploaded'], 400);
+    }
+});
+
+Route::get('/films', [FilmController::class, 'index']);
+// Route::get('/providers', [ProviderController::class, 'index']);
+// Route::post('/providers', [ProviderController::class, 'store']);

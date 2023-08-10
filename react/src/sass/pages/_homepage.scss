@@ -1,7 +1,10 @@
 .homeLayout {
     position: absolute;
+    height: 100vh;
 }
+ 
 
+  
 .home-header {
     display: flex;
     width: 100%;
@@ -31,5 +34,9 @@
 }
 
 .sideBar-Home{
-    background-color: red;
+    background-color: black;
+}
+.bd-highlight{
+  text-decoration: none;
+  color: aliceblue !important;
 }

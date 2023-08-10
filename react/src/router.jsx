@@ -13,9 +13,12 @@ import {
     Providers,
     ProviderForm,
     FilmForm,
+    Filmss,
+    Video,
 } from "./components";
 import { Dashboard, GuestPage, HomePage } from "./pages";
-import Films from "./components/admin/films/Films";
+import { Navigation } from "react-minimal-side-navigation";
+import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
 
 const router = createBrowserRouter([
     {
@@ -49,7 +52,7 @@ const router = createBrowserRouter([
                 element: <History />,
             },
             {
-                path: "/watchList",
+                path: "/watchList/:watchlistId",
                 element: <WatchList />,
             },
             {
@@ -57,12 +60,12 @@ const router = createBrowserRouter([
                 element: <Profile />,
             },
             {
-                path: "/subcribed",
+                path: "/subcribed/:providerId",
                 element: <Subcribed />,
             },
             {
                 path: "/video/:videoId",
-                element: <>ocho</>,
+                element: <Video />,
             },
         ],
     },
@@ -100,7 +103,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/admin/providers/:providerId/films",
-                element: <Films />,
+                element: <Filmss />,
             },
             {
                 path: "/admin/providers/:providerId/films/new",
