@@ -81,8 +81,6 @@ class ProviderController extends Controller
             ], 500);
         }
     }
-
-
     /**
      * Display the specified resource.
      */
