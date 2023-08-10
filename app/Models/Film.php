@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Film extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'stream_service_provider_id',
         'film_name',
@@ -15,6 +16,7 @@ class Film extends Model
         'film_desc',
         'video',
     ];
+
     public function favoritedByUsers()
     {
         return $this->belongsToMany(User::class, 'Favorite', 'Film_Id', 'User_Id')->withTimestamps();
@@ -32,6 +34,6 @@ class Film extends Model
 
     public function serviceProvider()
     {
-        return $this->belongsTo(Service_Provider::class, 'Service_Id')->onDelete('cascade');
+        return $this->belongsTo(StreamServiceProvider::class, 'Service_Id')->onDelete('cascade');
     }
 }

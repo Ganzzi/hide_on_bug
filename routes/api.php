@@ -34,7 +34,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // api routes for admin
     Route::apiResource('/admin/users', UserController::class);
     Route::apiResource('/admin/providers', ProviderController::class);
+    // api routes for admin
+    // Route::apiResource('/admin/users', UserController::class);
+    // Route::apiResource('/admin/providers', ProviderController::class);
+    // Route::apiResource('/admin/films', FilmController::class);
+
     Route::apiResource('/admin/films', FilmController::class);
+    Route::resource('/admin/providers', ProviderController::class);
 });
 
 // routes for signup, login
@@ -69,3 +75,22 @@ Route::get('/videos/{filename}', function ($filename) {
 
     return response($file)->header('Content-Type', $type);
 });
+
+Route::post('/upload-video', function (Request $request) {
+    $request->validate([
+        'video' => 'nullable|mimetypes:video/*|max:20480',
+    ]);
+
+    if ($request->hasFile('video')) {
+        $uploadedVideo = $request->file('video');
+        $videoPath = $uploadedVideo->store('public/videos');
+
+        return response()->json(['video' => $videoPath]);
+    } else {
+        return response()->json(['message' => 'No video file uploaded'], 400);
+    }
+});
+
+Route::get('/films', [FilmController::class, 'index']);
+// Route::get('/providers', [ProviderController::class, 'index']);
+// Route::post('/providers', [ProviderController::class, 'store']);

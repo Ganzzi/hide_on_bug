@@ -19,9 +19,12 @@ import VideoN from "./home/WatchList/VideoN";
 import Profile from "./home/Profile/Profile";
 import Update from "./home/Profile/Update";
 import Subcribed from "./home/Subcribed/Subcribed";
+import UpdateProfileModal from "./home/Profile/UpdateProfileModal";
+import Video from "./home/video/Video";
 
 export {
   Login,
+  Video,
   Signup,
   NotFound,
   Users,
@@ -39,4 +42,5 @@ export {
   Providers,
   FilmForm,
   Filmss,
+  UpdateProfileModal,
 };
