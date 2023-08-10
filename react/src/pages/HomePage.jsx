@@ -1,18 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Outlet, Navigate, Link, useNavigate } from "react-router-dom";
+import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import { Header } from "../components";
 
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../utils/axios";
-import { BsChatRightText, BsFillBellFill } from "react-icons/Bs";
-import {
-    AiOutlineClose,
-    AiOutlineLogout,
-    AiOutlineMenu,
-    AiOutlineSearch,
-    AiFillHome,
-} from "react-icons/ai";
 
 import { formatDateTime } from "../utils";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
@@ -159,7 +150,6 @@ export default function Homescreen() {
 
                 {/* Main content */} {user.role_id != 1 && <div className="col-9"><Outlet /></div>}
             </div>
-
 
             {/* Alert */}
             {showAlert && alerts.type && (

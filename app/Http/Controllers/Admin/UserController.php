@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
@@ -30,26 +30,14 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        // Check if an image was uploaded
-        if ($request->hasFile('image')) {
-            // Get the uploaded file from the request
-            $uploadedFile = $request->file('image');
-
-            // Store the uploaded file in a public storage disk
-            $filePath = $uploadedFile->store('public/images');
-        } else {
-            $filePath = null;
-        }
-
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role_id' => $data['role_id'],
-            'image' => basename($filePath)
+            'role_id' => $data['role_id']
         ]);
 
-        return response(new UserResource($user), 201);
+        return response(new UserResource($user), 200);
     }
 
     /**

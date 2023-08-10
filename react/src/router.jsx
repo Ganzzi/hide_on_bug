@@ -1,5 +1,19 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { Login, NotFound, Signup, Users, UserForm, Home, History, WatchList, Profile, Subcribed } from "./components";
+import {
+    Login,
+    NotFound,
+    Signup,
+    Users,
+    UserForm,
+    Home,
+    History,
+    WatchList,
+    Profile,
+    Subcribed,
+    Providers,
+    ProviderForm,
+    FilmForm,
+} from "./components";
 import { Dashboard, GuestPage, HomePage } from "./pages";
 import {Navigation} from 'react-minimal-side-navigation';
 import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
@@ -29,11 +43,11 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/home",
-                element: <Home/>,
+                element: <Home />,
             },
             {
                 path: "/history",
-                element: <History/>,
+                element: <History />,
             },
             {
                 path: "/watchList/:watchlistId",
@@ -41,7 +55,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/profile",
-                element: <Profile/>,
+                element: <Profile />,
             },
             {
                 path: "/subcribed/:providerId",
@@ -70,8 +84,32 @@ const router = createBrowserRouter([
                 element: <UserForm key={"userCreate"} />,
             },
             {
-                path: "/admin/users/:id",
+                path: "/admin/users/:userId",
                 element: <UserForm key={"userUpdate"} />,
+            },
+            {
+                path: "/admin/providers",
+                element: <Providers />,
+            },
+            {
+                path: "/admin/providers/new",
+                element: <ProviderForm key={"providerCreate"} />,
+            },
+            {
+                path: "/admin/providers/:providerId",
+                element: <ProviderForm key={"providerUpdate"} />,
+            },
+            {
+                path: "/admin/providers/:providerId/films",
+                element: <Films />,
+            },
+            {
+                path: "/admin/providers/:providerId/films/new",
+                element: <FilmForm key={"filmCreate"} />,
+            },
+            {
+                path: "/admin/providers/:providerId/films/:filmId",
+                element: <FilmForm key={"filmCreate"} />,
             },
         ],
     },

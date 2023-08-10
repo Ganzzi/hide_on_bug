@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('watch_list_films', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('watch_list_id');
+            $table->foreign('watch_list_id')->references('id')->on('watch_lists')->onDelete('cascade');
+            $table->unsignedBigInteger('film_id');
+            $table->foreign('film_id')->references('id')->on('films')->onDelete('cascade');
             $table->timestamps();
         });
     }

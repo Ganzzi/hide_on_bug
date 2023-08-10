@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ChatRoomController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +15,3 @@ use App\Http\Controllers\Api\ChatRoomController;
 Route::get('/', function () {
     return view('welcome');
 });
-
-
-Route::get('/chatrooms', [ChatRoomController::class, 'show']);

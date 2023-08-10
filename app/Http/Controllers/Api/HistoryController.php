@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Favorite;
+use App\Models\History;
 use Illuminate\Http\Request;
 
-class FavoriteController extends Controller
+class HistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +27,7 @@ class FavoriteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Favorite $favorite)
+    public function show(History $history)
     {
         //
     }
@@ -35,7 +35,7 @@ class FavoriteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Favorite $favorite)
+    public function update(Request $request, History $history)
     {
         //
     }
@@ -43,7 +43,7 @@ class FavoriteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Favorite $favorite)
+    public function destroy(History $history)
     {
         //
     }

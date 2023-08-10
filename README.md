@@ -2,8 +2,8 @@
 
 To run this project locally, please follow these steps:
 
-1.  `git clone https://github.com/Ganzzi/eProject.git `
-2.  `cd eProject/react`
+1.  `git clone https://github.com/Ganzzi/hide_on_bug.git `
+2.  `cd hide_on_bug/react`
 3.  change .env.example to .env
 4.  `npm install `
 5.  `npm run dev `
@@ -28,4 +28,5 @@ php artisan db:seed
 17. login with admin role: - email: admin@mail.com - password: admin123
 
 ---
+
 #

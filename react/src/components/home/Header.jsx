@@ -1,5 +1,5 @@
-import React from 'react';
-import logo from '/src/assets/logo-removebg-preview.png'; // Import the image
+import React from "react";
+import { logo } from "../../assets";
 
 const Header = () => {
   return (
