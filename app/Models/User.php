@@ -58,7 +58,7 @@ class User extends Authenticatable
 
     public function subcribings()
     {
-        return $this->belongsToMany(StreamProvider::class)->withPivot('billing_amount', 'expire_date')->onDelete('cascade');
+        return $this->belongsToMany(StreamServiceProvider::class)->withPivot('billing_amount', 'expire_date')->onDelete('cascade');
     }
 
     public function ratings()
@@ -66,7 +66,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Film::class)->withPivot('star')->onDelete('cascade');
     }
 
-    public function watchLists()
+    public function watchListFilms()
     {
         return $this->hasMany(WatchList::class)->onDelete('cascade');
     }
