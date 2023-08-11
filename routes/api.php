@@ -2,14 +2,16 @@
 
 // namespace for user page's controller
 
-use App\Http\Controllers\Admin\FilmController;
-use App\Http\Controllers\Admin\ProviderController;
-use App\Http\Controllers\Api\Auth;
-use App\Models\StreamServiceProvider;
-use App\Http\Controllers\Admin\UserController  as AdminUserController;
-use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Auth;
+use App\Http\Controllers\Admin\FilmController as AdminFilmController;
+use App\Http\Controllers\Admin\UserController  as AdminUserController;
+use App\Http\Controllers\Admin\ProviderController as AdminProviderController;
+use App\Http\Controllers\Api\FilmController as ApiFilmController;
+use App\Http\Controllers\Api\ProviderController;
+use App\Http\Controllers\Api\UserController as ApiUserController;
+use App\Http\Controllers\Api\WatchlistController as ApiWatchlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,15 +30,40 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    // api routes for user
     Route::post("/logout", [Auth::class, 'logout']);
-    Route::post("/update_profile", [UserController::class, 'update']);
+    Route::post("/update_rating", [ApiUserController::class, 'rateFilm']);
+    Route::post("/update_favorite", [ApiUserController::class, 'favoriteFilm']);
+    Route::post("/create_delete__history", [UserController::class, 'updateHistory']);
+    Route::apiResource('/watchlists', ApiWatchlistController::class);
 
-    // api routes for admin 
-    // Route::apiResource('/admin/users', UserController::class);
-    // Route::apiResource('/admin/providers', ProviderController::class);
-    // Route::apiResource('/admin/films', FilmController::class);
+    // not done
+    Route::post("/update_profile", [ApiUserController::class, 'update']);
 
-    Route::apiResource('/admin/films', FilmController::class);
+    // nhan
+    Route::post('/watchlist_add_delete_film', [ApiWatchlistController::class, 'add_or_delete_film_to_watch_list']);
+    Route::get('/films/{filmId}', [ApiFilmController::class, "watchFilm"]);
+    Route::post('/films',  [ApiFilmController::class,  "searchFilm"]);
+    Route::post('/recommended_films/{filmId}',  [ApiFilmController::class,  "getRecommendFilms"]);
+    //
+
+    Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);
+    Route::get('/getSubcriptions', [ApiUserController::class, 'getAllSubcriptions']);
+    Route::post("/update_history", [ApiUserController::class, 'addFilmToHistory']);
+    
+    Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
+    Route::post("/update_rating", [UserController::class, 'createRating']);
+    Route::get("/providers/{providerId}", [ProviderController::class, 'show']);
+    Route::post("/subcribe", [ProviderController::class, 'subcribeToProvider']);
+
+
+    // api routes for admin
+    Route::get('/admin/categories', [AdminFilmController::class, 'getCategories']);
+    Route::apiResource('/admin/users', AdminUserController::class);
+    Route::apiResource('/admin/providers', AdminProviderController::class);
+    Route::post('/admin/provider_update/{id}', [AdminProviderController::class, 'update_provider']);
+    Route::apiResource('/admin/films', AdminFilmController::class);
+    Route::post('/admin/film_update/{id}', [AdminFilmController::class, 'update_film']);
 });
 
 // routes for signup, login
@@ -84,3 +111,7 @@ Route::post('/upload-video', function (Request $request) {
         return response()->json(['message' => 'No video file uploaded'], 400);
     }
 });
+
+Route::get('/films', [FilmController::class, 'index']);
+// Route::get('/providers', [ProviderController::class, 'index']);
+// Route::post('/providers', [ProviderController::class, 'store']);

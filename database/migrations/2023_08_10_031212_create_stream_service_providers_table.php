@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('stream_service_providers', function (Blueprint $table) {
             $table->id();
-            $table->string('service_name');
-            $table->string('logo');
+            $table->string('provider_name');
+            $table->string('provider_logo');
             $table->timestamps();
         });
     }

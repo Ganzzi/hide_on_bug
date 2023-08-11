@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HistoryController extends Controller
 {
@@ -13,7 +14,6 @@ class HistoryController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -21,7 +21,6 @@ class HistoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**

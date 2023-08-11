@@ -12,28 +12,33 @@ class Film extends Model
     protected $fillable = [
         'stream_service_provider_id',
         'film_name',
-        'film_thumbnail',
-        'film_desc',
+        'film_poster',
         'video',
+        'premiere_date',
     ];
 
     public function favoritedByUsers()
     {
-        return $this->belongsToMany(User::class, 'Favorite', 'Film_Id', 'User_Id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'favorites', 'film_id', 'user_id')->withTimestamps();
     }
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'Film_Category', 'Film_Id', 'Film_Category_Id')->withTimestamps();
+        return $this->belongsToMany(Category::class, 'film_categories', 'film_id', 'category_id')->withTimestamps();
     }
 
     public function watchlists()
     {
-        return $this->belongsToMany(Watchlist::class, 'WatchlistFilm', 'Film_Id', 'Watchlist_Id')->withTimestamps();
+        return $this->belongsToMany(WatchList::class, 'watch_list_films', 'film_id', 'watch_list_id')->withTimestamps();
     }
 
     public function serviceProvider()
     {
-        return $this->belongsTo(Service_Provider::class, 'Service_Id')->onDelete('cascade');
+        return $this->belongsTo(StreamServiceProvider::class, 'stream_service_provider_id')->onDelete('cascade');
+    }
+
+    public function ratedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'ratings', 'film_id', 'user_id')->withPivot('rating')->withTimestamps();
     }
 }

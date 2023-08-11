@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class StreamServiceProvider extends Model
 {
     use HasFactory;
-
-    public function subcribedByUsers()
+    protected $fillable = [
+        // Các trường khác nếu có
+        'provider_name',
+        'provider_logo'
+    ];
+    public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('billing_amount', 'expire_date')->onDelete('cascade');
+        return $this->belongsToMany(User::class, 'subscriptions', 'provider_id', 'user_id')->withPivot('billing_amount', 'expire_date');
     }
 
     public function films()

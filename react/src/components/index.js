@@ -6,6 +6,7 @@ import Signup from "./guest/Signup";
 import UserForm from "./admin/users/UserForm";
 import Users from "./admin/users/Users";
 import ProviderForm from "./admin/providers/ProviderForm";
+//import Providers from "./admin/providers/EditProviderForm";
 import Providers from "./admin/providers/Providers";
 import FilmForm from "./admin/films/FilmForm";
 import Filmss from "./admin/films/Films";

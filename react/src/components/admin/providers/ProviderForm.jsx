@@ -9,8 +9,8 @@ export default function ProviderForm() {
     let { providerId } = useParams();
     const [provider, setProvider] = useState({
         id: null,
-        name: "",
-        image: null,
+        provider_name: "",
+        provider_logo: null,
     });
 
     const [errors, setErrors] = useState(null);
@@ -24,80 +24,77 @@ export default function ProviderForm() {
         setSlectedImage(file);
     };
 
-    // if (providerId) {
-    //     useEffect(() => {
-    //         setLoading(true);
-    //         const getProviderData = async () => {
-    //             await axiosClient
-    //                 .get(`/admin/providers/${id}`)
-    //                 .then(({ data }) => {
-    //                     setLoading(false);
-    //                     setProvider(data);
-    //                 })
-    //                 .catch(() => {
-    //                     setLoading(false);
-    //                 });
-    //         };
+    if (providerId) {
+        useEffect(() => {
+            setLoading(true);
+            const getProviderData = async () => {
+                await axiosClient
+                    .get(`/admin/providers/${providerId}`)
+                    .then(({ data }) => {
+                        setLoading(false);
+                        setProvider(data);
+                    })
+                    .catch(() => {
+                        setLoading(false);
+                    });
+            };
 
-    //         getProviderData();
-    //     }, []);
-    // }
+            getProviderData();
+        }, []);
+    }
 
     const onSubmit = async (ev) => {
         ev.preventDefault();
 
-        // if (providerId) {
-        //     await axiosClient
-        //         .put(`/admin/providers/${providerId}`, provider)
-        //         .then(() => {
-        //             setAlerts({
-        //                 type: "info",
-        //                 message: "provider was successfully updated",
-        //                 time: new Date(),
-        //             });
-        //             navigate("/admin/providers");
-        //         })
-        //         .catch((err) => {
-        //             const response = err.response;
-        //             if (response && response.status === 422) {
-        //                 setErrors(response.data.errors);
-        //             }
-        //         });
-        // } else {
-        //     const formdata = new FormData();
-        //     formdata.append("name", provider.name);
-        //     formdata.append("role_id", provider.role_id);
-        //     formdata.append("image", provider.image);
-        //     formdata.append("email", provider.email);
-        //     formdata.append("password", provider.password);
-        //     formdata.append(
-        //         "password_confirmation",
-        //         provider.password_confirmation
-        //     );
+        if (providerId) {
+            const formdata = new FormData();
+            formdata.append("provider_name", provider.provider_name);
+            formdata.append("provider_logo", provider.provider_logo);
 
-        //     await axiosClient
-        //         .post("/admin/providers", formdata)
-        //         .then(() => {
-        //             setAlerts({
-        //                 type: "info",
-        //                 message: "provider was successfully updated",
-        //                 time: new Date(),
-        //             });
-        //             navigate("/admin/providers");
-        //         })
-        //         .catch((err) => {
-        //             const response = err.response;
-        //             if (response && response.status === 422) {
-        //                 setErrors(response.data.errors);
-        //             }
-        //         });
-        // }
+            await axiosClient
+                .post(`/admin/provider_update/${providerId}`, formdata)
+                .then(() => {
+                    setAlerts({
+                        type: "info",
+                        message: "provider was successfully updated",
+                        time: new Date(),
+                    });
+                    navigate("/admin/providers");
+                })
+                .catch((err) => {
+                    const response = err.response;
+                    if (response && response.status === 422) {
+                        setErrors(response.data.errors);
+                    }
+                });
+        } else {
+            const formdata = new FormData();
+            formdata.append("provider_name", provider.provider_name);
+            formdata.append("provider_logo", provider.provider_logo);
+
+            await axiosClient
+                .post("/admin/providers", formdata)
+                .then(() => {
+                    setAlerts({
+                        type: "info",
+                        message: "provider was successfully updated",
+                        time: new Date(),
+                    });
+                    navigate("/admin/providers");
+                })
+                .catch((err) => {
+                    const response = err.response;
+                    if (response && response.status === 422) {
+                        setErrors(response.data.errors);
+                    }
+                });
+        }
     };
 
     return (
         <div className="d-flex flex-column">
-            {provider.id && <h1>Update provider: {provider.name}</h1>}
-            {!provider.id && <h1>New provider</h1>}
+            {providerId && <h1>Update provider: {provider.provider_name}</h1>}
+            {!providerId && <h1>New provider</h1>}
             <div className="card animated fadeInDown">
                 {loading && <div className="text-center">Loading...</div>}
                 {errors && (
@@ -110,14 +107,14 @@ export default function ProviderForm() {
                 {!loading && (
                     <form onSubmit={onSubmit}>
                         <input
-                            value={provider.name}
+                            value={provider.provider_name}
                             onChange={(ev) =>
                                 setProvider({
                                     ...provider,
-                                    name: ev.target.value,
+                                    provider_name: ev.target.value,
                                 })
                             }
-                            placeholder="Name"
+                            placeholder="Provider Name"
                         />
                         {selectedImage && (
                             <img
@@ -134,7 +131,7 @@ export default function ProviderForm() {
                             onChange={(ev) =>
                                 setProvider({
                                     ...provider,
-                                    image: ev.target.files[0],
+                                    provider_logo: ev.target.files[0],
                                 })
                             }
                         />

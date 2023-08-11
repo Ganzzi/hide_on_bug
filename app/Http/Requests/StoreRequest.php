@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -19,11 +20,12 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'stream_service_provider_id' => 'required|int',
+            'stream_service_provider_id' => 'required',
             'film_name' => 'required|string',
-            'film_thumbnail' => 'required|string',
-            'film_desc' => 'required|string',
-            'video' => 'required|file|mimes:mp4|max:20480',
+            'film_poster' => 'required|image',
+            'video' => 'required|mimetypes:video/*|max:20480',
+            'premiere_date' => 'required|date',
+            'categories' => 'nullable'
         ];
     }
 }
