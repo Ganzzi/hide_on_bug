@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class WatchList extends Model
 {
     use HasFactory;
+    // app/Models/Watchlist.php
+
+    protected $fillable = [
+        'user_id',
+        'name',
+    ];
+
 
     public function user()
     {
