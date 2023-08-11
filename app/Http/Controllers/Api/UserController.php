@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Subscription;
 
 class UserController extends Controller
 {
@@ -110,6 +111,39 @@ class UserController extends Controller
         return response()->json(['message' => 'Rating added']);
     }
 }
+
+public function subscriptions(Request $request)
+{
+    $user = User::findOrFail($request->user_id);
+
+    if ($user->balance >= 50) {
+        $user->balance -= 50;
+        $user->save();
+
+        $subscriptionData = $request->only([
+            'user_id',
+            'service_id',
+            'billing_amount',
+        ]);
+
+        $subscriptionData['subscript_start'] = now();
+        $subscriptionData['subscript_end'] = now()->addMonth();
+
+        $subscription = new Subscription($subscriptionData);
+        $subscription->save();
+
+        // Attach the subscription to the user's subscribings relationship
+        $user->subcribings()->attach($subscription->id, [
+            'billing_amount' => 50,
+            'subscript_end' => now()->addMonth(),
+        ]);
+
+        return response()->json(['message' => 'Subscription successful']);
+    } else {
+        return response()->json(['message' => 'Insufficient balance'], 400);
+    }
+}
+
 
 
 

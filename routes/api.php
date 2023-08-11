@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/logout", [Auth::class, 'logout']);
     Route::post("/update_profile", [UserController::class, 'update']);
     Route::post("/update_favorite", [UserController::class, 'createFavorite']);
-
+    Route::post("/update_subscription", [UserController::class, 'subscriptions']);
     Route::post("/update_rating", [UserController::class, 'createRating']);
 
 
