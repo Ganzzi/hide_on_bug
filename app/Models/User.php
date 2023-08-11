@@ -67,7 +67,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Film::class, 'ratings', 'user_id', 'film_id')->withPivot('rating')->onDelete('cascade');
     }
 
-    public function watchLists()
+    public function watchListFilms()
     {
         return $this->hasMany(WatchList::class)->onDelete('cascade');
     }

@@ -20,16 +20,37 @@ export default function Providers() {
         if (!window.confirm("Are you sure you want to delete this provider?")) {
             return;
         }
-        await axiosClient
-            .delete(`/admin/providers/${providerId}`)
-            .then(async () => {
-                setAlerts({
-                    type: "info",
-                    message: "user was successfully deleted",
-                    time: new Date(),
-                });
-                await getProviders();
-            });
+        // Rest of your delete logic
+        try {
+            const response = await axiosClient.delete(
+                `/admin/providers/${providerId}`
+            );
+            if (response.status === 200) {
+                // Remove the deleted provider from the providers state
+                setProviders((prevProviders) =>
+                    prevProviders.filter(
+                        (provider) => provider.id !== providerId
+                    )
+                );
+                setAlerts([
+                    {
+                        type: "success",
+                        message: "Provider deleted successfully",
+                    },
+                ]);
+            } else {
+                setAlerts([
+                    { type: "error", message: "Failed to delete provider" },
+                ]);
+            }
+        } catch (error) {
+            setAlerts([
+                {
+                    type: "error",
+                    message: "An error occurred while deleting provider",
+                },
+            ]);
+        }
     };
 
     const getProviders = async () => {
@@ -105,7 +126,7 @@ export default function Providers() {
                                                 `${
                                                     import.meta.env
                                                         .VITE_BASE_URL
-                                                }/api/images/` + _provider.logo
+                                                }/images/` + _provider.logo
                                             }
                                             width={50}
                                             height={50}

@@ -19,6 +19,7 @@ class WatchList extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id')->onDelete('cascade');
+        return $this->belongsTo(User::class, 'user_id')->onDelete('cascade');
     }
 
     public function films()
