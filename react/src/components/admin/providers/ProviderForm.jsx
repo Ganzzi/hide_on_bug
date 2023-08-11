@@ -9,8 +9,8 @@ export default function ProviderForm() {
     let { providerId } = useParams();
     const [provider, setProvider] = useState({
         id: null,
-        name: "",
-        image: null,
+        service_name: "",
+        logo: null,
     });
 
     const [errors, setErrors] = useState(null);
@@ -24,24 +24,24 @@ export default function ProviderForm() {
         setSlectedImage(file);
     };
 
-    // if (providerId) {
-    //     useEffect(() => {
-    //         setLoading(true);
-    //         const getProviderData = async () => {
-    //             await axiosClient
-    //                 .get(`/admin/providers/${id}`)
-    //                 .then(({ data }) => {
-    //                     setLoading(false);
-    //                     setProvider(data);
-    //                 })
-    //                 .catch(() => {
-    //                     setLoading(false);
-    //                 });
-    //         };
+    if (providerId) {
+        useEffect(() => {
+            setLoading(true);
+            const getProviderData = async () => {
+                await axiosClient
+                    .get(`/admin/providers/${providerId}`)
+                    .then(({ data }) => {
+                        setLoading(false);
+                        setProvider(data[0]);
+                    })
+                    .catch(() => {
+                        setLoading(false);
+                    });
+            };
 
-    //         getProviderData();
-    //     }, []);
-    // }
+            getProviderData();
+        }, []);
+    }
 
     const onSubmit = async (ev) => {
         ev.preventDefault();
@@ -65,9 +65,9 @@ export default function ProviderForm() {
         //         });
         // } else {
         //     const formdata = new FormData();
-        //     formdata.append("name", provider.name);
+        //     formdata.append("service_name", provider.service_name);
         //     formdata.append("role_id", provider.role_id);
-        //     formdata.append("image", provider.image);
+        //     formdata.append("logo", provider.logo);
         //     formdata.append("email", provider.email);
         //     formdata.append("password", provider.password);
         //     formdata.append(
@@ -94,9 +94,11 @@ export default function ProviderForm() {
         // }
     };
 
+    console.log(provider);
+
     return (
         <div className="d-flex flex-column">
-            {provider.id && <h1>Update provider: {provider.name}</h1>}
+            {provider.id && <h1>Update provider: {provider.service_name}</h1>}
             {!provider.id && <h1>New provider</h1>}
             <div className="card animated fadeInDown">
                 {loading && <div className="text-center">Loading...</div>}
@@ -110,14 +112,14 @@ export default function ProviderForm() {
                 {!loading && (
                     <form onSubmit={onSubmit}>
                         <input
-                            value={provider.name}
+                            value={provider.service_name}
                             onChange={(ev) =>
                                 setProvider({
                                     ...provider,
-                                    name: ev.target.value,
+                                    service_name: ev.target.value,
                                 })
                             }
-                            placeholder="Name"
+                            placeholder="Service Name"
                         />
                         {selectedImage && (
                             <img
@@ -134,7 +136,7 @@ export default function ProviderForm() {
                             onChange={(ev) =>
                                 setProvider({
                                     ...provider,
-                                    image: ev.target.files[0],
+                                    logo: ev.target.files[0],
                                 })
                             }
                         />

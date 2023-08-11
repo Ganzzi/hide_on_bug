@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
@@ -10,24 +10,47 @@ export default function Providers() {
     const [loading, setLoading] = useState(false);
     const { setAlerts } = useStateContext();
 
-    // useEffect(() => {
-    //     getProviders();
-    // }, []);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        getProviders();
+    }, []);
 
     const onDeleteClick = async (providerId) => {
         if (!window.confirm("Are you sure you want to delete this provider?")) {
             return;
         }
-        // await axiosClient
-        //     .delete(`/admin/providers/${providerId}`)
-        //     .then(async () => {
-        //         setAlerts({
-        //             type: "info",
-        //             message: "user was successfully deleted",
-        //             time: new Date(),
-        //         });
-        //         await getProviders();
-        //     });
+        // Rest of your delete logic
+        try {
+            const response = await axiosClient.delete(
+                `/admin/providers/${providerId}`
+            );
+            if (response.status === 200) {
+                // Remove the deleted provider from the providers state
+                setProviders((prevProviders) =>
+                    prevProviders.filter(
+                        (provider) => provider.id !== providerId
+                    )
+                );
+                setAlerts([
+                    {
+                        type: "success",
+                        message: "Provider deleted successfully",
+                    },
+                ]);
+            } else {
+                setAlerts([
+                    { type: "error", message: "Failed to delete provider" },
+                ]);
+            }
+        } catch (error) {
+            setAlerts([
+                {
+                    type: "error",
+                    message: "An error occurred while deleting provider",
+                },
+            ]);
+        }
     };
 
     const getProviders = async () => {
@@ -36,7 +59,7 @@ export default function Providers() {
             .get("/admin/providers")
             .then(({ data }) => {
                 setLoading(false);
-                setProviders(data.data);
+                setProviders(data);
             })
             .catch(() => {
                 setLoading(false);
@@ -69,10 +92,14 @@ export default function Providers() {
                 >
                     <thead className="thead-dark" style={{ with: "100%" }}>
                         <tr>
-                            <th style={{ paddingRight: "7rem" }}>ID</th>
-                            <th style={{ paddingRight: "7rem" }}>Image</th>
-                            <th style={{ paddingRight: "7rem" }}>Name</th>
-                            <th style={{ paddingRight: "7rem" }}>
+                            <th style={{ paddingRight: "4rem" }}>ID</th>
+                            <th style={{ paddingRight: "4rem" }}>
+                                Service Name
+                            </th>
+                            <th style={{ paddingRight: "4rem" }}>Logo</th>
+                            <th style={{ paddingRight: "4rem" }}>Users</th>
+                            <th style={{ paddingRight: "4rem" }}>Films</th>
+                            <th style={{ paddingRight: "4rem" }}>
                                 Create Date
                             </th>
                             <th>Actions</th>
@@ -89,25 +116,44 @@ export default function Providers() {
                     )}
                     {!loading && (
                         <tbody>
-                            {/* {providers.map((_provider) => (
+                            {providers.map((_provider) => (
                                 <tr key={_provider.id}>
                                     <td>{_provider.id}</td>
+                                    <td>{_provider.service_name}</td>
                                     <td>
                                         <img
                                             src={
                                                 `${
                                                     import.meta.env
                                                         .VITE_BASE_URL
-                                                }/api/images/` + _provider.image
+                                                }/images/` + _provider.logo
                                             }
                                             width={50}
                                             height={50}
                                             alt=""
                                         />
                                     </td>
-                                    <td>{_provider.name}</td>
+                                    <td>{_provider.users.length} subcribers</td>
+                                    <td
+                                        onClick={() => {
+                                            navigate(
+                                                `/admin/providers/${_provider.id}/films`,
+                                                {
+                                                    state: {
+                                                        films: _provider.films,
+                                                        providerId:
+                                                            _provider.id,
+                                                        service_name:
+                                                            _provider.service_name,
+                                                    },
+                                                }
+                                            );
+                                        }}
+                                    >
+                                        {_provider.films.length} films
+                                    </td>
+
                                     <td>
-                                        {" "}
                                         {formatDateTime(_provider.created_at)}
                                     </td>
                                     <td>
@@ -137,42 +183,7 @@ export default function Providers() {
                                         )}
                                     </td>
                                 </tr>
-                            ))} */}
-
-                            <tr key={_provider.id}>
-                                <td>{_provider.id}</td>
-                                <td>
-                                    <img
-                                        src={
-                                            `${
-                                                import.meta.env.VITE_BASE_URL
-                                            }/api/images/` + _provider.image
-                                        }
-                                        width={50}
-                                        height={50}
-                                        alt=""
-                                    />
-                                </td>
-                                <td>{_provider.name}</td>
-                                <td> {formatDateTime(_provider.created_at)}</td>
-                                <td>
-                                    <Link
-                                        className="btn-edit"
-                                        to={"/admin/providers/" + _provider.id}
-                                    >
-                                        Edit
-                                    </Link>
-                                    &nbsp;
-                                    <button
-                                        className="btn-delete"
-                                        onClick={() =>
-                                            onDeleteClick(_provider.id)
-                                        }
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
+                            ))}
                         </tbody>
                     )}
                 </table>
@@ -180,10 +191,3 @@ export default function Providers() {
         </div>
     );
 }
-
-const _provider = {
-    id: 2,
-    name: "pepsi",
-    image: "avc",
-    created_at: "none",
-};
