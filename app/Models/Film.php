@@ -19,21 +19,21 @@ class Film extends Model
 
     public function favoritedByUsers()
     {
-        return $this->belongsToMany(User::class, 'Favorite', 'Film_Id', 'User_Id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'favorites', 'film_id', 'user_id')->withTimestamps();
     }
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'Film_Category', 'Film_Id', 'Film_Category_Id')->withTimestamps();
+        return $this->belongsToMany(Category::class, 'film_categories', 'film_id', 'category_id')->withTimestamps();
     }
 
     public function watchlists()
     {
-        return $this->belongsToMany(Watchlist::class, 'WatchlistFilm', 'Film_Id', 'Watchlist_Id')->withTimestamps();
+        return $this->belongsToMany(Watchlist::class, 'watch_list_films', 'film_id', 'watchlist_id')->withTimestamps();
     }
 
     public function serviceProvider()
     {
-        return $this->belongsTo(StreamServiceProvider::class, 'Service_Id')->onDelete('cascade');
+        return $this->belongsTo(StreamServiceProvider::class, 'service_id')->onDelete('cascade');
     }
 }

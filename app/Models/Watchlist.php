@@ -18,11 +18,11 @@ class WatchList extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'User_Id')->onDelete('cascade');
+        return $this->belongsTo(User::class, 'user_id')->onDelete('cascade');
     }
 
     public function films()
     {
-        return $this->belongsToMany(Film::class, 'WatchlistFilm', 'Watchlist_Id', 'Film_Id')->withTimestamps();
+        return $this->belongsToMany(Film::class, 'watch_list_films', 'watchlist_id', 'film_id')->withTimestamps();
     }
 }

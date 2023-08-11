@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRequest;
 use App\Models\Film;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FilmController extends Controller
 {
@@ -46,8 +47,18 @@ class FilmController extends Controller
         }
 
         $film = new Film;
+
         $film->fill($data);
         $film->save();
+
+        // $cate_array = $data['cate_id'];
+        // foreach ($cate_array as $cate_id) {
+        //     DB::table('film_categories')->insert([
+        //         'film_id' => $film->id,
+        //         'category_id' => $cate_id
+        //     ]);
+        // }
+
 
         return response()->json($film, 201);
     }
@@ -62,6 +73,7 @@ class FilmController extends Controller
             'film_name' => 'required|string',
             'film_thumbnail' => 'required|string',
             'film_desc' => 'required|string',
+            // 'cate_id' => 'required'
         ]);
 
         // Update common fields
