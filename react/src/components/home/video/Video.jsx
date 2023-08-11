@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { FaHeart, FaRegStar, FaStar, FaPlusCircle } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import axiosClient from "../../../utils/axios";
 
 const Video = () => {
+    const {videoId} = useParams();
+
+    const [data, setData] = useState([]);
+    
+
+    // useEffect(() => {
+    //     const getVideo = async () => {
+    //         await axiosClient.get(`/films/${videoId}`).then(({ data }) => {
+    //             console.log(data);
+    //             setData(data);
+    //         })
+    //     }
+
+    //     getVideo()
+    // }, [])
+
     const settings = {
         dots: true,
         infinite: true,
