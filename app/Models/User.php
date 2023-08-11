@@ -59,7 +59,7 @@ class User extends Authenticatable
 
     public function subcribings()
     {
-        return $this->belongsToMany(StreamServiceProvider::class, 'subscriptions', 'user_id', 'provider_id')->withPivot('billing_amount', 'expire_date')->onDelete('cascade');
+        return $this->belongsToMany(StreamServiceProvider::class, 'subscriptions', 'user_id', 'provider_id')->withPivot('billing_amount', 'expire_date');
     }
 
     public function ratings()

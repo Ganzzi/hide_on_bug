@@ -9,6 +9,7 @@ use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Subscription;
 
 class UserController extends Controller
 {
@@ -109,9 +110,9 @@ class UserController extends Controller
                 // Add any other fields you have in the pivot table
             ]);
 
-            return response()->json(['message' => 'Rating added']);
-        }
+        return response()->json(['message' => 'Rating added']);
     }
+}
 
     function updateCategory(Request $request)
     {
@@ -214,5 +215,18 @@ class UserController extends Controller
 
     public function getAllFavorites()
     {
+        $user = Auth::user();
+        if ($user) {
+            // Lấy tất cả các mục yêu thích của người dùng từ bảng "favorite"
+            $favorites = DB::table('favorites')
+            ->join('films', 'favorites.film_id', '=', 'films.id')
+            ->where('favorites.user_id', $user->id)
+            ->select('films.id','films.film_name', 'films.film_poster')
+            ->get();
+
+            return response()->json($favorites);
+
     }
+}
+
 }
