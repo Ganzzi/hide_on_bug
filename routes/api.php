@@ -57,9 +57,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // api routes for admin
+    Route::get('/admin/categories', [AdminFilmController::class, 'getCategories']);
     Route::apiResource('/admin/users', AdminUserController::class);
     Route::apiResource('/admin/providers', AdminProviderController::class);
+    Route::post('/admin/provider_update/{id}', [AdminProviderController::class, 'update_provider']);
     Route::apiResource('/admin/films', AdminFilmController::class);
+    Route::post('/admin/film_update/{id}', [AdminFilmController::class, 'update_film']);
 });
 
 // routes for signup, login

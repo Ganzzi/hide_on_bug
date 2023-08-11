@@ -119,14 +119,15 @@ export default function Providers() {
                             {providers.map((_provider) => (
                                 <tr key={_provider.id}>
                                     <td>{_provider.id}</td>
-                                    <td>{_provider.service_name}</td>
+                                    <td>{_provider.provider_name}</td>
                                     <td>
                                         <img
                                             src={
                                                 `${
                                                     import.meta.env
                                                         .VITE_BASE_URL
-                                                }/images/` + _provider.logo
+                                                }/images/` +
+                                                _provider.provider_logo
                                             }
                                             width={50}
                                             height={50}
@@ -144,7 +145,7 @@ export default function Providers() {
                                                         providerId:
                                                             _provider.id,
                                                         service_name:
-                                                            _provider.service_name,
+                                                            _provider.provider_name,
                                                     },
                                                 }
                                             );
