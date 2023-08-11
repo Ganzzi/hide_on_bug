@@ -10,12 +10,12 @@ class StreamServiceProvider extends Model
     use HasFactory;
     protected $fillable = [
         // Các trường khác nếu có
-        'service_name',
-        'logo'
+        'provider_name',
+        'provider_logo'
     ];
     public function users()
     {
-        return $this->belongsToMany(User::class, 'subscriptions', 'service_id', 'user_id')->withPivot('billing_amount', 'subscript_start', 'subscript_end');
+        return $this->belongsToMany(User::class, 'subscriptions', 'provider_id', 'user_id')->withPivot('billing_amount', 'expire_date')->onDelete('cascade');
     }
 
     public function films()

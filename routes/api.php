@@ -2,14 +2,16 @@
 
 // namespace for user page's controller
 
-use App\Http\Controllers\Admin\FilmController;
-use App\Http\Controllers\Admin\ProviderController;
-use App\Http\Controllers\Api\Auth;
-use App\Http\Controllers\Admin\UserController  as AdminUserController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\WatchlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Auth;
+use App\Http\Controllers\Admin\FilmController as AdminFilmController;
+use App\Http\Controllers\Admin\UserController  as AdminUserController;
+use App\Http\Controllers\Admin\ProviderController as AdminProviderController;
+use App\Http\Controllers\Api\FilmController as ApiFilmController;
+use App\Http\Controllers\Api\ProviderController;
+use App\Http\Controllers\Api\UserController as ApiUserController;
+use App\Http\Controllers\Api\WatchlistController as ApiWatchlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,28 +30,40 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    // api routes for user
     Route::post("/logout", [Auth::class, 'logout']);
-    Route::post("/update_profile", [UserController::class, 'update']);
-    Route::post("/update_favorite", [UserController::class, 'createFavorite']);
+    Route::post("/update_rating", [ApiUserController::class, 'rateFilm']);
+    Route::post("/update_favorite", [ApiUserController::class, 'favoriteFilm']);
 
-    Route::post("/update_rating", [UserController::class, 'createRating']);
+    // not done
+    Route::post("/update_profile", [ApiUserController::class, 'update']);
+
+    Route::apiResource('/watchlists', ApiWatchlistController::class);
+    Route::post('/watchlist_add_delete_film', [ApiWatchlistController::class, 'add_or_delete_film_to_watch_list']);
+
+    Route::get('/films/{filmId}', [ApiFilmController::class, "watchFilm"]);
+    Route::post('/films',  [ApiFilmController::class,  "searchFilm"]);
+    Route::post('/recommended_films',  [ApiFilmController::class,  "getRecommendFilms"]);
+
+    Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);
+    Route::get('/getSubcriptions', [ApiUserController::class, 'getAllSubcriptions']);
+    Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
+    Route::post("/update_history", [ApiUserController::class, 'addFilmToHistory']);
+
+    Route::get("/providers/{providerId}", [ProviderController::class, 'show']);
+    Route::post("/subcribe", [ProviderController::class, 'subcribeToProvider']);
+    Route::post("/pay_subcription", [ProviderController::class, 'paySubcription']);
 
 
     // api routes for admin
     Route::apiResource('/admin/users', AdminUserController::class);
-    Route::apiResource('/admin/providers', ProviderController::class);
-    // api routes for admin
-
-    Route::apiResource('/admin/films', FilmController::class);
-    Route::resource('/admin/providers', ProviderController::class);
-    Route::resource('/admin/watchlists', WatchlistController::class);
+    Route::apiResource('/admin/providers', AdminProviderController::class);
+    Route::apiResource('/admin/films', AdminFilmController::class);
 });
 
 // routes for signup, login
 Route::post("/signup", [Auth::class, 'signup']);
 Route::post("/login", [Auth::class, 'login']);
-
-Route::apiResource('films', FilmController::class);
 
 // routes for get images in storage
 Route::get('/images/{filename}', function ($filename) {
@@ -77,22 +91,3 @@ Route::get('/videos/{filename}', function ($filename) {
 
     return response($file)->header('Content-Type', $type);
 });
-
-Route::post('/upload-video', function (Request $request) {
-    $request->validate([
-        'video' => 'nullable|mimetypes:video/*|max:20480',
-    ]);
-
-    if ($request->hasFile('video')) {
-        $uploadedVideo = $request->file('video');
-        $videoPath = $uploadedVideo->store('public/videos');
-
-        return response()->json(['video' => $videoPath]);
-    } else {
-        return response()->json(['message' => 'No video file uploaded'], 400);
-    }
-});
-
-Route::get('/films', [FilmController::class, 'index']);
-// Route::get('/providers', [ProviderController::class, 'index']);
-// Route::post('/providers', [ProviderController::class, 'store']);
