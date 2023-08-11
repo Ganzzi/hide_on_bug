@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 class FilmController extends Controller
 {
-    public function getRecommendFilms()
+    public function getRecommendFilms(Request $request)
     {
         // get a list of recommended films
-        //$user = Auth::user();
+        $user = Auth::user();
     }
 
     // function for user to watch a film - get provider infor, subcribe, rating, favorite,...
