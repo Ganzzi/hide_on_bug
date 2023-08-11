@@ -14,10 +14,6 @@ class HistoryController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-        $histories = $user->histories;
-
-        return response()->json($histories);
     }
 
     /**
@@ -25,19 +21,6 @@ class HistoryController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
-        $filmId = $request->input('film_id');
-
-        // Check if the history already exists
-        if (!$user->histories()->where('film_id', $filmId)->exists()) {
-            $history = new History([
-                'user_id' => $user->id,
-                'film_id' => $filmId,
-            ]);
-            $history->save();
-        }
-
-        return response()->json(['message' => 'History added successfully']);
     }
 
     /**

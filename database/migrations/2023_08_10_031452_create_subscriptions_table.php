@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreign('service_id')->references('id')->on('stream_service_providers')->onDelete('cascade');
             $table->date('subscript_start');
             $table->date('subscript_end');
-            $table->string('film_name');
             $table->integer('billing_amount');
             $table->timestamps();
         });
