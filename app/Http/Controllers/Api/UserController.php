@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Film;
 use App\Models\User;
+use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -40,78 +42,114 @@ class UserController extends Controller
     public function createFavorite(Request $request)
     {
         $user_id = $request->user_id;   // Replace with the actual user ID
-    $film_id = $request->film_id; // Replace with the actual video ID
+        $film_id = $request->film_id; // Replace with the actual video ID
 
-    $exists = DB::table('favorites')
-        ->where('user_id', $user_id)
-        ->where('film_id', $film_id)
-        ->exists();
-
-    if ($exists) {
-        // Delete the record from the pivot table
-        DB::table('favorites')
+        $exists = DB::table('favorites')
             ->where('user_id', $user_id)
             ->where('film_id', $film_id)
-            ->delete();
+            ->exists();
 
-        return response()->json(['message' => 'Favorite removed']);
-    } else {
-        // Insert a new record into the pivot table
-        DB::table('favorites')->insert([
-            'user_id' => $user_id,
-            'film_id' => $film_id,
-            'created_at' => now(),
-            'updated_at' => now(),
-            // Add any other fields you have in the pivot table
-        ]);
+        if ($exists) {
+            // Delete the record from the pivot table
+            DB::table('favorites')
+                ->where('user_id', $user_id)
+                ->where('film_id', $film_id)
+                ->delete();
 
-        return response()->json(['message' => 'Favorite added']);
-    }
+            return response()->json(['message' => 'Favorite removed']);
+        } else {
+            // Insert a new record into the pivot table
+            DB::table('favorites')->insert([
+                'user_id' => $user_id,
+                'film_id' => $film_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+                // Add any other fields you have in the pivot table
+            ]);
 
+            return response()->json(['message' => 'Favorite added']);
+        }
     }
 
     public function createRating(Request $request)
-{
-    $user_id = $request->user_id;   // Replace with the actual user ID
-    $film_id = $request->film_id; // Replace with the actual film ID
-    $rating_value = $request->rating; // Replace with the actual rating value
+    {
+        $user_id = $request->user_id;   // Replace with the actual user ID
+        $film_id = $request->film_id; // Replace with the actual film ID
+        $rating_value = $request->rating; // Replace with the actual rating value
 
-    // Validate the input
-    $request->validate([
-        'user_id' => 'required',
-        'film_id' => 'required',
-        'rating' => 'required|numeric|min:1|max:5',
-    ]);
-
-    $exists = DB::table('ratings')
-        ->where('user_id', $user_id)
-        ->where('film_id', $film_id)
-        ->exists();
-
-    if ($exists) {
-        // Update the existing record in the pivot table
-        DB::table('ratings')
-            ->where('user_id', $user_id)
-            ->where('film_id', $film_id)
-            ->update(['rating' => $rating_value, 'updated_at' => now()]);
-
-        return response()->json(['message' => 'Rating updated']);
-    } else {
-        // Insert a new record into the pivot table
-        DB::table('ratings')->insert([
-            'user_id' => $user_id,
-            'film_id' => $film_id,
-            'rating' => $rating_value,
-            'created_at' => now(),
-            'updated_at' => now(),
-            // Add any other fields you have in the pivot table
+        // Validate the input
+        $request->validate([
+            'user_id' => 'required',
+            'film_id' => 'required',
+            'rating' => 'required|numeric|min:1|max:5',
         ]);
 
-        return response()->json(['message' => 'Rating added']);
+        $exists = DB::table('ratings')
+            ->where('user_id', $user_id)
+            ->where('film_id', $film_id)
+            ->exists();
+
+        if ($exists) {
+            // Update the existing record in the pivot table
+            DB::table('ratings')
+                ->where('user_id', $user_id)
+                ->where('film_id', $film_id)
+                ->update(['rating' => $rating_value, 'updated_at' => now()]);
+
+            return response()->json(['message' => 'Rating updated']);
+        } else {
+            // Insert a new record into the pivot table
+            DB::table('ratings')->insert([
+                'user_id' => $user_id,
+                'film_id' => $film_id,
+                'rating' => $rating_value,
+                'created_at' => now(),
+                'updated_at' => now(),
+                // Add any other fields you have in the pivot table
+            ]);
+
+            return response()->json(['message' => 'Rating added']);
+        }
+    }
+
+    /**
+     * View user's history for a film.
+     */
+    public function updateHistory(Request $request)
+    {
+        $user_id = $request->user_id;   // Replace with the actual user ID
+        $film_id = $request->film_id; // Replace with the actual film ID
+
+        // Validate the input
+        $request->validate([
+            'user_id' => 'required',
+            'film_id' => 'required',
+        ]);
+
+        $exists = DB::table('histories')
+            ->where('user_id', $user_id)
+            ->where('film_id', $film_id)
+            ->exists();
+
+        if ($exists) {
+            // Delete the record from the pivot table
+            DB::table('histories')
+                ->where('user_id', $user_id)
+                ->where('film_id', $film_id)
+                ->delete();
+
+            return response()->json(['message' => 'Favorite removed']);
+        } else {
+            // Insert a new record into the pivot table
+            DB::table('histories')->insert([
+                'user_id' => $user_id,
+                'film_id' => $film_id,
+            ]);
+
+            return response()->json(['message' => 'Favorite added']);
+        }
+
+
+        return response()->json(['message' => 'History added']);
     }
 }
-
-
-
-}
-

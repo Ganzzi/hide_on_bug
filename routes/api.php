@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/update_favorite", [UserController::class, 'createFavorite']);
 
     Route::post("/update_rating", [UserController::class, 'createRating']);
-
+    Route::post("/create_delete__history", [UserController::class, 'updateHistory']);
 
     // api routes for admin
     Route::apiResource('/admin/users', UserController::class);
