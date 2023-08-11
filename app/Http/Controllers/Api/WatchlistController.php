@@ -20,19 +20,6 @@ class WatchListController extends Controller
 
         $WatchLists = WatchList::where('user_id', $user->id)->get();
 
-        // $WatchLists = WatchList::all();
-        if ($WatchLists->count() > 0) {
-            return response()->json([
-                "status" => 200,
-                "data" => $WatchLists,
-                "message" => "Get all WatchLists successfully"
-            ], 200);
-        } else {
-            return response()->json([
-                "status" => 404,
-                "message" => "No records found"
-            ], 404);
-        }
         return response()->json($WatchLists);
     }
 
@@ -83,7 +70,6 @@ class WatchListController extends Controller
     /**
      * Display the specified resource.
      */
-    // anh nhan lam lai, get tat ca film thuoc ve watch list
     public function show(string $id)
     {
         $WatchLists = WatchList::with('films')->findOrFail($id);

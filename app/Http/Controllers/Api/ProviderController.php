@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Subscription;
+use App\Models\User;
+
 class ProviderController extends Controller
 {
     /**
@@ -44,102 +46,81 @@ class ProviderController extends Controller
         }
     }
 
-//     public function renewSubscription(Request $request, int $subscriptionId)
-// {
-//     $user = Auth::user();
+    public function getProviders()
+    {
+        $user = Auth::user();
 
-//     // Kiểm tra người dùng có đủ số dư để gia hạn không
-//     if ($user->balance >= 50) {
-//         // Trừ tiền từ số dư người dùng
-//         $user->balance -= 50;
-//         $user->save();
+        $providers = $user->providers;
 
-//         // Lấy thông tin dịch vụ đăng ký cần gia hạn
-//         $subscription = Subscription::findOrFail($subscriptionId);
-
-//         // Cập nhật thông tin gia hạn và thời hạn
-//         $subscription->expire_date = now()->addMonth();
-//         $subscription->save();
-
-//         // Cập nhật thông tin trong bảng liên kết user_subscriptions
-//         $user->subscriptions()->updateExistingPivot($subscriptionId, [
-//             'billing_amount' => 50,
-//             'expire_date' => now()->addMonth(),
-//         ]);
-
-//         return response()->json(['message' => 'Renewal successful']);
-//     } else {
-//         return response()->json(['message' => 'Insufficient balance'], 400);
-//     }
-// }
-public function subscribeToService(Request $request)
-{
-    $user = Auth::user();
-
-    if ($user->balance >= 50) {
-        $user->balance -= 50;
-        $user->save();
-
-        $subscriptionData = [
-            'user_id' => $user->id,
-            'provider_id' => $request->provider_id, // Thay bằng cách lấy provider_id từ request
-            'billing_amount' => 50,
-            'expire_date' => now()->addMonth(),
-        ];
-
-        $subscription = new Subscription($subscriptionData);
-        $subscription->save();
-
-        return response()->json(['message' => 'Subscription successful']);
-    } else {
-        return response()->json(['message' => 'Insufficient balance'], 400);
+        return response()->json(['providers' => $providers]);
     }
-}
 
-public function updatepay()
-{
-    $user = Auth::user();
+    public function subscribeToService(Request $request)
+    {
+        $user = Auth::user();
 
-// Check if the user has an active subscription
-$subscription = $user->subcribings()->latest()->first();
+        if ($user->balance >= 50) {
+            $user->balance -= 50;
+            $user->save();
 
-if (!$subscription) {
-    return response()->json(['message' => 'No active subscription'], 400);
-}
+            $subscriptionData = [
+                'user_id' => $user->id,
+                'provider_id' => $request->provider_id, // Thay bằng cách lấy provider_id từ request
+                'billing_amount' => 50,
+                'expire_date' => now()->addMonth(),
+            ];
 
-$subscriptionCost = 50; // Cost of subscription extension
+            $subscription = new Subscription($subscriptionData);
+            $subscription->save();
 
-// Check if the user has sufficient balance
-if ($user->balance >= $subscriptionCost) {
-    // Begin a database transaction
-    DB::beginTransaction();
-
-    try {
-        // Deduct the subscription cost from the user's balance
-        $user->balance -= $subscriptionCost;
-        $user->save();
-
-        // Extend the expiration date of the subscription using a raw SQL update
-        $newExpireDate = DB::raw('DATE_ADD(expire_date, INTERVAL 1 MONTH)');
-        DB::table('subscriptions')
-            ->where('user_id', $user->id)
-            ->where('provider_id', $subscription->id)
-            ->update(['expire_date' => $newExpireDate]);
-
-        // Commit the transaction
-        DB::commit();
-
-        return response()->json(['message' => 'Subscription extended successfully']);
-    } catch (\Exception $e) {
-        // If an exception occurs, rollback the transaction
-        DB::rollback();
-
-        return response()->json(['message' => 'An error occurred'], 500);
+            return response()->json(['message' => 'Subscription successful']);
+        } else {
+            return response()->json(['message' => 'Insufficient balance'], 400);
+        }
     }
-} else {
-    return response()->json(['message' => 'Insufficient balance'], 400);
-}
 
-}
+    public function updatepay()
+    {
+        $user = Auth::user();
 
+        // Check if the user has an active subscription
+        $subscription = $user->subcribings()->latest()->first();
+
+        if (!$subscription) {
+            return response()->json(['message' => 'No active subscription'], 400);
+        }
+
+        $subscriptionCost = 50; // Cost of subscription extension
+
+        // Check if the user has sufficient balance
+        if ($user->balance >= $subscriptionCost) {
+            // Begin a database transaction
+            DB::beginTransaction();
+
+            try {
+                // Deduct the subscription cost from the user's balance
+                $user->balance -= $subscriptionCost;
+                $user->save();
+
+                // Extend the expiration date of the subscription using a raw SQL update
+                $newExpireDate = DB::raw('DATE_ADD(expire_date, INTERVAL 1 MONTH)');
+                DB::table('subscriptions')
+                    ->where('user_id', $user->id)
+                    ->where('provider_id', $subscription->id)
+                    ->update(['expire_date' => $newExpireDate]);
+
+                // Commit the transaction
+                DB::commit();
+
+                return response()->json(['message' => 'Subscription extended successfully']);
+            } catch (\Exception $e) {
+                // If an exception occurs, rollback the transaction
+                DB::rollback();
+
+                return response()->json(['message' => 'An error occurred'], 500);
+            }
+        } else {
+            return response()->json(['message' => 'Insufficient balance'], 400);
+        }
+    }
 }
