@@ -47,12 +47,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);
     Route::get('/getSubcriptions', [ApiUserController::class, 'getAllSubcriptions']);
-    Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
     Route::post("/update_history", [ApiUserController::class, 'addFilmToHistory']);
 
+    Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
     Route::get("/providers/{providerId}", [ProviderController::class, 'show']);
-    Route::post("/subcribe", [ProviderController::class, 'subcribeToProvider']);
-    Route::post("/pay_subcription", [ProviderController::class, 'paySubcription']);
+    Route::post("/subcribe", [ProviderController::class, 'subscribeToService']);
+    Route::post("/updatepay", [ProviderController::class, 'updatepay']);
 
 
     // api routes for admin
