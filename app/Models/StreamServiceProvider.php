@@ -13,9 +13,9 @@ class StreamServiceProvider extends Model
         'service_name',
         'logo'
     ];
-    public function subcribedByUsers()
+    public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('billing_amount', 'expire_date')->onDelete('cascade');
+        return $this->belongsToMany(User::class, 'subscriptions', 'service_id', 'user_id')->withPivot('billing_amount', 'subscript_start', 'subscript_end');
     }
 
     public function films()

@@ -14,19 +14,8 @@ class ProviderController extends Controller
      */
     public function index()
     {
-        $providers = StreamServiceProvider::all();
-        // if ($providers->count() > 0) {
-        //     return response()->json([
-        //         "status" => 200,
-        //         "data" => $providers,
-        //         "message" => "Get all providers successfully"
-        //     ], 200);
-        // } else {
-        //     return response()->json([
-        //         "status" => 404,
-        //         "message" => "No records found"
-        //     ], 404);
-        // }
+        $providers = StreamServiceProvider::all()->load('films')->load('users');
+
         return response()->json($providers);
     }
 
@@ -121,7 +110,7 @@ class ProviderController extends Controller
     public function destroy($id)
     {
         $provider = StreamServiceProvider::findOrFail($id);
-        
+
         if (!$provider) {
             return response()->json([
                 'status' => 404,

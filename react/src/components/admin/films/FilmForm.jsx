@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import axiosClient from "../../../utils/axios.js";
@@ -6,12 +6,20 @@ import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 
 export default function FilmForm() {
     const navigate = useNavigate();
-    let { providerId, filmId } = useParams();
+    const { filmId } = useParams();
     const [film, setFilm] = useState({
         id: null,
         name: "",
         image: null,
     });
+    const location = useLocation();
+    const [providerId, setProviderId] = useState(null);
+    const [service_name, setService_name] = useState("");
+
+    useEffect(() => {
+        setProviderId(location.state.providerId);
+        setService_name(location.state.service_name);
+    }, []);
 
     const [errors, setErrors] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -96,8 +104,12 @@ export default function FilmForm() {
 
     return (
         <div className="d-flex flex-column">
-            {film.id && <h1>Update film: {film.name}</h1>}
-            {!film.id && <h1>New film</h1>}
+            {filmId && (
+                <h1>
+                    Update film {film.name} of provider {service_name}
+                </h1>
+            )}
+            {!filmId && <h1>New film for provider {service_name}</h1>}
             <div className="card animated fadeInDown">
                 {loading && <div className="text-center">Loading...</div>}
                 {errors && (
