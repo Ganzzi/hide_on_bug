@@ -18,6 +18,18 @@ export default function Providers() {
             return;
         }
         // Rest of your delete logic
+        try {
+            const response = await axiosClient.delete(`/admin/providers/${providerId}`);
+            if (response.status === 200) {
+                // Remove the deleted provider from the providers state
+                setProviders(prevProviders => prevProviders.filter(provider => provider.id !== providerId));
+                setAlerts([{ type: "success", message: "Provider deleted successfully" }]);
+            } else {
+                setAlerts([{ type: "error", message: "Failed to delete provider" }]);
+            }
+        } catch (error) {
+            setAlerts([{ type: "error", message: "An error occurred while deleting provider" }]);
+        }
     };
 
     const getProviders = async () => {
