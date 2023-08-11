@@ -1,47 +1,37 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 import { formatDateTime } from "../../../utils/index.js";
 
-export default function Films() {
-    let { providerId } = useParams();
+export default function Providers() {
     const [films, setFilms] = useState([]);
     const [loading, setLoading] = useState(false);
     const { setAlerts } = useStateContext();
+    const [providerId, setProviderId] = useState(null);
+    const [service_name, setService_name] = useState("");
+    const location = useLocation();
 
-    // useEffect(() => {
-    //     getFilms();
-    // }, []);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setFilms(location.state.films);
+        setProviderId(location.state.providerId);
+        setService_name(location.state.service_name);
+    }, []);
 
     const onDeleteClick = async (filmId) => {
-        if (!window.confirm("Are you sure you want to delete this film?")) {
+        if (!window.confirm("Are you sure you want to delete this provider?")) {
             return;
         }
-        // await axiosClient
-        //     .delete(`/admin/films/${filmId}`)
-        //     .then(async () => {
-        //         setAlerts({
-        //             type: "info",
-        //             message: "user was successfully deleted",
-        //             time: new Date(),
-        //         });
-        //         await getFilms();
-        //     });
-    };
-
-    const getFilms = async () => {
-        setLoading(true);
-        await axiosClient
-            .get("/admin/films")
-            .then(({ data }) => {
-                setLoading(false);
-                setFilms(data.data);
-            })
-            .catch(() => {
-                setLoading(false);
+        await axiosClient.delete(`/admin/films/${filmId}`).then(async () => {
+            setAlerts({
+                type: "info",
+                message: "Provider was successfully deleted",
+                time: new Date(),
             });
+        });
     };
 
     return (
@@ -53,29 +43,41 @@ export default function Films() {
                     alignItems: "center",
                 }}
             >
-                <h1
-                    style={{
-                        fontFamily: "fantasy",
-                        justifycontent: "space-between",
-                    }}
-                ></h1>
-                <Link
+                <h1>Films of {service_name}</h1>
+                <button
                     className="btn-add"
-                    to={`/admin/providers/${providerId}/films/new`}
+                    onClick={() => {
+                        navigate(`/admin/providers/${providerId}/films/new`, {
+                            state: {
+                                providerId: providerId,
+                                service_name: service_name,
+                            },
+                        });
+                    }}
                 >
                     Add new
-                </Link>
+                </button>
+                {/* <Link
+                    className="btn-add"
+                    to={`/admin/providers/${providerId}/films/new`}
+                    state={{
+                        providerId: providerId,
+                        service_name: service_name,
+                    }}
+                >
+                    Add new
+                </Link> */}
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>
                 <table
                     className=""
-                    style={{ with: "100%", paddingRight: "3rem" }}
+                    style={{ width: "100%", paddingRight: "3rem" }}
                 >
-                    <thead className="thead-dark" style={{ with: "100%" }}>
+                    <thead className="thead-dark" style={{ width: "100%" }}>
                         <tr>
                             <th style={{ paddingRight: "7rem" }}>ID</th>
                             <th style={{ paddingRight: "7rem" }}>Image</th>
-                            <th style={{ paddingRight: "7rem" }}>Name</th>
+                            <th style={{ paddingRight: "7rem" }}>Film Name</th>
                             <th style={{ paddingRight: "7rem" }}>
                                 Create Date
                             </th>
@@ -93,7 +95,7 @@ export default function Films() {
                     )}
                     {!loading && (
                         <tbody>
-                            {/* {providers.map((_film) => (
+                            {films.map((_film) => (
                                 <tr key={_film.id}>
                                     <td>{_film.id}</td>
                                     <td>
@@ -109,72 +111,39 @@ export default function Films() {
                                             alt=""
                                         />
                                     </td>
-                                    <td>{_film.name}</td>
+                                    <td>{_film.film_name}</td>
+                                    <td> {formatDateTime(_film.created_at)}</td>
                                     <td>
-                                        {" "}
-                                        {formatDateTime(_film.created_at)}
-                                    </td>
-                                    <td>
-                                        {_film.role_id != 1 && (
-                                            <>
-                                                <Link
-                                                    className="btn-edit"
-                                                    to={
-                                                        "/admin/providers/" +
-                                                        _film.id
+                                        <button
+                                            className="btn-edit"
+                                            onClick={() => {
+                                                navigate(
+                                                    `/admin/providers/${_film.stream_service_provider_id}/films/${_film.id}`,
+                                                    {
+                                                        state: {
+                                                            providerId:
+                                                                providerId,
+                                                            service_name:
+                                                                service_name,
+                                                        },
                                                     }
-                                                >
-                                                    Edit
-                                                </Link>
-                                                &nbsp;
-                                                <button
-                                                    className="btn-delete"
-                                                    onClick={() =>
-                                                        onDeleteClick(
-                                                            _film.id
-                                                        )
-                                                    }
-                                                >
-                                                    Delete
-                                                </button>
-                                            </>
-                                        )}
+                                                );
+                                            }}
+                                        >
+                                            Edit
+                                        </button>
+                                        &nbsp;
+                                        <button
+                                            className="btn-delete"
+                                            onClick={() =>
+                                                onDeleteClick(_film.id)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
-                            ))} */}
-
-                            <tr key={_film.id}>
-                                <td>{_film.id}</td>
-                                <td>
-                                    <img
-                                        src={
-                                            `${
-                                                import.meta.env.VITE_BASE_URL
-                                            }/api/images/` + _film.image
-                                        }
-                                        width={50}
-                                        height={50}
-                                        alt=""
-                                    />
-                                </td>
-                                <td>{_film.name}</td>
-                                <td> {formatDateTime(_film.created_at)}</td>
-                                <td>
-                                    <Link
-                                        className="btn-edit"
-                                        to={`/admin/providers/${providerId}/films/${_film.id}`}
-                                    >
-                                        Edit
-                                    </Link>
-                                    &nbsp;
-                                    <button
-                                        className="btn-delete"
-                                        onClick={() => onDeleteClick(_film.id)}
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
+                            ))}
                         </tbody>
                     )}
                 </table>
@@ -182,10 +151,3 @@ export default function Films() {
         </div>
     );
 }
-
-const _film = {
-    id: 2,
-    name: "pepsi",
-    image: "avc",
-    created_at: "none",
-};

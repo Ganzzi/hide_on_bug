@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -39,7 +40,7 @@ class UserController extends Controller
         return response()->json($_user);
     }
 
-    public function createFavorite(Request $request)
+    public function favoriteFilm(Request $request)
     {
         $user_id = $request->user_id;   // Replace with the actual user ID
         $film_id = $request->film_id; // Replace with the actual video ID
@@ -71,7 +72,7 @@ class UserController extends Controller
         }
     }
 
-    public function createRating(Request $request)
+    public function rateFilm(Request $request)
     {
         $user_id = $request->user_id;   // Replace with the actual user ID
         $film_id = $request->film_id; // Replace with the actual film ID
@@ -112,6 +113,20 @@ class UserController extends Controller
         }
     }
 
+    function updateCategory(Request $request)
+    {
+        // ham goi khi update profile
+    }
+
+    public function addFilmToHistory(Request $request)
+    {
+    }
+
+    public function getUserHistory()
+    {
+        // identify user
+        $user = Auth::user();
+    }
     /**
      * View user's history for a film.
      */
@@ -145,11 +160,18 @@ class UserController extends Controller
                 'user_id' => $user_id,
                 'film_id' => $film_id,
             ]);
+    public function getAllSubcriptions()
+    {
+    }
 
             return response()->json(['message' => 'Favorite added']);
         }
 
 
         return response()->json(['message' => 'History added']);
+    }
+}
+    public function getAllFavorites()
+    {
     }
 }

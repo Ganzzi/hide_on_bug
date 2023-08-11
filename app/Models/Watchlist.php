@@ -12,17 +12,18 @@ class WatchList extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
+        'watch_list_name',
     ];
 
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id')->onDelete('cascade');
+        return $this->belongsTo(User::class, 'user_id')->onDelete('cascade');
     }
 
     public function films()
     {
-        return $this->belongsToMany(Film::class, 'watch_list_films', 'watchlist_id', 'film_id')->withTimestamps();
+        return $this->belongsToMany(Film::class, 'watch_list_films', 'watch_list_id', 'film_id')->withTimestamps();
     }
 }

@@ -12,9 +12,9 @@ class Film extends Model
     protected $fillable = [
         'stream_service_provider_id',
         'film_name',
-        'film_thumbnail',
-        'film_desc',
+        'film_poster',
         'video',
+        'premiere_date',
     ];
 
     public function favoritedByUsers()
@@ -29,11 +29,16 @@ class Film extends Model
 
     public function watchlists()
     {
-        return $this->belongsToMany(Watchlist::class, 'watch_list_films', 'film_id', 'watchlist_id')->withTimestamps();
+        return $this->belongsToMany(Watchlist::class, 'watch_list_films', 'film_id', 'watch_list_id')->withTimestamps();
     }
 
     public function serviceProvider()
     {
-        return $this->belongsTo(StreamServiceProvider::class, 'service_id')->onDelete('cascade');
+        return $this->belongsTo(StreamServiceProvider::class, 'stream_service_provider_id')->onDelete('cascade');
+    }
+
+    public function ratedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'ratings', 'film_id', 'user_id')->withPivot('rating')->withTimestamps();
     }
 }

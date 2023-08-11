@@ -16,61 +16,65 @@ class UsersSeeder extends Seeder
         User::create([
             'id' => 1,
             'role_id' => 1,
-            'fullname' => 'Nguyen',
             'name' => 'admin',
-            'password' => bcrypt('admin123'),
             'email' => 'admin@gmail.com',
+            'password' => bcrypt('admin123'),
             'balance' => 10000,
+            'phone_number' => '6767371231231',
             'created_at' => now(),
             'updated_at' => now(),
+            'image' => 'abd.png'
         ]);
 
         User::create([
             'id' => 2,
             'role_id' => 2,
-            'fullname' => 'Le nguyen',
             'name' => 'Jane Smith',
-            'password' => bcrypt('user123'),
             'email' => 'user1@gmail.com',
+            'password' => bcrypt('user123'),
             'balance' => 10000,
+            'phone_number' => '099839123233',
             'created_at' => now(),
             'updated_at' => now(),
+            'image' => 'abd.png'
         ]);
 
         User::create([
             'id' => 3,
             'role_id' => 2,
-            'fullname' => 'Tran thi',
             'name' => 'John',
-            'password' => bcrypt('user123'),
             'email' => 'user2@gmail.com',
+            'password' => bcrypt('user123'),
             'balance' => 10000,
+            'phone_number' => '123125514213',
             'created_at' => now(),
             'updated_at' => now(),
+            'image' => 'abd.png'
         ]);
 
         User::create([
             'id' => 4,
             'role_id' => 2,
-            'fullname' => 'Jayson',
             'name' => 'Anna',
             'password' => bcrypt('user123'),
             'email' => 'user3@gmail.com',
             'balance' => 10000,
+            'phone_number' => '213214214',
             'created_at' => now(),
             'updated_at' => now(),
+            'image' => 'abd.png'
         ]);
 
         User::create([
             'id' => 5,
             'role_id' => 2,
-            'fullname' => 'Le Tran',
             'name' => 'Louis',
             'password' => bcrypt('user123'),
             'email' => 'user4@gmail.com',
             'balance' => 100,
             'created_at' => now(),
             'updated_at' => now(),
+            'image' => 'abd.png'
         ]);
     }
 }

@@ -24,7 +24,8 @@ class User extends Authenticatable
         'image',
         'bio',
         'gender',
-        'lock'
+        'balance',
+        'phone_number'
     ];
 
     /**
@@ -53,17 +54,17 @@ class User extends Authenticatable
 
     public function favoritings()
     {
-        return $this->belongsToMany(Film::class)->withPivot('favorites')->onDelete('cascade');
+        return $this->belongsToMany(Film::class, 'favorites', 'user_id', 'film_id')->onDelete('cascade');
     }
 
     public function subcribings()
     {
-        return $this->belongsToMany(StreamServiceProvider::class)->withPivot('billing_amount', 'subscribe_end')->onDelete('cascade');
+        return $this->belongsToMany(StreamServiceProvider::class, 'subscriptions', 'user_id', 'provider_id')->withPivot('billing_amount', 'expire_date')->onDelete('cascade');
     }
 
     public function ratings()
     {
-        return $this->belongsToMany(Film::class)->withPivot('star')->onDelete('cascade');
+        return $this->belongsToMany(Film::class, 'ratings', 'user_id', 'film_id')->withPivot('rating')->onDelete('cascade');
     }
 
     public function watchListFilms()

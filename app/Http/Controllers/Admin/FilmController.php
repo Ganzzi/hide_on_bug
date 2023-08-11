@@ -42,8 +42,8 @@ class FilmController extends Controller
         if ($request->hasFile('video')) {
             $uploadedVideo = $request->file('video');
             $videoName = $uploadedVideo->getClientOriginalName();
-            $videoPath = $uploadedVideo->storeAs('public/videos', $videoName);
-            $data['video'] = $videoPath;
+            //$videoPath = $uploadedVideo->storeAs('public/videos', $videoName);
+            $data['video'] = $videoName;
         }
 
         $film = new Film;

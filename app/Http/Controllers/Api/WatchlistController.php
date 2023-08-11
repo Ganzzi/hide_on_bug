@@ -77,7 +77,8 @@ class WatchlistController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(String $id)
+    // anh nhan lam lai, get tat ca film thuoc ve watch list
+    public function show(string $id)
     {
         $watchlists = Watchlist::findOrFail($id);
         return response()->json([$watchlists]);
@@ -123,7 +124,7 @@ class WatchlistController extends Controller
     public function destroy($id)
     {
         $watchlist = Watchlist::findOrFail($id);
-        
+
         if (!$watchlist) {
             return response()->json([
                 'status' => 404,
@@ -135,5 +136,10 @@ class WatchlistController extends Controller
             'status' => 200, // Đã sửa từ 404 thành 200
             'message' => 'watchlist deleted successfully'
         ], 200);
+    }
+
+    // function to add or delete a film to watch list
+    public function add_or_delete_film_to_watch_list(Request $request)
+    {
     }
 }

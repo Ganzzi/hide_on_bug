@@ -9,8 +9,12 @@ class Categories extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'cate_name',
+    ];
+
     public function films()
     {
-        return $this->BelongsToMany(Film::class)->withPivot('')->onDelete('cascade');
+        return $this->BelongsToMany(Film::class, 'film_categories', 'category_id', 'film_id')->onDelete('cascade');
     }
 }

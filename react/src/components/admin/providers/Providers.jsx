@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 import { formatDateTime } from "../../../utils/index.js";
@@ -8,6 +9,8 @@ export default function Providers() {
     const [providers, setProviders] = useState([]);
     const [loading, setLoading] = useState(false);
     const { setAlerts } = useStateContext();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         getProviders();
@@ -18,6 +21,36 @@ export default function Providers() {
             return;
         }
         // Rest of your delete logic
+        try {
+            const response = await axiosClient.delete(
+                `/admin/providers/${providerId}`
+            );
+            if (response.status === 200) {
+                // Remove the deleted provider from the providers state
+                setProviders((prevProviders) =>
+                    prevProviders.filter(
+                        (provider) => provider.id !== providerId
+                    )
+                );
+                setAlerts([
+                    {
+                        type: "success",
+                        message: "Provider deleted successfully",
+                    },
+                ]);
+            } else {
+                setAlerts([
+                    { type: "error", message: "Failed to delete provider" },
+                ]);
+            }
+        } catch (error) {
+            setAlerts([
+                {
+                    type: "error",
+                    message: "An error occurred while deleting provider",
+                },
+            ]);
+        }
     };
 
     const getProviders = async () => {
@@ -26,7 +59,7 @@ export default function Providers() {
             .get("/admin/providers")
             .then(({ data }) => {
                 setLoading(false);
-                setProviders(data.data); // Assuming the API response structure contains a "data" field
+                setProviders(data);
             })
             .catch(() => {
                 setLoading(false);
@@ -35,66 +68,124 @@ export default function Providers() {
 
     return (
         <div>
-            <div>
-                <h1>Providers</h1>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                <h1
+                    style={{
+                        fontFamily: "fantasy",
+                        justifycontent: "space-between",
+                    }}
+                ></h1>
                 <Link className="btn-add" to="/admin/providers/new">
                     Add new
                 </Link>
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>
-                <table>
-                    <thead>
+                <table
+                    className=""
+                    style={{ with: "100%", paddingRight: "3rem" }}
+                >
+                    <thead className="thead-dark" style={{ with: "100%" }}>
                         <tr>
-                            <th>ID</th>
-                            <th>Logo</th>
-                            <th>Name</th>
-                            <th>Created Date</th>
+                            <th style={{ paddingRight: "4rem" }}>ID</th>
+                            <th style={{ paddingRight: "4rem" }}>
+                                Service Name
+                            </th>
+                            <th style={{ paddingRight: "4rem" }}>Logo</th>
+                            <th style={{ paddingRight: "4rem" }}>Users</th>
+                            <th style={{ paddingRight: "4rem" }}>Films</th>
+                            <th style={{ paddingRight: "4rem" }}>
+                                Create Date
+                            </th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {loading ? (
+                    {loading && (
+                        <tbody>
                             <tr>
                                 <td colSpan="5" className="text-center">
                                     Loading...
                                 </td>
                             </tr>
-                        ) : (
-                            providers.map((_provider) => (
+                        </tbody>
+                    )}
+                    {!loading && (
+                        <tbody>
+                            {providers.map((_provider) => (
                                 <tr key={_provider.id}>
                                     <td>{_provider.id}</td>
+                                    <td>{_provider.service_name}</td>
                                     <td>
                                         <img
                                             src={
-                                                `${import.meta.env.VITE_BASE_URL}/admin/images/` +
-                                                _provider.logo
+                                                `${
+                                                    import.meta.env
+                                                        .VITE_BASE_URL
+                                                }/images/` + _provider.logo
                                             }
                                             width={50}
                                             height={50}
                                             alt=""
                                         />
                                     </td>
-                                    <td>{_provider.service_name}</td>
-                                    <td>{formatDateTime(_provider.created_at)}</td>
-                                    <td>
-                                        <Link
-                                            className="btn-edit"
-                                            to={`/admin/providers/${_provider.id}/edit`} // Định hướng đến URL của trang EditForm
-                                        >
-                                            Edit
-                                        </Link>{" "}
+                                    <td>{_provider.users.length} subcribers</td>
+                                    <td
+                                        onClick={() => {
+                                            navigate(
+                                                `/admin/providers/${_provider.id}/films`,
+                                                {
+                                                    state: {
+                                                        films: _provider.films,
+                                                        providerId:
+                                                            _provider.id,
+                                                        service_name:
+                                                            _provider.service_name,
+                                                    },
+                                                }
+                                            );
+                                        }}
+                                    >
+                                        {_provider.films.length} films
+                                    </td>
 
-                                        <button
-                                            className="btn-delete"
-                                            onClick={() => onDeleteClick(_provider.id)}
-                                        >
-                                            Delete
-                                        </button>
+                                    <td>
+                                        {formatDateTime(_provider.created_at)}
+                                    </td>
+                                    <td>
+                                        {_provider.role_id != 1 && (
+                                            <>
+                                                <Link
+                                                    className="btn-edit"
+                                                    to={
+                                                        "/admin/providers/" +
+                                                        _provider.id
+                                                    }
+                                                >
+                                                    Edit
+                                                </Link>
+                                                &nbsp;
+                                                <button
+                                                    className="btn-delete"
+                                                    onClick={() =>
+                                                        onDeleteClick(
+                                                            _provider.id
+                                                        )
+                                                    }
+                                                >
+                                                    Delete
+                                                </button>
+                                            </>
+                                        )}
                                     </td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
+                            ))}
+                        </tbody>
+                    )}
                 </table>
             </div>
         </div>
