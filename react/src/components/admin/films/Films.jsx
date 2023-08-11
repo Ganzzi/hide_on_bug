@@ -16,8 +16,8 @@ export default function Providers() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setFilms(location.state.films);
-        setProviderId(location.state.providerId);
+        setFilms(location?.state.films);
+        setProviderId(location?.state.providerId);
         setService_name(location.state.service_name);
     }, []);
 
@@ -31,6 +31,7 @@ export default function Providers() {
                 message: "Provider was successfully deleted",
                 time: new Date(),
             });
+            navigate(`/admin/providers/${providerId}`);
         });
     };
 
@@ -57,16 +58,6 @@ export default function Providers() {
                 >
                     Add new
                 </button>
-                {/* <Link
-                    className="btn-add"
-                    to={`/admin/providers/${providerId}/films/new`}
-                    state={{
-                        providerId: providerId,
-                        service_name: service_name,
-                    }}
-                >
-                    Add new
-                </Link> */}
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>
                 <table
@@ -78,6 +69,9 @@ export default function Providers() {
                             <th style={{ paddingRight: "7rem" }}>ID</th>
                             <th style={{ paddingRight: "7rem" }}>Image</th>
                             <th style={{ paddingRight: "7rem" }}>Film Name</th>
+                            <th style={{ paddingRight: "7rem" }}>
+                                Premiere Date
+                            </th>
                             <th style={{ paddingRight: "7rem" }}>
                                 Create Date
                             </th>
@@ -104,7 +98,8 @@ export default function Providers() {
                                                 `${
                                                     import.meta.env
                                                         .VITE_BASE_URL
-                                                }/api/images/` + _film.image
+                                                }/api/images/` +
+                                                _film.film_poster
                                             }
                                             width={50}
                                             height={50}
@@ -112,6 +107,10 @@ export default function Providers() {
                                         />
                                     </td>
                                     <td>{_film.film_name}</td>
+                                    <td>
+                                        {" "}
+                                        {formatDateTime(_film.premiere_date)}
+                                    </td>
                                     <td> {formatDateTime(_film.created_at)}</td>
                                     <td>
                                         <button

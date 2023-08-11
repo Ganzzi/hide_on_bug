@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/logout", [Auth::class, 'logout']);
     Route::post("/update_rating", [ApiUserController::class, 'rateFilm']);
     Route::post("/update_favorite", [ApiUserController::class, 'favoriteFilm']);
+    Route::post("/create_delete__history", [UserController::class, 'updateHistory']);
     Route::apiResource('/watchlists', ApiWatchlistController::class);
 
     // not done
@@ -48,18 +49,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);
     Route::get('/getSubcriptions', [ApiUserController::class, 'getAllSubcriptions']);
-    Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
     Route::post("/update_history", [ApiUserController::class, 'addFilmToHistory']);
-
+    
+    Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
+    Route::post("/update_rating", [UserController::class, 'createRating']);
     Route::get("/providers/{providerId}", [ProviderController::class, 'show']);
     Route::post("/subcribe", [ProviderController::class, 'subcribeToProvider']);
-    Route::post("/pay_subcription", [ProviderController::class, 'paySubcription']);
 
 
     // api routes for admin
+    Route::get('/admin/categories', [AdminFilmController::class, 'getCategories']);
     Route::apiResource('/admin/users', AdminUserController::class);
     Route::apiResource('/admin/providers', AdminProviderController::class);
+    Route::post('/admin/provider_update/{id}', [AdminProviderController::class, 'update_provider']);
     Route::apiResource('/admin/films', AdminFilmController::class);
+    Route::post('/admin/film_update/{id}', [AdminFilmController::class, 'update_film']);
 });
 
 // routes for signup, login
@@ -92,3 +96,22 @@ Route::get('/videos/{filename}', function ($filename) {
 
     return response($file)->header('Content-Type', $type);
 });
+
+Route::post('/upload-video', function (Request $request) {
+    $request->validate([
+        'video' => 'nullable|mimetypes:video/*|max:20480',
+    ]);
+
+    if ($request->hasFile('video')) {
+        $uploadedVideo = $request->file('video');
+        $videoPath = $uploadedVideo->store('public/videos');
+
+        return response()->json(['video' => $videoPath]);
+    } else {
+        return response()->json(['message' => 'No video file uploaded'], 400);
+    }
+});
+
+Route::get('/films', [FilmController::class, 'index']);
+// Route::get('/providers', [ProviderController::class, 'index']);
+// Route::post('/providers', [ProviderController::class, 'store']);
