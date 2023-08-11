@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('stream_service_providers')->onDelete('cascade');
-            $table->date('subscript_start');
-            $table->date('subscript_end');
+            $table->date('subscribe_start');
+            $table->date('subscribe_end');
             $table->integer('billing_amount');
             $table->timestamps();
         });
