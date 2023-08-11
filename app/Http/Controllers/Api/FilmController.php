@@ -15,11 +15,16 @@ class FilmController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
 
-        $user_subscription = DB::table('subscriptions')->where('user_id', $user_id)->first();
+        $provider_ids = DB::table('stream_service_providers')->pluck('id')->toArray();
+
+        $user_subscription = DB::table('subscriptions')
+            ->where('user_id', $user_id)
+            ->whereIn('provider_id', $provider_ids) // Sử dụng whereIn để kiểm tra user_subscription với tất cả provider_ids
+            ->first();
 
         if ($user_subscription) {
-            $category_id = $request->input('category_id');
-            $film_id = $request->input('film_id'); // Lấy film_id từ request hoặc cách khác bạn có thể lấy film_id dựa vào logic của mình.
+            $category_id = $request->get('category_id');
+            $film_id = $request->get('film_id'); // Lấy film_id từ request hoặc cách khác bạn có thể lấy film_id dựa vào logic của mình.
 
             $relatedFilmIds = DB::table('film_categories')
                 ->where('category_id', $category_id)
@@ -33,11 +38,13 @@ class FilmController extends Controller
                 ->select('films.*', 'stream_service_providers.provider_name', 'stream_service_providers.provider_logo')
                 ->get();
         } else {
-            $recommends = []; // Không có gợi ý nếu không có subscription
+            $recommends = []; // Không có gợi ý nếu không có subscription cho nhà cung cấp tương ứng
         }
 
         return response()->json(['recommend_films' => $recommends]);
     }
+
+
 
 
     // function for user to watch a film - get provider infor, subcribe, rating, favorite,...
