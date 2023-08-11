@@ -2,24 +2,30 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Watchlist;
+use App\Models\WatchList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class WatchlistController extends Controller
+class WatchListController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $watchlists = Watchlist::all();
-        if ($watchlists->count() > 0) {
+        $user = Auth::user();
+
+        $WatchLists = WatchList::where('user_id', $user->id)->get();
+
+        // $WatchLists = WatchList::all();
+        if ($WatchLists->count() > 0) {
             return response()->json([
                 "status" => 200,
-                "data" => $watchlists,
-                "message" => "Get all watchlists successfully"
+                "data" => $WatchLists,
+                "message" => "Get all WatchLists successfully"
             ], 200);
         } else {
             return response()->json([
@@ -27,7 +33,7 @@ class WatchlistController extends Controller
                 "message" => "No records found"
             ], 404);
         }
-        return response()->json($watchlists);
+        return response()->json($WatchLists);
     }
 
     /**
@@ -48,23 +54,23 @@ class WatchlistController extends Controller
         }
 
         // Kiểm tra xem đã tồn tại bản ghi nào có user_id và service_name tương tự chưa
-        $existingWatchlist = Watchlist::where('name', $request->name)
+        $existingWatchList = WatchList::where('name', $request->name)
             ->first();
 
-        if ($existingWatchlist) {
+        if ($existingWatchList) {
             return response()->json([
                 "status" => 409, // Conflict status code
-                "message" => "watchlist name with the same user and watchlist name already exists"
+                "message" => "WatchList name with the same user and WatchList name already exists"
             ], 409);
         }
 
-        $provider = Watchlist::create($request->all());
+        $provider = WatchList::create($request->all());
 
         if ($provider) {
             return response()->json([
                 "status" => 201,
                 "data" => $provider,
-                "message" => "watchlist name added successfully"
+                "message" => "WatchList name added successfully"
             ], 201);
         } else {
             return response()->json([
@@ -80,8 +86,8 @@ class WatchlistController extends Controller
     // anh nhan lam lai, get tat ca film thuoc ve watch list
     public function show(string $id)
     {
-        $watchlists = Watchlist::findOrFail($id);
-        return response()->json([$watchlists]);
+        $WatchLists = WatchList::with('films')->findOrFail($id);
+        return response()->json([$WatchLists]);
     }
 
     /**
@@ -100,19 +106,19 @@ class WatchlistController extends Controller
                 'errors' => $validator->messages()
             ], 400);
         } else {
-            $watchlist = Watchlist::find($id);
-            if (!$watchlist) {
+            $WatchList = WatchList::find($id);
+            if (!$WatchList) {
                 return response()->json([
                     'status' => 404,
                     'message' => "watch list not found"
                 ], 404);
             }
 
-            $watchlist->update($request->all());
+            $WatchList->update($request->all());
 
             return response()->json([
                 'status' => 200,
-                'data' => $watchlist,
+                'data' => $WatchList,
                 'message' => "Update watch list successfully"
             ], 200);
         }
@@ -123,23 +129,51 @@ class WatchlistController extends Controller
      */
     public function destroy($id)
     {
-        $watchlist = Watchlist::findOrFail($id);
+        $WatchList = WatchList::findOrFail($id);
 
-        if (!$watchlist) {
+        if (!$WatchList) {
             return response()->json([
                 'status' => 404,
                 'message' => 'no record found'
             ], 404);
         }
-        $watchlist->delete();
+        $WatchList->delete();
         return response()->json([
             'status' => 200, // Đã sửa từ 404 thành 200
-            'message' => 'watchlist deleted successfully'
+            'message' => 'WatchList deleted successfully'
         ], 200);
     }
 
     // function to add or delete a film to watch list
     public function add_or_delete_film_to_watch_list(Request $request)
     {
+        $film_id = $request->film_id;  // Replace with the actual film ID
+        $watch_list_id = $request->watch_list_id;
+
+
+        $existingFilm = DB::table('watch_list_films')
+            ->where('watch_list_id', $watch_list_id)
+            ->where('film_id', $film_id)
+            ->first();
+
+        if ($existingFilm) {
+            // Delete the existing film record from the pivot table
+            DB::table('watch_list_films')
+                ->where('watch_list_id', $watch_list_id)
+                ->where('film_id', $film_id)
+                ->delete();
+
+            return response()->json(['message' => 'Film removed']);
+        } else {
+            // Insert a new film record into the pivot table
+            DB::table('watch_list_films')->insert([
+                'watch_list_id' => $watch_list_id,
+                'film_id' => $film_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return response()->json(['message' => 'Film added']);
+        }
     }
 }
