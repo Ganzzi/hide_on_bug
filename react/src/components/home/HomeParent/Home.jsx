@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { limitText } from '../../../utils';
+import ReactPlayer from "react-player";
 import VideoD from './VideoD';
 const Home = () => {
   const menuRef = useRef(null);
@@ -47,11 +48,10 @@ const Home = () => {
 <div className="row row-cols-3 g-3">
   <div className="col">
     <div className="card">
-      <img
-        src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"
-        className="card-img-top"
-        alt="Hollywood Sign on The Hill"
-      />
+    <ReactPlayer className="video_home"
+                    url="https://youtu.be/OXO_iPk0hg0"
+                    controls
+                />
       <div className="card-body">
         <h5 className="card-title">Card title</h5>
         <p className="card-text">
@@ -62,11 +62,11 @@ const Home = () => {
   </div>
   <div className="col">
     <div className="card">
-      <img
-        src="https://mdbcdn.b-cdn.net/img/new/standard/city/042.webp"
-        className="card-img-top"
-        alt="Palm Springs Road"
-      />
+  
+    <ReactPlayer className="video_home"
+                    url="http://127.0.0.1:8000/api/videos/video1.mp4"
+                    controls
+                />
       <div className="card-body">
         <h5 className="card-title">Card title</h5>
         <p className="card-text">
