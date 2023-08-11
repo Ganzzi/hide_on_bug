@@ -44,7 +44,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::apiResource('/admin/films', FilmController::class);
-    Route::resource('/admin/providers', ProviderController::class);
+    //Route::resource('/admin/providers', ProviderController::class);
+    // Route::get('/providers', [ProviderController::class, 'index']);
+    // Route::post('/providers', [ProviderController::class, 'store']);
+    // Route::post("admin/providers/{id}", [ProviderController::class, "update"]);
+    Route::get("admin/providers", [ProviderController::class, "index"]);
+    // Route::post("admin/providers", [ProviderController::class, "store"]);
+    // Route::delete("admin/providers/{id}", [ProviderController::class, "delete"]);
+    Route::post("admin/providers/{id}", [ProviderController::class, "update"]);
     Route::resource('/admin/watchlists', WatchlistController::class);
 });
 

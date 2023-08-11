@@ -66,7 +66,7 @@ export default function Providers() {
                                     <td>
                                         <img
                                             src={
-                                                `${import.meta.env.VITE_BASE_URL}/admin/images/` +
+                                                `${import.meta.env.VITE_BASE_URL}/images/` +
                                                 _provider.logo
                                             }
                                             width={50}
