@@ -44,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/watchlist_add_delete_film', [ApiWatchlistController::class, 'add_or_delete_film_to_watch_list']);
     Route::get('/films/{filmId}', [ApiFilmController::class, "watchFilm"]);
     Route::post('/films',  [ApiFilmController::class,  "searchFilm"]);
-    Route::post('/recommended_films/{filmId}',  [ApiFilmController::class,  "getRecommendFilms"]);
+    Route::post('/recommended_films',  [ApiFilmController::class,  "getRecommendFilms"]);
     //
 
     Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);

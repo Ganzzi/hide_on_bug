@@ -10,21 +10,42 @@ use Illuminate\Support\Facades\Auth;
 
 class FilmController extends Controller
 {
-    public function getRecommendFilms(Request $request, $film_id)
+    public function getRecommendFilms(Request $request)
     {
-        $category_id = $request->category_id;
+        $user = Auth::user();
+        $user_id = $user->id;
 
-        $relatedFilmIds = DB::table('film_categories')
-            ->where('category_id', $category_id)
-            ->where('film_id', '!=', $film_id) // Exclude the current film
-            ->pluck('film_id'); // Get an array of related film IDs
+        $provider_ids = DB::table('stream_service_providers')->pluck('id')->toArray();
 
-        $recommends = DB::table('films')
-            ->whereIn('id', $relatedFilmIds)
-            ->get();
+        $user_subscription = DB::table('subscriptions')
+            ->where('user_id', $user_id)
+            ->whereIn('provider_id', $provider_ids) // Sử dụng whereIn để kiểm tra user_subscription với tất cả provider_ids
+            ->first();
+
+        if ($user_subscription) {
+            $category_id = $request->get('category_id');
+            $film_id = $request->get('film_id'); // Lấy film_id từ request hoặc cách khác bạn có thể lấy film_id dựa vào logic của mình.
+
+            $relatedFilmIds = DB::table('film_categories')
+                ->where('category_id', $category_id)
+                ->where('film_id', '!=', $film_id)
+                ->pluck('film_id')
+                ->toArray();
+
+            $recommends = DB::table('films')
+                ->join('stream_service_providers', 'films.stream_service_provider_id', '=', 'stream_service_providers.id')
+                ->whereIn('films.id', $relatedFilmIds)
+                ->select('films.*', 'stream_service_providers.provider_name', 'stream_service_providers.provider_logo')
+                ->get();
+        } else {
+            $recommends = []; // Không có gợi ý nếu không có subscription cho nhà cung cấp tương ứng
+        }
 
         return response()->json(['recommend_films' => $recommends]);
     }
+
+
+
 
     // function for user to watch a film - get provider infor, subcribe, rating, favorite,...
     // public function watchFilm($filmId)
