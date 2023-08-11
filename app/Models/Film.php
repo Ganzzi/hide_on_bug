@@ -29,7 +29,7 @@ class Film extends Model
 
     public function watchlists()
     {
-        return $this->belongsToMany(Watchlist::class, 'watch_list_films', 'film_id', 'watch_list_id')->withTimestamps();
+        return $this->belongsToMany(WatchList::class, 'watch_list_films', 'film_id', 'watch_list_id')->withTimestamps();
     }
 
     public function serviceProvider()

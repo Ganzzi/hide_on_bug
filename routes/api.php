@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/logout", [Auth::class, 'logout']);
     Route::post("/update_rating", [ApiUserController::class, 'rateFilm']);
     Route::post("/update_favorite", [ApiUserController::class, 'favoriteFilm']);
+    Route::post("/create_delete__history", [UserController::class, 'updateHistory']);
 
     // not done
     Route::post("/update_profile", [ApiUserController::class, 'update']);
@@ -47,14 +48,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);
     Route::get('/getSubcriptions', [ApiUserController::class, 'getAllSubcriptions']);
-    Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
     Route::post("/update_history", [ApiUserController::class, 'addFilmToHistory']);
-
+    
+    Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
     Route::post("/update_rating", [UserController::class, 'createRating']);
-    Route::post("/create_delete__history", [UserController::class, 'updateHistory']);
     Route::get("/providers/{providerId}", [ProviderController::class, 'show']);
     Route::post("/subcribe", [ProviderController::class, 'subcribeToProvider']);
-    Route::post("/pay_subcription", [ProviderController::class, 'paySubcription']);
 
 
     // api routes for admin
