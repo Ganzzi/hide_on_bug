@@ -241,15 +241,23 @@ class ProviderController extends Controller
 
         return response()->json($providers);
     }
+
+    public function show($id)
+    {
+        $providers = StreamServiceProvider::find($id);
+
+        return response($providers);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'service_name' => 'required',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'provider_name' => 'required',
+            'provider_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         $providers = new StreamServiceProvider();
-        $providers->service_name = $request->service_name;
-        // $providers->logo = $request->logo;
+        $providers->provider_name = $request->provider_name;
+
         if ($validator->fails()) {
             return response()->json(
                 [
@@ -259,11 +267,11 @@ class ProviderController extends Controller
                 400
             );
         } else {
-            if ($request->hasFile('logo')) {
-                $image = $request->file('logo');
+            if ($request->hasFile('provider_logo')) {
+                $image = $request->file('provider_logo');
                 $imageName =  $image->getClientOriginalName();
                 $image->move(public_path('images'), $imageName);
-                $providers->logo = $imageName;
+                $providers->provider_logo = $imageName;
             }
             $providers->save();
             if ($providers) {
@@ -295,8 +303,8 @@ class ProviderController extends Controller
                 "message" => "No record found"
             ], 404);
         }
-        if ($provider->logo) {
-            $destination = public_path($provider->logo);
+        if ($provider->provider_logo) {
+            $destination = public_path($provider->provider_logo);
             if (File::exists($destination)) {
                 File::delete($destination);
             }
@@ -307,7 +315,7 @@ class ProviderController extends Controller
             "message" => "provider deleted successfully"
         ], 200);
     }
-    public function update(Request $request, $id)
+    public function update_provider(Request $request, $id)
     {
         $providers = StreamServiceProvider::find($id);
         if (!$providers) {
@@ -317,10 +325,9 @@ class ProviderController extends Controller
             ], 404);
         }
         $validator = null;
-        if ($request->image) {
+        if ($request->provider_logo) {
             $validator = Validator::make($request->all(), [
-                'service_name' => 'required',
-                'price' => 'required|numeric',
+                'provider_name' => 'required',
             ]);
         } else {
             $validator = Validator::make($request->all(), [
@@ -329,7 +336,7 @@ class ProviderController extends Controller
             ]);
         }
 
-        $providers->service_name = $request->service_name;
+        $providers->provider_name = $request->provider_name;
         if ($validator->fails()) {
             return response()->json(
                 [
@@ -339,17 +346,17 @@ class ProviderController extends Controller
                 400
             );
         } else {
-            if ($request->hasFile('logo')) {
-                if ($providers->logo) {
-                    $destination = public_path($providers->logo);
+            if ($request->hasFile('provider_logo')) {
+                if ($providers->provider_logo) {
+                    $destination = public_path($providers->provider_logo);
                     if (File::exists($destination)) {
                         File::delete($destination);
                     }
                 }
-                $logo = $request->file('logo');
-                $imageName = $logo->getClientOriginalName();
-                $logo->move(public_path('images'), $imageName);
-                $providers->logo = $imageName;
+                $provider_logo = $request->file('provider_logo');
+                $imageName = $provider_logo->getClientOriginalName();
+                $provider_logo->move(public_path('images'), $imageName);
+                $providers->provider_logo = $imageName;
             }
             $providers->save();
             if ($providers) {

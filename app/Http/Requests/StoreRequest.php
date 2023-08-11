@@ -22,11 +22,10 @@ class StoreRequest extends FormRequest
         return [
             'stream_service_provider_id' => 'required',
             'film_name' => 'required|string',
-            'film_thumbnail' => 'required|string',
-            'film_desc' => 'required|string',
+            'film_poster' => 'required|image',
             'video' => 'required|mimetypes:video/*|max:20480',
-            // 'cate_id' => 'required|array'
-
+            'premiere_date' => 'required|date',
+            'categories' => 'nullable'
         ];
     }
 }

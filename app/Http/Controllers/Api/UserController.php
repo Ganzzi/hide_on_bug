@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Film;
 use App\Models\User;
+use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -119,16 +121,96 @@ class UserController extends Controller
 
     public function addFilmToHistory(Request $request)
     {
+        $user = Auth::user();
+        $film_id = $request->film_id;
+
+        // Check if the film already exists in the user's history
+        $existingHistory = DB::table('histories')
+            ->where('user_id', $user->id)
+            ->where('film_id', $film_id)
+            ->first();
+
+        if ($existingHistory) {
+            // Delete the existing history entry
+            DB::table('histories')
+                ->where('id', $existingHistory->id)
+                ->delete();
+        }
+
+        // Create a new history entry
+        DB::table('histories')->insert([
+            'user_id' => $user->id,
+            'film_id' => $film_id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['message' => 'Film added to history'], 201);
     }
 
     public function getUserHistory()
     {
         // identify user
         $user = Auth::user();
+
+        // Retrieve user's history from the database
+        $userHistory = DB::table('histories')
+            ->where('user_id', $user->id)
+            ->get();
+
+        return response()->json(['user_history' => $userHistory], 200);
+    }
+    /**
+     * View user's history for a film.
+     */
+    public function updateHistory(Request $request)
+    {
+        $user_id = $request->user_id;   // Replace with the actual user ID
+        $film_id = $request->film_id; // Replace with the actual film ID
+
+        // Validate the input
+        $request->validate([
+            'user_id' => 'required',
+            'film_id' => 'required',
+        ]);
+
+        $exists = DB::table('histories')
+            ->where('user_id', $user_id)
+            ->where('film_id', $film_id)
+            ->exists();
+
+        if ($exists) {
+            // Delete the record from the pivot table
+            DB::table('histories')
+                ->where('user_id', $user_id)
+                ->where('film_id', $film_id)
+                ->delete();
+
+            return response()->json(['message' => 'Favorite removed']);
+        } else {
+            // Insert a new record into the pivot table
+            DB::table('histories')->insert([
+                'user_id' => $user_id,
+                'film_id' => $film_id,
+            ]);
+        }
+
+
+        return response()->json(['message' => 'History added']);
     }
 
     public function getAllSubcriptions()
     {
+        // identify user
+        $user = Auth::user();
+
+        // Retrieve all subscriptions for the user from the database
+        $subscriptions = DB::table('subscriptions')
+            ->where('user_id', $user->id)
+            ->select('provider_id', 'expire_date', 'billing_amount', 'created_at', 'updated_at')
+            ->get();
+
+        return response()->json(['subscriptions' => $subscriptions], 200);
     }
 
     public function getAllFavorites()

@@ -5,7 +5,7 @@ import { limitText } from '../../../utils';
 const Subcribed = () => {
   return (
     <div className="home-container "> 
-    <div className="d-flex flex-column  justify-content-center  my-3 rounded-top ">
+    <div className="d-flex flex-column  justify-content-center  my-3 rounded-top backgr ">
        <div className="d-flex flex-row  m-3">
     <img  className="ChannelImg border border-info shadow p-2 bg-light "
         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNVmFP2QMAnHxPCyCH442oXwKJeT5ey44L4hMZjPeK0Wi6au6gkagBcXO_QTx4ZdQviAA&usqp=CAU"
@@ -31,7 +31,7 @@ const Subcribed = () => {
     </div>
 </div>
  
-<div className="d-flex flex-column  justify-content-center align-items-center my-3 rounded-top z-index">
+<div className="d-flex flex-column  justify-content-center align-items-center my-3 rounded-top z-index backgr">
 <h3 className="mt-4 text-light lead">Videos</h3>
        {/* card  */}
 <div className="row row-cols-4 g-2 m-3">
