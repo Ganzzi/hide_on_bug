@@ -15,6 +15,7 @@ import {
     FilmForm,
     Filmss,
     Video,
+    Contact,
 } from "./components";
 import { Dashboard, GuestPage, HomePage } from "./pages";
 import { Navigation } from "react-minimal-side-navigation";
@@ -60,9 +61,15 @@ const router = createBrowserRouter([
                 element: <Profile />,
             },
             {
+                path: "/contact",
+                element: <Contact />,
+            },
+            
+            {
                 path: "/subcribed/:providerId",
                 element: <Subcribed />,
             },
+           
             {
                 path: "/video/:videoId",
                 element: <Video />,

@@ -21,6 +21,10 @@ import Update from "./home/Profile/Update";
 import Subcribed from "./home/Subcribed/Subcribed";
 import UpdateProfileModal from "./home/Profile/UpdateProfileModal";
 import Video from "./home/video/Video";
+import Contact from "./home/Contact";
+
+
+
 
 export {
   Login,
@@ -43,4 +47,5 @@ export {
   FilmForm,
   Filmss,
   UpdateProfileModal,
+  Contact,
 };

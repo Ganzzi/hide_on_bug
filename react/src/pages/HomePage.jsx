@@ -14,6 +14,11 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 
+ 
+
+
+ 
+
 
 
 export default function Homescreen() {
@@ -78,27 +83,13 @@ export default function Homescreen() {
         return <Navigate to={"/admin"} />;
     }
 
-    // function to logout
-    const onLogout = async (ev) => {
-        ev.preventDefault();
-
-        await axiosClient
-            .post("/logout")
-            .then(() => {
-                setToken(null);
-                setUser({});
-            })
-            .catch((err) => {
-                console.log(err);
-                setToken(null);
-                setUser({});
-            });
-    };
+    
 
     return (
         <div id="homeLayout" className="">
             {/* Home Page Header */}
             <Header />
+            
             <div className="container-fluid"> 
             <div className="row">
                 <div className="sideBar-Home col-3 d-flex flex-column">
@@ -136,10 +127,16 @@ export default function Homescreen() {
                         <h5 className="text-center"> Privacy & Contact </h5>
                         <div class="d-flex flex-column bd-highlight mb-3">
                           
-                                <div class="p-2 bd-highlight">Contact Us</div> 
-                            <div class="p-2 bd-highlight">Site Map</div> 
-                            <div class="p-2 bd-highlight">HotLine: +0123256789</div> 
-                            <div class="p-2 bd-highlight">Address: 590 CMT8 Distric 3</div> 
+                              <a href="" className="text-decoration-none">  <div class="p-2 bd-highlight" onClick={() => {
+                            navigate('contact')
+                        }}>Contact Us</div> </a> 
+                            <div className="p-2 bd-highlight">HotLine: +0123256789</div> 
+                            <div className="p-2 bd-highlight">Address: 590 CMT8 District 3</div> 
+                            <div className="mt-3"><p> © 2023 StreamTrace, Inc. All Rights Reserved</p></div> 
+
+                          
+                            
+
 
                         </div>
 
