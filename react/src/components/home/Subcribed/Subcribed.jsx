@@ -3,7 +3,8 @@ import { formatDateTime, limitText } from "../../../utils";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../../utils/axios";
 
-const Subcribed = () => {
+const Subcribed = () =>
+{
     const { providerId } = useParams();
     const [provider, setProvider] = useState(null);
     const [films, setfilms] = useState([]);
@@ -13,11 +14,14 @@ const Subcribed = () => {
     const [expireDate, setExpireDate] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const getWatlistVideo = async () => {
+    useEffect(() =>
+    {
+        const getWatlistVideo = async () =>
+        {
             await axiosClient
                 .get(`providers/${providerId}`)
-                .then(({ data }) => {
+                .then(({ data }) =>
+                {
                     setProvider(data.provider);
                     setfilms(data.films);
                     setSubscribed(data.subscribed);
@@ -30,7 +34,8 @@ const Subcribed = () => {
         getWatlistVideo();
     }, [providerId]);
 
-    const formatDate = (date) => {
+    const formatDate = (date) =>
+    {
         if (!date) return "";
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -38,12 +43,14 @@ const Subcribed = () => {
         return `${year}-${month}-${day}`;
     };
 
-    const handleExtendSubscription = async () => {
+    const handleExtendSubscription = async () =>
+    {
         await axiosClient
             .post("updatepay", {
                 provider_id: providerId,
             })
-            .then(() => {
+            .then(() =>
+            {
                 const newExpireDate = new Date(expireDate);
                 newExpireDate.setMonth(newExpireDate.getMonth() + 1);
                 // console.log(newExpireDate);
@@ -51,13 +58,16 @@ const Subcribed = () => {
             });
     };
 
-    const handleSubscribeOrUnSubcribe = async () => {
+    const handleSubscribeOrUnSubcribe = async () =>
+    {
         await axiosClient
             .post("subcribeOrUnsubcribe", {
                 provider_id: providerId,
             })
-            .then(() => {
-                if (subscribed) {
+            .then(() =>
+            {
+                if (subscribed)
+                {
                     setExpireDate(expireDateCurrent);
                 }
                 setSubscribed(!subscribed);
@@ -76,7 +86,7 @@ const Subcribed = () => {
                     <img
                         className="ChannelImg border border-info shadow p-2 bg-light "
                         src={
-                            `http://127.0.0.1:8000/api/images/` +
+                            `http://127.0.0.1:8001/api/images/` +
                             provider?.provider_logo
                         }
                         alt=""
@@ -142,7 +152,7 @@ const Subcribed = () => {
                                 <div className="card">
                                     <img
                                         src={
-                                            `http://127.0.0.1:8000/api/images/` +
+                                            `http://127.0.0.1:8001/api/images/` +
                                             film?.film_poster
                                         }
                                         className="card-img-top"

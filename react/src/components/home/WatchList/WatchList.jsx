@@ -4,20 +4,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import axiosClient from "../../../utils/axios";
 import { useNavigate, useParams } from "react-router-dom";
-const WatchList = () => {
+
+
+const WatchList = () =>
+{
     const { watchlistId } = useParams();
     const navigate = useNavigate();
 
     const [sortState, setSortState] = useState("asc");
     const [films, setfilms] = useState([]);
 
-    useEffect(() => {
-        if (sortState == "asc") {
+    useEffect(() =>
+    {
+        if (sortState == "asc")
+        {
             const sortedFilms = films.sort(
                 (a, b) => new Date(a.created_at) - new Date(b.created_at)
             );
             setfilms(sortedFilms);
-        } else {
+        } else
+        {
             const sortedFilmsDescending = films.sort(
                 (a, b) => new Date(b.created_at) - new Date(a.created_at)
             );
@@ -25,11 +31,14 @@ const WatchList = () => {
         }
     }, [sortState]);
 
-    useEffect(() => {
-        const getWatlistVideo = async () => {
+    useEffect(() =>
+    {
+        const getWatlistVideo = async () =>
+        {
             await axiosClient
                 .get(`watchlists/${watchlistId}`)
-                .then(({ data }) => {
+                .then(({ data }) =>
+                {
                     setfilms(data[0].films);
                 });
         };
@@ -45,7 +54,7 @@ const WatchList = () => {
                     {/* Page Heading */}
 
                     <div className="effect">
-                        <h1 contenteditable className="h1_css">
+                        <h1 contentEditable className="h1_css">
                             HISTORY VIDEOS
                         </h1>
                     </div>
@@ -72,7 +81,8 @@ const WatchList = () => {
                     {films.map((film, index) => (
                         <div
                             className="row"
-                            onClick={() => {
+                            onClick={() =>
+                            {
                                 navigate("/video/" + film.id);
                             }}
                         >
@@ -81,7 +91,7 @@ const WatchList = () => {
                                     <img
                                         className="img-fluid rounded mb-3 mb-md-0"
                                         src={
-                                            `http://127.0.0.1:8000/api/images/` +
+                                            `http://127.0.0.1:8001/api/images/` +
                                             film.film_poster
                                         }
                                         alt=""

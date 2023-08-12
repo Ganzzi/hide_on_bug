@@ -4,12 +4,14 @@ import UpdateProfileModal from "./UpdateProfileModal";
 import { useStateContext } from "../../../contexts/ContextProvider";
 import axiosClient from "../../../utils/axios";
 
-const Profile = () => {
+const Profile = () =>
+{
     const [showModal, setShowModal] = useState(false);
 
     const { user } = useStateContext();
 
-    const handleUpdateUser = async (data) => {
+    const handleUpdateUser = async (data) =>
+    {
         await axiosClient
             .post("update_profile", data)
             .then(() => setShowModal(false));
@@ -31,7 +33,7 @@ const Profile = () => {
                                 >
                                     <img
                                         src={
-                                            `http://127.0.0.1:8000/api/images/` +
+                                            `http://127.0.0.1:8001/api/images/` +
                                             user.image
                                         }
                                         alt="Generic placeholder image"

@@ -3,12 +3,9 @@ import ReactPlayer from "react-player";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-<<<<<<< HEAD
+
 import
 {
-=======
-import {
->>>>>>> aa04e2ba62edbc30bd4177e9c3fb48c2e51f3be6
     FaHeart,
     FaRegStar,
     FaStar,
@@ -20,7 +17,8 @@ import { useParams } from "react-router-dom";
 import axiosClient from "../../../utils/axios";
 import RatingModal from "./RatingModal";
 
-function isDateBeforeCurrentDay(dateString) {
+function isDateBeforeCurrentDay (dateString)
+{
     const currentDate = new Date();
     const givenDate = new Date(dateString);
 
@@ -28,7 +26,8 @@ function isDateBeforeCurrentDay(dateString) {
     return givenDate < currentDate;
 }
 
-const Video = () => {
+const Video = () =>
+{
     const { videoId } = useParams();
 
     const [data, setData] = useState({
@@ -53,9 +52,12 @@ const Video = () => {
     const [isFavorited, setIsFavorited] = useState(false);
     const [userRating, setUserRating] = useState(0);
 
-    useEffect(() => {
-        const getVideo = async () => {
-            await axiosClient.get(`/films/${videoId}`).then(({ data }) => {
+    useEffect(() =>
+    {
+        const getVideo = async () =>
+        {
+            await axiosClient.get(`/films/${videoId}`).then(({ data }) =>
+            {
                 setData(data.film);
                 setProviderData(data.provider[0]);
                 setRating(data.average_rating ? data.average_rating : 0);
@@ -63,7 +65,8 @@ const Video = () => {
             });
         };
 
-        const updateHistory = async () => {
+        const updateHistory = async () =>
+        {
             await axiosClient.post("update_history", {
                 film_id: videoId,
             });
@@ -73,17 +76,20 @@ const Video = () => {
         updateHistory();
     }, []);
 
-    const favoriteFilm = async () => {
+    const favoriteFilm = async () =>
+    {
         await axiosClient
             .post("update_favorite", {
                 film_id: data.id,
             })
-            .then(() => {
+            .then(() =>
+            {
                 setIsFavorited(!isFavorited);
             });
     };
 
-    const handleRatingSubmit = async (rating) => {
+    const handleRatingSubmit = async (rating) =>
+    {
         await axiosClient.post("update_rating", {
             film_id: data.id,
             rating: rating,
@@ -105,7 +111,7 @@ const Video = () => {
                 <div className="p-2 d-flex flex-column align-items-center m-3">
                     <ReactPlayer
                         className="video border border-white  "
-                        url={`http://127.0.0.1:8000/api/videos/` + data.video}
+                        url={`http://127.0.0.1:8001/api/videos/` + data.video}
                         controls={isBeforeCurrentDay ? true : false}
                         playing={isBeforeCurrentDay ? true : false}
                     />
@@ -127,7 +133,7 @@ const Video = () => {
                     <img
                         className="user_img"
                         src={
-                            `http://127.0.0.1:8000/api/images/` +
+                            `http://127.0.0.1:8001/api/images/` +
                             providerData?.provider_logo
                         }
                         alt=""

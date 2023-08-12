@@ -11,7 +11,8 @@ import { useNavigate } from "react-router-dom";
 import axiosClient from "../../utils/axios";
 import { useStateContext } from "../../contexts/ContextProvider";
 
-const Header = () => {
+const Header = () =>
+{
     const { user, token, setUser, setToken, alerts, setAlerts } =
         useStateContext();
     const [searchRequest, setSearchRequest] = useState("");
@@ -19,41 +20,50 @@ const Header = () => {
 
     const navigate = useNavigate();
     // function to logout
-    const onLogout = async (ev) => {
+    const onLogout = async (ev) =>
+    {
         ev.preventDefault();
 
         await axiosClient
             .post("/logout")
-            .then(() => {
+            .then(() =>
+            {
                 setToken(null);
                 setUser({});
             })
-            .catch((err) => {
+            .catch((err) =>
+            {
                 console.log(err);
                 setToken(null);
                 setUser({});
             });
     };
 
-    useEffect(() => {
-        const getSearch = async () => {
+    useEffect(() =>
+    {
+        const getSearch = async () =>
+        {
             await axiosClient
                 .post("search_film", {
                     film_name: searchRequest,
                 })
-                .then(({ data }) => {
+                .then(({ data }) =>
+                {
                     setSearchResponse(data.films);
                 });
         };
 
-        if (searchRequest != "") {
+        if (searchRequest != "")
+        {
             getSearch();
-        } else {
+        } else
+        {
             setSearchResponse(null);
         }
     }, [searchRequest]);
 
-    const handleSearch = (value) => {
+    const handleSearch = (value) =>
+    {
         setSearchRequest(value);
     };
 
@@ -62,7 +72,8 @@ const Header = () => {
             {/* Logo */}
             <div
                 className="d-flex flex-row  "
-                onClick={() => {
+                onClick={() =>
+                {
                     navigate("home");
                 }}
             >
@@ -103,7 +114,7 @@ const Header = () => {
                             <div key={k} className="d-flex flex-row">
                                 <img
                                     src={
-                                        `http://127.0.0.1:8000/api/images/` +
+                                        `http://127.0.0.1:8001/api/images/` +
                                         v.film_poster
                                     }
                                     style={{
