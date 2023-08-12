@@ -266,26 +266,25 @@ class ProviderController extends Controller
             );
         } else {
             if ($request->hasFile('provider_logo')) {
-                $image = $request->file('provider_logo');
-                $imageName = $image->getClientOriginalName(); // Adding timestamp to avoid name conflicts
-                $image->storeAs('images', $imageName, 'public'); // Store image in storage/app/public/images
-                $imagePath = $imageName; // Relative path to the stored image
+                $provider_logo = $request->file('provider_logo');
+                $imageName = time() . '_' . $provider_logo->getClientOriginalName();
+                $provider_logo->move(public_path('images'), $imageName);
             }
 
-            $providers = new StreamServiceProvider();
-            $providers->provider_name = $request->provider_name;
-            if (isset($imagePath)) {
-                $providers->provider_logo = $imagePath;
+            $provider = new StreamServiceProvider();
+            $provider->provider_name = $request->provider_name;
+            if (isset($imageName)) {
+                $provider->provider_logo = $imageName;
             }
 
-            $providers->save();
+            $provider->save();
 
-            if ($providers) {
+            if ($provider) {
                 return response()->json(
                     [
                         "status" => 201,
-                        "data" => $providers,
-                        'message' => 'providers created successfully'
+                        "data" => $provider,
+                        'message' => 'Provider created successfully'
                     ],
                     201
                 );
@@ -293,7 +292,7 @@ class ProviderController extends Controller
                 return response()->json(
                     [
                         "status" => 500,
-                        'message' => 'Error server'
+                        'message' => 'Internal Server Error'
                     ],
                     500
                 );
