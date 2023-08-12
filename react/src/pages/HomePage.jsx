@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, Navigate, useNavigate } from "react-router-dom";
-import { Header } from "../components";
+import { AddWatchListModal, Header } from "../components";
 
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../utils/axios";
@@ -12,10 +12,8 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
 
-export default function Homescreen ()
-{
+export default function Homescreen() {
     const { user, token, setUser, setToken, alerts, setAlerts } =
         useStateContext();
     const [userDataFetched, setUserDataFetched] = useState(false);
@@ -24,26 +22,28 @@ export default function Homescreen ()
     const [searchData, setSearchData] = useState([]);
     const [watchlists, setWatchlists] = useState([]);
     const [userProvider, setUserProvider] = useState([]);
+    const [showAddWatchListModal, setShowAddWatchListModal] = useState(false);
 
     const navigate = useNavigate();
 
     const [showAlert, setShowAlert] = useState(true);
 
-    useEffect(() =>
-    {
-        const getWatlistVideo = async () =>
-        {
-            await axiosClient.get("watchlists").then(({ data }) =>
-            {
-                console.log(data);
-                setWatchlists(data);
-            });
-        };
+    const handleAddWatchList = async () => {
+        setShowAddWatchListModal(true);
+    };
 
-        const getSubcribed = async () =>
-        {
-            await axiosClient.get("getProviders").then(({ data }) =>
-            {
+    const handleAddWatchListSuccess = async () => {
+        await getWatlistVideo();
+    };
+    const getWatlistVideo = async () => {
+        await axiosClient.get("watchlists").then(({ data }) => {
+            console.log(data);
+            setWatchlists(data);
+        });
+    };
+    useEffect(() => {
+        const getSubcribed = async () => {
+            await axiosClient.get("getProviders").then(({ data }) => {
                 console.log(data);
                 setUserProvider(data.providers);
             });
@@ -54,11 +54,9 @@ export default function Homescreen ()
     }, []);
 
     // useEffect to show alert in home page
-    useEffect(() =>
-    {
+    useEffect(() => {
         setShowAlert(true);
-        const timer = setTimeout(() =>
-        {
+        const timer = setTimeout(() => {
             setShowAlert(false);
             setAlerts({
                 type: null,
@@ -67,30 +65,24 @@ export default function Homescreen ()
             });
         }, 5000);
 
-        return () =>
-        {
+        return () => {
             clearTimeout(timer);
         };
     }, [alerts]);
 
     // useEffect to get data base on token
-    useEffect(() =>
-    {
-        if (token)
-        {
+    useEffect(() => {
+        if (token) {
             axiosClient
                 .get("/user")
-                .then(({ data }) =>
-                {
+                .then(({ data }) => {
                     setUser(data);
                     setUserDataFetched(true);
                 })
-                .catch((err) =>
-                {
+                .catch((err) => {
                     const response = err.response;
 
-                    if (response && response.status === 401)
-                    {
+                    if (response && response.status === 401) {
                         console.error(response.status); // Access the status code
                         console.error(response.data.message);
                         localStorage.removeItem("ACCESS_TOKEN");
@@ -100,17 +92,14 @@ export default function Homescreen ()
     }, [token, setUser]);
 
     // function to get user result when search
-    const handleSearchUsers = async (e) =>
-    {
+    const handleSearchUsers = async (e) => {
         e.preventDefault();
     };
 
     // protected navigation
-    if (!token)
-    {
+    if (!token) {
         return <Navigate to={"/"} />;
-    } else if (token && user.role_id == 1 && userDataFetched)
-    {
+    } else if (token && user.role_id == 1 && userDataFetched) {
         return <Navigate to={"/admin"} />;
     }
 
@@ -118,7 +107,6 @@ export default function Homescreen ()
         <div id="homeLayout" className="">
             {/* Home Page Header */}
             <Header />
-
             <div className="container-fluid">
                 <div className="row">
                     <div className="sideBar-Home col-3 d-flex flex-column">
@@ -127,8 +115,7 @@ export default function Homescreen ()
                         <Menu className="Menu">
                             <hr />
                             <MenuItem
-                                onClick={() =>
-                                {
+                                onClick={() => {
                                     navigate("home");
                                 }}
                             >
@@ -137,20 +124,32 @@ export default function Homescreen ()
                                 </i>
                             </MenuItem>
                             <SubMenu label="Watch List">
+                                {showAddWatchListModal ? (
+                                    <AddWatchListModal
+                                        onSuccess={handleAddWatchListSuccess}
+                                        onClose={() =>
+                                            setShowAddWatchListModal(false)
+                                        }
+                                    />
+                                ) : (
+                                    <MenuItem
+                                        onClick={() => handleAddWatchList()}
+                                    >
+                                        Add new watch list
+                                    </MenuItem>
+                                )}
                                 {watchlists.map((item, index) => (
                                     <MenuItem
-                                        onClick={() =>
-                                        {
+                                        onClick={() => {
                                             navigate(`watchList/${item.id}`);
                                         }}
                                     >
-                                        {watchlists[0].watch_list_name}
+                                        {item.watch_list_name}
                                     </MenuItem>
                                 ))}
                             </SubMenu>
                             <MenuItem
-                                onClick={() =>
-                                {
+                                onClick={() => {
                                     navigate("history");
                                 }}
                             >
@@ -162,8 +161,7 @@ export default function Homescreen ()
                             <SubMenu label="Subcribed">
                                 {userProvider.map((item, index) => (
                                     <MenuItem
-                                        onClick={() =>
-                                        {
+                                        onClick={() => {
                                             navigate(`subcribed/${item.id}`);
                                         }}
                                     >
@@ -186,8 +184,7 @@ export default function Homescreen ()
                                 ))}
                             </SubMenu>
                             <MenuItem
-                                onClick={() =>
-                                {
+                                onClick={() => {
                                     navigate("profile");
                                 }}
                             >
@@ -198,49 +195,19 @@ export default function Homescreen ()
                                 Profile{" "}
                             </MenuItem>
                             <hr />
-                            <h5 className="text-center">
-                                {" "}
-                                Other Service Of StreamTrace{" "}
-                            </h5>
-                            <MenuItem>
-                                {" "}
-                                <i className="m-1">
-                                    <FontAwesomeIcon
-                                        icon={faStar}
-                                        color="yellow"
-                                    />
-                                </i>{" "}
-                                A Week Premium{" "}
-                            </MenuItem>
-                            <MenuItem>
-                                {" "}
-                                <i className="m-1">
-                                    <FontAwesomeIcon
-                                        icon={faStar}
-                                        color="yellow"
-                                    />
-                                </i>{" "}
-                                A Month Premium{" "}
-                            </MenuItem>
-                            <MenuItem>
-                                {" "}
-                                <i className="m-1">
-                                    <FontAwesomeIcon
-                                        icon={faStar}
-                                        color="yellow"
-                                    />
-                                </i>{" "}
-                                A Year Premium{" "}
-                            </MenuItem>
-                            <hr />
                             <h5 className="text-center"> Privacy & Contact </h5>
                             <div className="d-flex flex-column bd-highlight mb-3">
                                 <a href="" className="text-decoration-none">
                                     {" "}
                                     <div
+<<<<<<< HEAD
                                         className="p-2 bd-highlight"
                                         onClick={() =>
                                         {
+=======
+                                        class="p-2 bd-highlight"
+                                        onClick={() => {
+>>>>>>> aa04e2ba62edbc30bd4177e9c3fb48c2e51f3be6
                                             navigate("contact");
                                         }}
                                     >
@@ -271,18 +238,18 @@ export default function Homescreen ()
                     )}
                 </div>
             </div>
-
             {/* Alert */}
             {showAlert && alerts.type && (
                 <div
                     className="alert-home"
                     style={{
-                        backgroundColor: `${alerts.type == "info"
-                            ? "#00ccff"
-                            : alerts.type == "warming"
+                        backgroundColor: `${
+                            alerts.type == "info"
+                                ? "#00ccff"
+                                : alerts.type == "warming"
                                 ? "#FFCC99"
                                 : alerts.type == "error" && "#CC0000"
-                            }`,
+                        }`,
                     }}
                 >
                     <div className="alert-content">
@@ -293,8 +260,7 @@ export default function Homescreen ()
                     </div>
                     <button
                         className="alert-close-btn"
-                        onClick={() =>
-                        {
+                        onClick={() => {
                             setShowAlert(false);
                         }}
                     >

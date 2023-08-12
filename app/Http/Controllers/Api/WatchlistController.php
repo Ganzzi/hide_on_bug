@@ -28,8 +28,9 @@ class WatchListController extends Controller
      */
     public function store(Request $request)
     {
+        $user_id = Auth::user()->id;
+
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|int',
             'watch_list_name' => 'required|string',
         ]);
 
@@ -41,7 +42,7 @@ class WatchListController extends Controller
         }
 
         // Kiểm tra xem đã tồn tại bản ghi nào có user_id và watch_list_name tương tự chưa
-        $existingWatchList = WatchList::where('user_id', $request->user_id)
+        $existingWatchList = WatchList::where('user_id', $user_id)
             ->where('watch_list_name', $request->watch_list_name)
             ->first();
 
@@ -52,7 +53,10 @@ class WatchListController extends Controller
             ], 409);
         }
 
-        $newWatchList = WatchList::create($request->all());
+        $newWatchList = WatchList::create([
+            'watch_list_name' => $request->watch_list_name,
+            'user_id' => $user_id
+        ]);
 
         if ($newWatchList) {
             return response()->json([

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('billing_amount');
             $table->timestamp('subscript_end');
             $table->timestamps();
-
             // Define foreign keys if needed
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('stream_service_provider_id')->references('id')->on('stream_service_providers')->onDelete('cascade');

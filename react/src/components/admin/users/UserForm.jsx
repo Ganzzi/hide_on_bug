@@ -115,9 +115,9 @@ export default function UserForm ()
     };
 
     return (
-        <div className="d-flex flex-column">
-            {user.id && <h1>Update User: {user.name}</h1>}
-            {!user.id && <h1>New User</h1>}
+        <div className="d-flex flex-column align-items-center m-5">
+            {user.id && <i><h1>Update User:  <i className="text-danger">{user.name} </i></h1></i> }
+            {!user.id && <i><h1 >Add New User</h1></i>}
             <div className="card animated fadeInDown">
                 {loading && <div className="text-center">Loading...</div>}
                 {errors && (
@@ -128,7 +128,7 @@ export default function UserForm ()
                     </div>
                 )}
                 {!loading && (
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={onSubmit} className="m-3">
                         <input
                             value={user.name}
                             onChange={(ev) =>
@@ -192,8 +192,8 @@ export default function UserForm ()
                         />
 
                         <button
-                            className="btn btn-outline-success"
-                            style={{ width: "100px" }}
+                            className="btn btn-outline-success mt-4"
+                            style={{ width: "100px", marginLeft:"40%" }}
                         >
                             Save
                         </button>

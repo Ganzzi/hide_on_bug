@@ -10,8 +10,56 @@ use Illuminate\Support\Facades\Auth;
 
 class FilmController extends Controller
 {
-    public function getRecommendFilms($filmId)
+    public function getRecommendedFilms(Request $request)
     {
+        // Lấy thông tin người dùng đã đăng nhập
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Không tìm thấy người dùng'], 404);
+        }
+
+        // Lấy danh sách category_id mà người dùng đã lựa chọn
+        $userCategoryIds = $user->user_categories->pluck('category_id');
+
+        if ($userCategoryIds->isEmpty()) {
+            return response()->json(['message' => 'Người dùng không có bất kỳ danh mục nào'], 200);
+        }
+
+        // Tìm các phim có chung danh mục với người dùng và sắp xếp theo rating
+        $recommendedFilms = Film::whereHas('categories', function ($query) use ($userCategoryIds) {
+            $query->whereIn('category_id', $userCategoryIds);
+        })
+            ->leftJoin('ratings', 'films.id', '=', 'ratings.film_id')
+            ->with(['serviceProvider', 'categories'])
+            ->select(
+                'films.id',
+                'films.stream_service_provider_id',
+                DB::raw('AVG(ratings.rating) as avg_rating'),
+                'films.film_name',
+                'films.film_poster', // Bổ sung cột film_poster vào câu truy vấn
+                'films.video'
+            )
+            ->groupBy('films.id', 'films.stream_service_provider_id', 'films.film_name', 'films.video', 'films.film_poster') // Bổ sung cột film_poster vào câu truy vấn
+            ->orderBy('avg_rating', 'desc')
+            ->get();
+
+        // Bổ sung thông tin vào kết quả trả về
+        $recommendedFilms->transform(function ($film) {
+            $film->provider_name = $film->serviceProvider->provider_name;
+            $film->provider_logo = $film->serviceProvider->provider_logo;
+            $film->cate_name = $film->categories->implode('cate_name', ', ');
+            return $film;
+        });
+
+        return response()->json(['recommended_films' => $recommendedFilms], 200);
+    }
+
+    public function getRecommendFilms1(Request $request)
+    {
+        // Lấy id của phim từ request
+        $filmId = $request->input('film_id');
+
         // Tìm phim dựa trên $filmId
         $film = Film::find($filmId);
 
@@ -74,11 +122,12 @@ class FilmController extends Controller
 
         // Step 4: Get the user's rating for the film
         $userRatings = DB::table('ratings')
-            ->where('film_id', $filmId)
-            ->count(); // Count the number of ratings
+            ->where('user_id', $user_id)
+            ->where('film_id', $filmId)->get('rating')->first();
 
         // Step 5: Calculate the average rating for the film
         $averageRating = DB::table('ratings')
+            ->where('user_id', $user_id)
             ->where('film_id', $filmId)
             ->avg('rating'); // Get the average
 

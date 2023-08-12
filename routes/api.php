@@ -44,19 +44,19 @@ Route::middleware('auth:sanctum')->group(function () {
     // nhan
     Route::post('/watchlist_add_delete_film', [ApiWatchlistController::class, 'add_or_delete_film_to_watch_list']);
     Route::get('/films/{filmId}', [ApiFilmController::class, "watchFilm"]);
-    Route::post('/films',  [ApiFilmController::class,  "searchFilm"]);
-    Route::post('/recommended_films/{filmId}',  [ApiFilmController::class,  "getRecommendFilms"]);
-    //
+    Route::post('/search_film',  [ApiFilmController::class,  "searchFilm"]);
+    Route::get('/recommended_films',  [ApiFilmController::class,  "getRecommendedFilms"]);
+
+    // Route::get('/recommended_films',  [ApiFilmController::class,  "getRecommendFilms1"]); //cach khac
 
     Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);
-    Route::get('/getSubcriptions', [ApiUserController::class, 'getAllSubcriptions']);
     Route::post("/update_history", [ApiUserController::class, 'addFilmToHistory']);
 
     Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
     Route::get("/providers/{providerId}", [ProviderController::class, 'show']);
     Route::get("/getProviders", [ProviderController::class, 'getProviders']);
-    Route::post("/subcribe", [ProviderController::class, 'subscribeToService']);
-    Route::post("/updatepay", [ProviderController::class, 'updatepay']);
+    Route::post("/subcribeOrUnsubcribe", [ProviderController::class, 'subscribeOrUnsubscribe']);
+    Route::post("/updatepay", [ProviderController::class, 'extendExpireDate']);
 
 
     // api routes for admin
@@ -98,22 +98,3 @@ Route::get('/videos/{filename}', function ($filename) {
 
     return response($file)->header('Content-Type', $type);
 });
-
-Route::post('/upload-video', function (Request $request) {
-    $request->validate([
-        'video' => 'nullable|mimetypes:video/*|max:20480',
-    ]);
-
-    if ($request->hasFile('video')) {
-        $uploadedVideo = $request->file('video');
-        $videoPath = $uploadedVideo->store('public/videos');
-
-        return response()->json(['video' => $videoPath]);
-    } else {
-        return response()->json(['message' => 'No video file uploaded'], 400);
-    }
-});
-
-//Route::get('/films', [FilmController::class, 'index']);
-// Route::get('/providers', [ProviderController::class, 'index']);
-// Route::post('/providers', [ProviderController::class, 'store']);

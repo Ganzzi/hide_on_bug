@@ -34,7 +34,7 @@ export function EditProviderForm({ provider, onCancelEdit, onUpdateProvider }) {
 
     return (
         <div>
-            <h2>Edit Provider</h2>
+       <i><h2> Edit Provider  </h2></i>      
             {loading ? (
                 <p>Loading...</p>
             ) : (

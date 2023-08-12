@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Subscription;
+use App\Models\UserCategory;
 
 class UserController extends Controller
 {
@@ -28,23 +29,51 @@ class UserController extends Controller
 
     public function update(Request $request, $user)
     {
+        $user = Auth::user();
+
         $data = $request->validate([
-            'name' => 'required|string|max:55|min:5',
-            'email' => 'nullable|email|unique:users,email|max:255|regex:/\w{1,}@\w{1,}\.\w{2,5}/i',
+            'name' => 'nullable|string|max:55|min:5',
+            'email' => 'nullable|email|max:255|unique:users,email,' . $user->id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'bio' => 'required|max:255',
-            'gender' => 'required',
+            'bio' => 'nullable|max:255',
+            'gender' => 'nullable',
+            'phone_number' => 'nullable|string|max:20',
+            'password' => 'nullable|string|min:4',
+            'categories' => 'nullable'
         ]);
 
-        if (isset($data['image'])) {
-            $data['image'] =  basename($data['image']->store('public/images'));
+        if (isset($data['categories'])) {
+            $categories = json_decode($data['categories']);
         }
 
-        $_user = User::find($user);
+        if (!$user->id) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
 
-        $_user->update($data);
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('public/images');
+            $data['image'] = basename($imagePath);
+        }
 
-        return response()->json($_user);
+        // Thực hiện cập nhật mật khẩu nếu có giá trị
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
+
+        $user->update($data);
+
+        if (isset($categories)) {
+            DB::table('user_categories')->where('user_id', $user->id)->delete();
+
+            foreach ($categories as $categoryId) {
+                $userCategory = new UserCategory();
+                $userCategory->user_id = $user->id;
+                $userCategory->category_id = $categoryId;
+                $userCategory->save();
+            }
+        }
+
+        return response()->json($user);
     }
 
     public function favoriteFilm(Request $request)
@@ -154,9 +183,9 @@ class UserController extends Controller
         return response()->json(['message' => 'Film added to history'], 201);
     }
 
-    public function getUserHistory(Request $request)
+    public function getUserHistory()
     {
-        $user_id = $request->input('user_id');
+        $user_id = Auth::user()->id;
 
         $userHistory = DB::table('histories')
             ->join('films', 'films.id', '=', 'histories.film_id')

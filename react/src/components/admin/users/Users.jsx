@@ -65,9 +65,9 @@ export default function Users ()
                         justifycontent: "space-between",
                     }}
                 ></h1>
-                {/* <Link className="btn-add" to="/admin/users/new">
-                    Add new
-                </Link> */}
+                <Link className="btn-add bg-dark" to="/admin/users/new">
+                   <i>Add New User</i>
+                </Link>
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>
                 <table
@@ -101,6 +101,7 @@ export default function Users ()
                                 <tr key={u.id}>
                                     <td>{u.id}</td>
                                     <td>
+
                                         <img
                                             src={
                                                 `${import.meta.env
@@ -111,6 +112,7 @@ export default function Users ()
                                             height={50}
                                             alt=""
                                         />
+
                                     </td>
                                     <td>{u.name}</td>
                                     <td>{u.email}</td>
