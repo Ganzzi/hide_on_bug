@@ -18,7 +18,7 @@ class ProviderController extends Controller
     public function show(string $providerId)
     {
         $user = Auth::user();
-        $userId = Auth::user()->id;
+
         $userBalance = $user->balance;
         // Lấy thông tin về provider dựa trên providerId
         $provider = StreamServiceProvider::where('id', $providerId)->first();
@@ -48,7 +48,8 @@ class ProviderController extends Controller
 
     public function getProviders(Request $request)
     {
-        $user_id = $request->get('user_id');
+        // $user_id = $request->get('user_id');
+        $user_id = Auth::user()->id;
 
         $providers = Subscription::where('user_id', $user_id)
             ->join('stream_service_providers', 'subscriptions.provider_id', '=', 'stream_service_providers.id')

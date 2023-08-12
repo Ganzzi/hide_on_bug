@@ -21,6 +21,7 @@ export default function Homescreen() {
     const [showSearchResponse, setShowSearchResponse] = useState(false);
     const [searchData, setSearchData] = useState([]);
     const [watchlists, setWatchlists] = useState([]);
+    const [userProvider, setUserProvider] = useState([]);
 
     const navigate = useNavigate();
 
@@ -34,13 +35,14 @@ export default function Homescreen() {
             });
         };
 
-        // const getSubcribed = async () => {
-        //     await axiosClient.get("providers").then(({ data }) => {
-        //         console.log(data);
-        //     });
-        // };
+        const getSubcribed = async () => {
+            await axiosClient.get("getProviders").then(({ data }) => {
+                console.log(data);
+                setUserProvider(data.providers);
+            });
+        };
 
-        // getSubcribed();
+        getSubcribed();
         getWatlistVideo();
     }, []);
 
@@ -137,13 +139,27 @@ export default function Homescreen() {
                                 History{" "}
                             </MenuItem>
                             <SubMenu label="Subcribed">
-                                {watchlists.map((item, index) => (
+                                {userProvider.map((item, index) => (
                                     <MenuItem
                                         onClick={() => {
-                                            navigate(`watchList/${item.id}`);
+                                            navigate(`subcribed/${item.id}`);
                                         }}
                                     >
-                                        {watchlists[0].watch_list_name}
+                                        <div className="d-flex flex-row">
+                                            <img
+                                                src={
+                                                    `http://127.0.0.1:8000/api/images/` +
+                                                    item.provider_logo
+                                                }
+                                                style={{
+                                                    width: 30,
+                                                    height: 30,
+                                                    borderRadius: 30,
+                                                }}
+                                                alt=""
+                                            />
+                                            {item?.provider_name}
+                                        </div>
                                     </MenuItem>
                                 ))}
                             </SubMenu>

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { limitText } from "../../../utils";
-import { useParams } from "react-router-dom";
+import { formatDateTime, limitText } from "../../../utils";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../../utils/axios";
 
 const Subcribed = () => {
     const { providerId } = useParams();
     const [provider, setProvider] = useState(null);
     const [films, setfilms] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getWatlistVideo = async () => {
@@ -19,9 +20,8 @@ const Subcribed = () => {
         };
 
         getWatlistVideo();
-    }, []);
+    }, [providerId]);
 
-    console.log(films);
     return (
         <div className="home-container ">
             <div className="d-flex flex-column  justify-content-center  my-3 rounded-top backgr ">
@@ -30,25 +30,30 @@ const Subcribed = () => {
                         className="ChannelImg border border-info shadow p-2 bg-light "
                         src={
                             `http://127.0.0.1:8000/api/images/` +
-                            provider.provider_logo
+                            provider?.provider_logo
                         }
                         alt=""
                     />
                     <div className="horizontal-container">
                         <h3 className="mt-4 text-danger">
-                            {provider.provider_name}
+                            {provider?.provider_name}
                         </h3>
                         <div className="figcaption-container">
-                            <figcaption className="blockquote-footer mt-4">
-                                Attended in{" "}
-                                <cite title="Source Title">11/10/2023</cite>
-                            </figcaption>
-                            <figcaption className="blockquote-footer mt-2">
+                            {provider?.created_at && (
+                                <figcaption className="blockquote-footer mt-4">
+                                    Attended in
+                                    <cite title="Source Title">
+                                        {formatDateTime(provider.created_at)}
+                                    </cite>
+                                </figcaption>
+                            )}
+                            {/* <figcaption className="blockquote-footer mt-2">
                                 Subscribers:{" "}
                                 <cite title="Source Title">20N</cite>
-                            </figcaption>
+                            </figcaption> */}
                             <figcaption className="blockquote-footer mt-2">
-                                Videos: <cite title="Source Title">20</cite>
+                                Videos:{" "}
+                                <cite title="Source Title">{films.length}</cite>
                             </figcaption>
                         </div>
                     </div>
@@ -57,54 +62,43 @@ const Subcribed = () => {
 
             <div className="d-flex flex-column  justify-content-center align-items-center my-3 rounded-top z-index backgr">
                 <h3 className="mt-4 text-light lead">Videos</h3>
-                {/* card  */}
-                <div className="row row-cols-4 g-2 m-3">
-                    {films.map((film, index) => (
-                        <div className="col" key={index}>
-                            <div className="card">
-                                <img
-                                    src={
-                                        `http://127.0.0.1:8000/api/images/` +
-                                        film.film_poster
-                                    }
-                                    className="card-img-top"
-                                    alt="Hollywood Sign on The Hill"
-                                />
-                                <div className="card-body">
-                                    <h5 className="card-title">
-                                        {film.film_name}
-                                    </h5>
-                                    <p className="card-text">
-                                        {limitText(
-                                            "  This is a longer card with supporting text below as a natural lead-in",
-                                            100
-                                        )}
-                                    </p>
+
+                {/* Video place */}
+                {films.length != 0 ? (
+                    <div className="row row-cols-4 g-2 m-3">
+                        {films.map((film, index) => (
+                            <div
+                                className="col"
+                                key={index}
+                                onClick={() => navigate("/video/" + film.id)}
+                            >
+                                <div className="card">
+                                    <img
+                                        src={
+                                            `http://127.0.0.1:8000/api/images/` +
+                                            film?.film_poster
+                                        }
+                                        className="card-img-top"
+                                        alt="Hollywood Sign on The Hill"
+                                    />
+                                    <div className="card-body">
+                                        <h5 className="card-title">
+                                            {film?.film_name}
+                                        </h5>
+                                        <p className="card-text">
+                                            {limitText(
+                                                "  This is a longer card with supporting text below as a natural lead-in",
+                                                100
+                                            )}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-
-                    {/* <VideoD imageURL={''} content={''}/> */}
-                    <div className="col">
-                        <div className="card">
-                            <img
-                                src="https://mdbcdn.b-cdn.net/img/new/standard/city/050.webp"
-                                className="card-img-top"
-                                alt="Skyscrapers"
-                            />
-                            <div className="card-body">
-                                <h5 className="card-title">Card title</h5>
-                                <p className="card-text">
-                                    {limitText(
-                                        "  This is a longer card with supporting text below as a natural lead-in",
-                                        100
-                                    )}
-                                </p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
-                </div>
+                ) : (
+                    <h1 style={{ color: "white" }}>none film at all</h1>
+                )}
             </div>
         </div>
     );

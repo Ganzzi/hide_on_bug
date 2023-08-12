@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const RatingModal = ({ onClose, onSubmit }) => {
+const RatingModal = ({ onClose, onSubmit, user_rating }) => {
     const [rating, setRating] = useState(0);
 
     const handleRatingChange = (newRating) => {
@@ -11,6 +11,10 @@ const RatingModal = ({ onClose, onSubmit }) => {
         onSubmit(rating);
         onClose();
     };
+
+    useEffect(() => {
+        setRating(user_rating);
+    }, []);
 
     return (
         <div className="rating-modal">

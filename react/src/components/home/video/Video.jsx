@@ -35,6 +35,7 @@ const Video = () => {
         provider_logo: null,
     });
     const [isFavorited, setIsFavorited] = useState(false);
+    const [userRating, setUserRating] = useState(0);
 
     useEffect(() => {
         const getVideo = async () => {
@@ -42,6 +43,7 @@ const Video = () => {
                 setData(data.film);
                 setProviderData(data.provider[0]);
                 setRating(data.average_rating ? data.average_rating : 0);
+                setUserRating(data.user_ratings[0].rating);
             });
         };
 
@@ -99,13 +101,13 @@ const Video = () => {
                         className="user_img"
                         src={
                             `http://127.0.0.1:8000/api/images/` +
-                            providerData.provider_logo
+                            providerData?.provider_logo
                         }
                         alt=""
                     />
                     <div>
                         <div className="user_name">
-                            {providerData.provider_name}
+                            {providerData?.provider_name}
                         </div>
                     </div>
                 </div>
@@ -159,6 +161,7 @@ const Video = () => {
                 <RatingModal
                     onClose={() => setShowRateModal(false)}
                     onSubmit={handleRatingSubmit}
+                    user_rating={userRating}
                 />
             )}
         </div>
