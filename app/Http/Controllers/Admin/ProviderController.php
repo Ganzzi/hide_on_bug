@@ -267,7 +267,7 @@ class ProviderController extends Controller
         } else {
             if ($request->hasFile('provider_logo')) {
                 $image = $request->file('provider_logo');
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Adding timestamp to avoid name conflicts
+                $imageName = $image->getClientOriginalName(); // Adding timestamp to avoid name conflicts
                 $image->storeAs('images', $imageName, 'public'); // Store image in storage/app/public/images
                 $imagePath = $imageName; // Relative path to the stored image
             }
