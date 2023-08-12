@@ -10,42 +10,32 @@ use Illuminate\Support\Facades\Auth;
 
 class FilmController extends Controller
 {
-    public function getRecommendFilms(Request $request)
+    public function getRecommendFilms($filmId)
     {
-        $recommends = Film::all()->load('categories');
-        // $user = Auth::user();
-        // $user_id = $user->id;
+        // Tìm phim dựa trên $filmId
+        $film = Film::find($filmId);
 
-        // $provider_ids = DB::table('stream_service_providers')->pluck('id')->toArray();
+        if (!$film) {
+            return response()->json(['error' => 'Không tìm thấy phim'], 404);
+        }
 
-        // $user_subscription = DB::table('subscriptions')
-        //     ->where('user_id', $user_id)
-        //     ->whereIn('provider_id', $provider_ids) // Sử dụng whereIn để kiểm tra user_subscription với tất cả provider_ids
-        //     ->first();
+        // Lấy danh sách các category của phim đang xem
+        $filmCategories = $film->categories;
 
-        // if ($user_subscription) {
-        //     $category_id = $request->get('category_id');
-        //     $film_id = $request->get('film_id'); // Lấy film_id từ request hoặc cách khác bạn có thể lấy film_id dựa vào logic của mình.
+        if ($filmCategories->isEmpty()) {
+            return response()->json(['message' => 'Phim không thuộc bất kỳ category nào'], 200);
+        }
 
-        //     $relatedFilmIds = DB::table('film_categories')
-        //         ->where('category_id', $category_id)
-        //         ->where('film_id', '!=', $film_id)
-        //         ->pluck('film_id')
-        //         ->toArray();
+        // Lấy danh sách phim có chung category với phim đang xem
+        $recommendedFilms = Film::whereHas('categories', function ($query) use ($filmCategories) {
+            $query->whereIn('category_id', $filmCategories->pluck('id'));
+        })
+            ->where('id', '<>', $film->id) // Loại trừ phim đang xem
+            ->orderBy('premiere_date', 'desc') // Sắp xếp theo ngày ra mắt giảm dần
+            ->get();
 
-        //     $recommends = DB::table('films')
-        //         ->join('stream_service_providers', 'films.stream_service_provider_id', '=', 'stream_service_providers.id')
-        //         ->whereIn('films.id', $relatedFilmIds)
-        //         ->select('films.*', 'stream_service_providers.provider_name', 'stream_service_providers.provider_logo')
-        //         ->get();
-        // } else {
-        //     $recommends = []; // Không có gợi ý nếu không có subscription cho nhà cung cấp tương ứng
-        // }
-
-        return response()->json(['recommend_films' => $recommends]);
+        return response()->json(['recommended_films' => $recommendedFilms], 200);
     }
-
-
 
 
     // function for user to watch a film - get provider infor, subcribe, rating, favorite,...
