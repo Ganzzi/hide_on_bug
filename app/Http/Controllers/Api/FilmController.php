@@ -68,6 +68,8 @@ class FilmController extends Controller
     }
 
 
+
+
     // function for user to watch a film - get provider infor, subcribe, rating, favorite,...
     // public function watchFilm($filmId)
     // {

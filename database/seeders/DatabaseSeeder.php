@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesSeeder::class);
         $this->call(UsersSeeder::class);
+        $now = Carbon::now();
 
         // Stream Service Providers
         DB::table('stream_service_providers')->insert([
@@ -25,18 +26,15 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Films
-        DB::table('films')->insert([
-            'stream_service_provider_id' => 1,
-            'film_name' => 'Awesome Movie',
-            'film_poster' => 'awesome_movie_poster.jpg',
-            'video' => 'awesome_movie.mp4',
-            'premiere_date' => Carbon::now(),
-        ]);
+        DB::table('films')->insert([]);
 
         // Favorites
         DB::table('favorites')->insert([
-            'user_id' => 1,
-            'film_id' => 1,
+            ['id' => 1, 'user_id' => 1, 'film_id' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 2, 'user_id' => 3, 'film_id' => 2, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 3, 'user_id' => 2, 'film_id' => 4, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 4, 'user_id' => 4, 'film_id' => 6, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 5, 'user_id' => 2, 'film_id' => 3, 'created_at' => $now, 'updated_at' => $now],
         ]);
 
         // Ratings
@@ -68,7 +66,11 @@ class DatabaseSeeder extends Seeder
 
         // Categories
         DB::table('categories')->insert([
-            'cate_name' => 'Action',
+            ['cate_name' => 'Action', 'created_at' => $now, 'updated_at' => $now],
+            ['cate_name' => 'Documentary', 'created_at' => $now, 'updated_at' => $now],
+            ['cate_name' => 'Education', 'created_at' => $now, 'updated_at' => $now],
+            ['cate_name' => 'Entertainment', 'created_at' => $now, 'updated_at' => $now],
+            ['cate_name' => 'Working', 'created_at' => $now, 'updated_at' => $now],
         ]);
 
         // Film Categories
