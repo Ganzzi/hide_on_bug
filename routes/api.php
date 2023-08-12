@@ -34,7 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/logout", [Auth::class, 'logout']);
     Route::post("/update_rating", [ApiUserController::class, 'rateFilm']);
     Route::post("/update_favorite", [ApiUserController::class, 'favoriteFilm']);
-    Route::post("/create_delete_history", [UserController::class, 'updateHistory']);
     Route::apiResource('/watchlists', ApiWatchlistController::class);
 
     // not done
@@ -44,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/watchlist_add_delete_film', [ApiWatchlistController::class, 'add_or_delete_film_to_watch_list']);
     Route::get('/films/{filmId}', [ApiFilmController::class, "watchFilm"]);
     Route::post('/films',  [ApiFilmController::class,  "searchFilm"]);
-    Route::post('/recommended_films',  [ApiFilmController::class,  "getRecommendFilms"]);
+    Route::get('/recommended_films',  [ApiFilmController::class,  "getRecommendFilms"]);
     //
 
     Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);
@@ -52,7 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/update_history", [ApiUserController::class, 'addFilmToHistory']);
 
     Route::get('/getFavorites', [ApiUserController::class, 'getAllFavorites']);
-    Route::post("/update_rating", [UserController::class, 'createRating']);
     Route::get("/providers/{providerId}", [ProviderController::class, 'show']);
     Route::get("/getProviders", [ProviderController::class, 'getProviders']);
     Route::post("/subcribe", [ProviderController::class, 'subscribeToService']);

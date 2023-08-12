@@ -43,7 +43,7 @@ class UserController extends Controller
 
     public function favoriteFilm(Request $request)
     {
-        $user_id = $request->user_id;   // Replace with the actual user ID
+        $user_id = Auth::user()->id;   // Replace with the actual user ID
         $film_id = $request->film_id; // Replace with the actual video ID
 
         $exists = DB::table('favorites')
@@ -75,16 +75,16 @@ class UserController extends Controller
 
     public function rateFilm(Request $request)
     {
-        $user_id = $request->user_id;   // Replace with the actual user ID
-        $film_id = $request->film_id; // Replace with the actual film ID
-        $rating_value = $request->rating; // Replace with the actual rating value
-
         // Validate the input
         $request->validate([
-            'user_id' => 'required',
             'film_id' => 'required',
             'rating' => 'required|numeric|min:1|max:5',
         ]);
+
+        $user_id = Auth::user()->id;   // Replace with the actual user ID
+        $film_id = $request->film_id; // Replace with the actual film ID
+        $rating_value = $request->rating; // Replace with the actual rating value
+
 
         $exists = DB::table('ratings')
             ->where('user_id', $user_id)
@@ -167,35 +167,26 @@ class UserController extends Controller
      */
     public function updateHistory(Request $request)
     {
-        $user_id = $request->user_id;   // Replace with the actual user ID
+        $user_id = Auth::user()->id;   // Replace with the actual user ID
         $film_id = $request->film_id; // Replace with the actual film ID
 
         // Validate the input
         $request->validate([
-            'user_id' => 'required',
             'film_id' => 'required',
         ]);
 
-        $exists = DB::table('histories')
+        // Delete the record from the pivot table
+        DB::table('histories')
             ->where('user_id', $user_id)
             ->where('film_id', $film_id)
-            ->exists();
+            ->delete();
 
-        if ($exists) {
-            // Delete the record from the pivot table
-            DB::table('histories')
-                ->where('user_id', $user_id)
-                ->where('film_id', $film_id)
-                ->delete();
+        // Insert a new record into the pivot table
+        DB::table('histories')->insert([
+            'user_id' => $user_id,
+            'film_id' => $film_id,
+        ]);
 
-            return response()->json(['message' => 'Favorite removed']);
-        } else {
-            // Insert a new record into the pivot table
-            DB::table('histories')->insert([
-                'user_id' => $user_id,
-                'film_id' => $film_id,
-            ]);
-        }
 
 
         return response()->json(['message' => 'History added']);

@@ -1,163 +1,137 @@
-import React, { useRef } from 'react';
-import { limitText } from '../../../utils';
+import React, { useEffect, useRef, useState } from "react";
+import { limitText } from "../../../utils";
 import ReactPlayer from "react-player";
-import VideoD from './VideoD';
+import VideoD from "./VideoD";
+import axiosClient from "../../../utils/axios";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
-  const menuRef = useRef(null);
+    const menuRef = useRef(null);
+    const [filmData, setFilmData] = useState([]);
+    const navigate = useNavigate();
 
-  const scrollLeft = () => {
-    menuRef.current.scrollBy({
-      left: -200, // Adjust the scroll distance as needed
-      behavior: 'smooth',
-    });
-  };
+    useEffect(() => {
+        const getFilms = async () => {
+            await axiosClient.get(`recommended_films`).then(({ data }) => {
+                console.log(data);
+                setFilmData(data.recommend_films);
+            });
+        };
 
-  const scrollRight = () => {
-    menuRef.current.scrollBy({
-      left: 200, // Adjust the scroll distance as needed
-      behavior: 'smooth',
-    });
-  };
-  return (
-    <div className="home-container">
-    <div className="menu-bar">
-    <button className="arrow-button" onClick={scrollLeft}>
-          &lt;
-        </button>
-      <div className="menu" ref={menuRef}>
-        <a href="#" className="menu-item">Home</a>
-        <a href="#" className="menu-item">Trending</a>
-        <a href="#" className="menu-item">Home</a>
-        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
-        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
-        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
-        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
-        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
-        <a href="#" className="menu-item">Trending</a> <a href="#" className="menu-item">Home</a>
-        <a href="#" className="menu-item">Trending</a>
-        {/* Add more menu items */}
-      </div>
-      
-        
-        <button className="arrow-button" onClick={scrollRight}>
-          &gt;
-        </button>
-      
-    </div>
-{/* card  */}
-<div className="row row-cols-3 g-3">
-  <div className="col">
-    <div className="card">
-    <ReactPlayer className="video_home"
-                    url="https://youtu.be/OXO_iPk0hg0"
-                    controls
-                />
-      <div className="card-body">
-        <h5 className="card-title">Card title</h5>
-        <p className="card-text">
-        {limitText('  This is a longer card with supporting text below as a natural lead-in',100)}
-        </p>
-      </div>
-    </div>
-  </div>
-  <div className="col">
-    <div className="card">
-  
-    <ReactPlayer className="video_home"
-                    url="http://127.0.0.1:8000/api/videos/video1.mp4"
-                    controls
-                />
-      <div className="card-body">
-        <h5 className="card-title">Card title</h5>
-        <p className="card-text">
-        {limitText('  This is a longer card with supporting text below as a natural lead-in',100)}
-        </p>
-      </div>
-    </div>
-  </div>
-  <div className="col">
-    <div className="card">
-      <img
-        src="https://mdbcdn.b-cdn.net/img/new/standard/city/042.webp"
-        className="card-img-top"
-        alt="Palm Springs Road"
-      />
-      <div className="card-body">
-        <h5 className="card-title">Card title</h5>
-        <p className="card-text">
-        {limitText('  This is a longer card with supporting text below as a natural lead-in',100)}
-        </p>
-      </div>
-    </div>
-  </div>
-  <div className="col">
-    <div className="card">
-      <img
-        src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp"
-        className="card-img-top"
-        alt="Los Angeles Skyscrapers"
-      />
-      <div className="card-body">
-        <h5 className="card-title">Card title</h5>
-        <p className="card-text">
-        {limitText('  This is a longer card with supporting text below as a natural lead-in',100)}
-        </p>
-      </div>
-    </div>
-  </div>
-  <div className="col">
-    <div className="card">
-      <img
-        src="https://mdbcdn.b-cdn.net/img/new/standard/city/044.webp"
-        className="card-img-top"
-        alt="Skyscrapers"
-      />
-      <div className="card-body">
-        <h5 className="card-title">Card title</h5>
-        <p className="card-text">
-        {limitText('  This is a longer card with supporting text below as a natural lead-in',100)}
-        </p>
-      </div>
-    </div>
-  </div>
-  <div className="col">
-    <div className="card">
-      <img
-        src="https://mdbcdn.b-cdn.net/img/new/standard/city/046.webp"
-        className="card-img-top"
-        alt="Skyscrapers"
-      />
-      <div className="card-body">
-        <h5 className="card-title">Card title</h5>
-        <p className="card-text">
-        {limitText('  This is a longer card with supporting text below as a natural lead-in',100)}
-        </p>
-      </div>
-    </div>
-  </div>
-  {/* <VideoD imageURL={''} content={''}/> */}
-  <div className="col">
-    <div className="card">
-      <img
-        src="https://mdbcdn.b-cdn.net/img/new/standard/city/050.webp"
-        className="card-img-top"
-        alt="Skyscrapers"
-      />
-      <div className="card-body">
-        <h5 className="card-title">Card title</h5>
-        <p className="card-text">
-         
-        {limitText('  This is a longer card with supporting text below as a natural lead-in',100)}
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
- 
- 
+        getFilms();
+    }, []);
 
-  );
-}
+    console.log(filmData);
+
+    const scrollLeft = () => {
+        menuRef.current.scrollBy({
+            left: -200, // Adjust the scroll distance as needed
+            behavior: "smooth",
+        });
+    };
+
+    const scrollRight = () => {
+        menuRef.current.scrollBy({
+            left: 200, // Adjust the scroll distance as needed
+            behavior: "smooth",
+        });
+    };
+    return (
+        <div className="home-container">
+            <div className="menu-bar">
+                <button className="arrow-button" onClick={scrollLeft}>
+                    &lt;
+                </button>
+                <div className="menu" ref={menuRef}>
+                    <a href="#" className="menu-item">
+                        Home
+                    </a>
+                    <a href="#" className="menu-item">
+                        Trending
+                    </a>
+                    <a href="#" className="menu-item">
+                        Home
+                    </a>
+                    <a href="#" className="menu-item">
+                        Trending
+                    </a>{" "}
+                    <a href="#" className="menu-item">
+                        Home
+                    </a>
+                    <a href="#" className="menu-item">
+                        Trending
+                    </a>{" "}
+                    <a href="#" className="menu-item">
+                        Home
+                    </a>
+                    <a href="#" className="menu-item">
+                        Trending
+                    </a>{" "}
+                    <a href="#" className="menu-item">
+                        Home
+                    </a>
+                    <a href="#" className="menu-item">
+                        Trending
+                    </a>{" "}
+                    <a href="#" className="menu-item">
+                        Home
+                    </a>
+                    <a href="#" className="menu-item">
+                        Trending
+                    </a>{" "}
+                    <a href="#" className="menu-item">
+                        Home
+                    </a>
+                    <a href="#" className="menu-item">
+                        Trending
+                    </a>{" "}
+                    <a href="#" className="menu-item">
+                        Home
+                    </a>
+                    <a href="#" className="menu-item">
+                        Trending
+                    </a>
+                    {/* Add more menu items */}
+                </div>
+
+                <button className="arrow-button" onClick={scrollRight}>
+                    &gt;
+                </button>
+            </div>
+            {/* card  */}
+            <div className="row row-cols-3 g-3">
+                {filmData.map((item) => (
+                    <div
+                        className="col"
+                        onClick={() => {
+                            navigate("/video/" + item.id);
+                        }}
+                    >
+                        <div className="card">
+                            {/* <ReactPlayer
+                                className="video_home"
+                                url={
+                                    "http://127.0.0.1:8000/api/videos/" +
+                                    item.video
+                                }
+                                controls
+                            /> */}
+                            <img
+                                className="img-fluid rounded mb-3 mb-md-0"
+                                src={
+                                    `http://127.0.0.1:8000/api/images/` +
+                                    item.film_poster
+                                }
+                                alt=""
+                            />
+                            <div className="card-body">
+                                <h5 className="card-title">{item.film_name}</h5>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
 
 export default Home;

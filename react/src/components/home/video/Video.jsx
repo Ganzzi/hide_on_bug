@@ -3,9 +3,17 @@ import ReactPlayer from "react-player";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { FaHeart, FaRegStar, FaStar, FaPlusCircle } from "react-icons/fa";
+import {
+    FaHeart,
+    FaRegStar,
+    FaStar,
+    FaPlusCircle,
+    FaSpellCheck,
+    FaClipboardCheck,
+} from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import axiosClient from "../../../utils/axios";
+import RatingModal from "./RatingModal";
 
 const Video = () => {
     const { videoId } = useParams();
@@ -21,6 +29,7 @@ const Video = () => {
         video: null,
     });
     const [rating, setRating] = useState(0);
+    const [showRateModal, setShowRateModal] = useState(false);
 
     const [providerData, setProviderData] = useState({
         provider_logo: null,
@@ -30,25 +39,37 @@ const Video = () => {
     useEffect(() => {
         const getVideo = async () => {
             await axiosClient.get(`/films/${videoId}`).then(({ data }) => {
-                console.log(data);
                 setData(data.film);
                 setProviderData(data.provider[0]);
                 setRating(data.average_rating ? data.average_rating : 0);
             });
         };
 
+        const updateHistory = async () => {
+            await axiosClient.post("update_history", {
+                film_id: videoId,
+            });
+        };
+
         getVideo();
+        updateHistory();
     }, []);
 
     const favoriteFilm = async () => {
         await axiosClient
             .post("update_favorite", {
-                user_id: 3,
-                film_id: 3,
+                film_id: data.id,
             })
             .then(() => {
                 setIsFavorited(!isFavorited);
             });
+    };
+
+    const handleRatingSubmit = async (rating) => {
+        await axiosClient.post("update_rating", {
+            film_id: data.id,
+            rating: rating,
+        });
     };
 
     const settings = {
@@ -89,13 +110,18 @@ const Video = () => {
                     </div>
                 </div>
 
-                <div className="mb-0 star_icon" onClick={favoriteFilm}>
-                    <p>
-                        <FaPlusCircle size={20} className="mr-1" />{" "}
+                <div className="mb-0 star_icon">
+                    <p onClick={favoriteFilm}>
                         {isFavorited ? (
-                            <p>added to favorite</p>
+                            <>
+                                <FaClipboardCheck size={20} />
+                                <p>in favorite</p>
+                            </>
                         ) : (
-                            <p>Add to Favorite</p>
+                            <>
+                                <FaPlusCircle size={20} className="mr-1" />
+                                <p>Add to Favorite</p>
+                            </>
                         )}
                     </p>
 
@@ -106,6 +132,13 @@ const Video = () => {
                             <FaRegStar key={index} size={20} className="mr-1" />
                         )
                     )}
+
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setShowRateModal(true)}
+                    >
+                        Rate
+                    </button>
                 </div>
             </div>
             <hr className="mt-5" />
@@ -122,6 +155,12 @@ const Video = () => {
                     </div>
                 </Slider>
             </div>
+            {showRateModal && (
+                <RatingModal
+                    onClose={() => setShowRateModal(false)}
+                    onSubmit={handleRatingSubmit}
+                />
+            )}
         </div>
     );
 };

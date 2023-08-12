@@ -21,6 +21,7 @@ const Subcribed = () => {
         getWatlistVideo();
     }, []);
 
+    console.log(films);
     return (
         <div className="home-container ">
             <div className="d-flex flex-column  justify-content-center  my-3 rounded-top backgr ">
@@ -59,7 +60,7 @@ const Subcribed = () => {
                 {/* card  */}
                 <div className="row row-cols-4 g-2 m-3">
                     {films.map((film, index) => (
-                        <div className="col">
+                        <div className="col" key={index}>
                             <div className="card">
                                 <img
                                     src={
