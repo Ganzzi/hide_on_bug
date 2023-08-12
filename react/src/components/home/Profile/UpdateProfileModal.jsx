@@ -1,16 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useStateContext } from "../../../contexts/ContextProvider";
+import axiosClient from "../../../utils/axios";
 
-const UpdateProfileModal = ({ closeModal, profileContent, onUpdate }) => {
+const UpdateProfileModal = ({ closeModal, onUpdate }) => {
+    const { user } = useStateContext();
+
     const [hasChanges, setHasChanges] = useState(false);
     const [profile, setProfile] = useState({
-        name: profileContent.name,
+        name: user.name,
         email: null,
         image: null,
-        bio: profileContent.bio,
-        gender: profileContent.gender,
+        bio: user.bio,
+        gender: user.gender,
     });
 
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const getCate = async () => {
+            await axiosClient.get(`/categories`).then(({ data }) => {
+                setCategories(data.categories);
+            });
+        };
+
+        getCate();
+    }, []);
+
+    const handleCategoryChange = (categoryId) => {
+        setHasChanges(true);
+        if (selectedCategories.includes(categoryId)) {
+            setSelectedCategories(
+                selectedCategories.filter((id) => id !== categoryId)
+            );
+        } else {
+            setSelectedCategories([...selectedCategories, categoryId]);
+        }
+    };
+
     const handleSubmit = async (e) => {
+        console.log("submitting");
         e.preventDefault();
 
         const formData = new FormData();
@@ -23,6 +52,11 @@ const UpdateProfileModal = ({ closeModal, profileContent, onUpdate }) => {
         }
         formData.append("bio", profile.bio);
         formData.append("gender", profile.gender);
+
+        if (selectedCategories.length > 0) {
+            const categoryIds = selectedCategories.map(Number);
+            formData.append("categories", JSON.stringify(categoryIds));
+        }
 
         onUpdate(formData);
     };
@@ -59,12 +93,11 @@ const UpdateProfileModal = ({ closeModal, profileContent, onUpdate }) => {
                                 />
                             ) : (
                                 <img
-                                    // src={
-                                    //     `${
-                                    //         import.meta.env.VITE_BASE_URL
-                                    //     }/api/images/` + profileContent.image
-                                    // }
-                                    src={profileContent.image}
+                                    src={
+                                        `${
+                                            import.meta.env.VITE_BASE_URL
+                                        }/api/images/` + user.image
+                                    }
                                     className="my-2"
                                     alt=""
                                     style={{
@@ -130,7 +163,7 @@ const UpdateProfileModal = ({ closeModal, profileContent, onUpdate }) => {
                             type="email"
                             className="form-control"
                             id="email"
-                            defaultValue={profileContent.email}
+                            defaultValue={user.email}
                             onChange={(e) => {
                                 setProfile({
                                     ...profile,
@@ -175,6 +208,27 @@ const UpdateProfileModal = ({ closeModal, profileContent, onUpdate }) => {
                             <option value="female">Female</option>
                         </select>
                     </div>
+
+                    <div className="d-flex flex-column">
+                        <label>Select Categories:</label>
+                        {categories.map((category) => (
+                            <label key={category.id}>
+                                <input
+                                    type="checkbox"
+                                    value={category.id}
+                                    checked={selectedCategories.includes(
+                                        category.id
+                                    )}
+                                    onChange={
+                                        () => handleCategoryChange(category.id)
+                                        // console.log(category.id)
+                                    }
+                                />
+                                {category.cate_name}
+                            </label>
+                        ))}
+                    </div>
+
                     <div
                         className="d-flex"
                         style={{

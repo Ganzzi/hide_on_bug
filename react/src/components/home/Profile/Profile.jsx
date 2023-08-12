@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import UpdateProfileModal from "./UpdateProfileModal";
+import { useStateContext } from "../../../contexts/ContextProvider";
+import axiosClient from "../../../utils/axios";
 
 const Profile = () => {
     const [showModal, setShowModal] = useState(false);
-    const [profileContent, setProfileContent] = useState({
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNVmFP2QMAnHxPCyCH442oXwKJeT5ey44L4hMZjPeK0Wi6au6gkagBcXO_QTx4ZdQviAA&usqp=CAU",
-        name: "",
-        email: "",
-        bio: "",
-        gender: "",
-    });
 
-    const handleUpdateProfile = async (formData) => {};
+    const { user } = useStateContext();
+
+    const handleUpdateUser = async (data) => {
+        await axiosClient
+            .post("update_profile", data)
+            .then(() => setShowModal(false));
+    };
 
     return (
         <section className="h-100 gradient-custom-2">
@@ -29,7 +30,10 @@ const Profile = () => {
                                     style={{ width: 150 }}
                                 >
                                     <img
-                                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                                        src={
+                                            `http://127.0.0.1:8000/api/images/` +
+                                            user.image
+                                        }
                                         alt="Generic placeholder image"
                                         className="img-fluid img-thumbnail mt-4 mb-2"
                                         style={{ width: 150, zIndex: 1 }}
@@ -39,16 +43,17 @@ const Profile = () => {
                                         className="btn btn-outline-dark"
                                         data-mdb-ripple-color="dark"
                                         style={{ zIndex: 1 }}
+                                        onClick={() => setShowModal(true)}
                                     >
                                         Edit profile
                                     </button>
                                 </div>
                                 <div className="ms-3" style={{ marginTop: 80 }}>
-                                    <h5>Andy Horwitz</h5>
+                                    <h5>{user.name}</h5>
                                     <div>
-                                        <h6>balance</h6>
-                                        <h6>email</h6>
-                                        <h6>gender</h6>
+                                        <h6>${user.balance}</h6>
+                                        <h6>{user.email}</h6>
+                                        <h6>{user.phone_number}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -57,12 +62,12 @@ const Profile = () => {
                                 style={{ backgroundColor: "#f8f9fa" }}
                             >
                                 <div className="d-flex justify-content-end text-center py-1">
-                                    <div>
+                                    {/* <div>
                                         <p className="mb-1 h5">478</p>
                                         <p className="small text-muted mb-0">
                                             Supscription
                                         </p>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             <div className="card-body p-4 text-black">
@@ -72,7 +77,9 @@ const Profile = () => {
                                         className="p-4"
                                         style={{ backgroundColor: "#f8f9fa" }}
                                     >
-                                        <p className="font-italic mb-1">bio</p>
+                                        <p className="font-italic mb-1">
+                                            {user.bio}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -90,6 +97,16 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
+            {showModal && (
+                <div className="modal-overlay">
+                    <div className="update-modal">
+                        <UpdateProfileModal
+                            closeModal={() => setShowModal(false)}
+                            onUpdate={(data) => handleUpdateUser(data)}
+                        />
+                    </div>
+                </div>
+            )}
         </section>
     );
 };

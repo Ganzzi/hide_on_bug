@@ -14,7 +14,8 @@ const Home = () => {
     useEffect(() => {
         const getFilms = async () => {
             await axiosClient.get(`recommended_films`).then(({ data }) => {
-                setFilmData(data.recommend_films);
+                console.log(data.recommended_films);
+                setFilmData(data.recommended_films);
             });
         };
         const getCategory = async () => {
@@ -27,6 +28,8 @@ const Home = () => {
 
         getFilms();
     }, []);
+
+    console.log(filmData);
 
     const scrollLeft = () => {
         menuRef.current.scrollBy({
@@ -51,15 +54,16 @@ const Home = () => {
                     <p className="menu-item" onClick={() => setFilteredI(-1)}>
                         All
                     </p>
-                    {categories.map((cate) => (
-                        <p
-                            className="menu-item"
-                            key={cate.id}
-                            onClick={() => setFilteredI(cate.id)}
-                        >
-                            {cate?.cate_name}
-                        </p>
-                    ))}
+                    {categories &&
+                        categories.map((cate) => (
+                            <p
+                                className="menu-item"
+                                key={cate.id}
+                                onClick={() => setFilteredI(cate.id)}
+                            >
+                                {cate?.cate_name}
+                            </p>
+                        ))}
                     {/* Add more menu items */}
                 </div>
 
@@ -68,17 +72,53 @@ const Home = () => {
                 </button>
             </div>
             {/* card  */}
+            <h1>Recommend Films: </h1>
             <div className="row row-cols-3 g-3">
-                {filmData.map((item) => {
-                    if (filteredI != -1) {
-                        let found = false;
-                        for (let i = 0; i < item.categories.length; i++) {
-                            if (item.categories[i].id == filteredI) {
-                                found = true;
+                {filmData &&
+                    filmData.map((item) => {
+                        if (filteredI != -1) {
+                            let found = false;
+                            for (let i = 0; i < item.categories.length; i++) {
+                                if (item.categories[i].id == filteredI) {
+                                    found = true;
+                                }
                             }
-                        }
 
-                        if (found) {
+                            if (found) {
+                                return (
+                                    <div
+                                        className="col"
+                                        onClick={() => {
+                                            navigate("/video/" + item.id);
+                                        }}
+                                    >
+                                        <div className="card">
+                                            {/* <ReactPlayer
+                                className="video_home"
+                                url={
+                                    "http://127.0.0.1:8000/api/videos/" +
+                                    item.video
+                                }
+                                controls
+                            /> */}
+                                            <img
+                                                className="img-fluid rounded mb-3 mb-md-0"
+                                                src={
+                                                    `http://127.0.0.1:8000/api/images/` +
+                                                    item.film_poster
+                                                }
+                                                alt=""
+                                            />
+                                            <div className="card-body">
+                                                <h5 className="card-title">
+                                                    {item.film_name}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                        } else {
                             return (
                                 <div
                                     className="col"
@@ -88,13 +128,13 @@ const Home = () => {
                                 >
                                     <div className="card">
                                         {/* <ReactPlayer
-                                className="video_home"
-                                url={
-                                    "http://127.0.0.1:8000/api/videos/" +
-                                    item.video
-                                }
-                                controls
-                            /> */}
+                                        className="video_home"
+                                        url={
+                                            "http://127.0.0.1:8000/api/videos/" +
+                                            item.video
+                                        }
+                                        controls
+                                    /> */}
                                         <img
                                             className="img-fluid rounded mb-3 mb-md-0"
                                             src={
@@ -112,41 +152,7 @@ const Home = () => {
                                 </div>
                             );
                         }
-                    } else {
-                        return (
-                            <div
-                                className="col"
-                                onClick={() => {
-                                    navigate("/video/" + item.id);
-                                }}
-                            >
-                                <div className="card">
-                                    {/* <ReactPlayer
-                                        className="video_home"
-                                        url={
-                                            "http://127.0.0.1:8000/api/videos/" +
-                                            item.video
-                                        }
-                                        controls
-                                    /> */}
-                                    <img
-                                        className="img-fluid rounded mb-3 mb-md-0"
-                                        src={
-                                            `http://127.0.0.1:8000/api/images/` +
-                                            item.film_poster
-                                        }
-                                        alt=""
-                                    />
-                                    <div className="card-body">
-                                        <h5 className="card-title">
-                                            {item.film_name}
-                                        </h5>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    }
-                })}
+                    })}
             </div>
         </div>
     );

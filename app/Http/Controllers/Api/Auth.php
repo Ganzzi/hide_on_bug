@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
+use App\Models\Category;
 use App\Models\User;
+use App\Models\UserCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 // use User;
@@ -17,6 +19,9 @@ class Auth extends Controller
     {
         $data = $request->validated();
 
+        if (isset($data['categories'])) {
+            $categories = json_decode($data['categories']);
+        }
         // Check if an image was uploaded
         if ($request->hasFile('image')) {
             // Get the uploaded file from the request
@@ -36,6 +41,24 @@ class Auth extends Controller
             'role_id' => 2,
             'image' => basename($filePath)
         ]);
+
+        if (isset($categories)) {
+            foreach ($categories as $categoryId) {
+                $userCategory = new UserCategory();
+                $userCategory->user_id = $user->id;
+                $userCategory->category_id = $categoryId;
+                $userCategory->save();
+            }
+        } else {
+            $all_categories = Category::all();
+            foreach ($all_categories as $_cate) {
+                $userCategory = new UserCategory();
+                $userCategory->user_id = $user->id;
+                $userCategory->category_id = $_cate->id;
+                $userCategory->save();
+            }
+        }
+
 
         // Generate token for the user
         $token = $user->createToken('main')->plainTextToken;

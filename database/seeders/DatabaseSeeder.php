@@ -26,14 +26,57 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Films
-        DB::table('films')->insert([]);
+        DB::table('films')->insert([
+            [
+                'stream_service_provider_id' => 1,
+                'film_name' => 'Film 1',
+                'film_poster' => '1691767285_Oahu-Honolulu-Aerial-Hero-2_1.jpg',
+                'video' => 'pexels-ibrahim-bennett-15541408 (1440p).mp4',
+                'premiere_date' => '2023-08-15',
+            ],
+            [
+                'stream_service_provider_id' => 1,
+                'film_name' => 'Film 2',
+                'film_poster' => '1691804187_Iezts5z7tuYAAJ0TTrR76waErT2kITYEdb1mXkRl.png',
+                'video' => 'pexels-levi-vaagenes-11502960 (1080p).mp4',
+                'premiere_date' => '2023-08-16',
+            ],
+            [
+                'stream_service_provider_id' => 1,
+                'film_name' => 'Film 1',
+                'film_poster' => '1691767285_Oahu-Honolulu-Aerial-Hero-2_1.jpg',
+                'video' => 'pexels-ibrahim-bennett-15541408 (1440p).mp4',
+                'premiere_date' => '2023-08-15',
+            ],
+            [
+                'stream_service_provider_id' => 1,
+                'film_name' => 'Film 2',
+                'film_poster' => '1691804187_Iezts5z7tuYAAJ0TTrR76waErT2kITYEdb1mXkRl.png',
+                'video' => 'pexels-levi-vaagenes-11502960 (1080p).mp4',
+                'premiere_date' => '2023-08-16',
+            ],
+            [
+                'stream_service_provider_id' => 1,
+                'film_name' => 'Film 1',
+                'film_poster' => '1691767285_Oahu-Honolulu-Aerial-Hero-2_1.jpg',
+                'video' => 'pexels-ibrahim-bennett-15541408 (1440p).mp4',
+                'premiere_date' => '2023-08-15',
+            ],
+            [
+                'stream_service_provider_id' => 1,
+                'film_name' => 'Film 2',
+                'film_poster' => '1691804187_Iezts5z7tuYAAJ0TTrR76waErT2kITYEdb1mXkRl.png',
+                'video' => 'pexels-levi-vaagenes-11502960 (1080p).mp4',
+                'premiere_date' => '2023-08-16',
+            ],
+        ]);
 
         // Favorites
         DB::table('favorites')->insert([
             ['id' => 1, 'user_id' => 1, 'film_id' => 1, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 2, 'user_id' => 3, 'film_id' => 2, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 3, 'user_id' => 2, 'film_id' => 4, 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 4, 'user_id' => 4, 'film_id' => 6, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 4, 'user_id' => 4, 'film_id' => 5, 'created_at' => $now, 'updated_at' => $now],
             ['id' => 5, 'user_id' => 2, 'film_id' => 3, 'created_at' => $now, 'updated_at' => $now],
         ]);
 

@@ -1,18 +1,39 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosClient from "../../utils/axios";
 import { useStateContext } from "../../contexts/ContextProvider.jsx";
 import { HiOutlinePhotograph } from "react-icons/Hi";
 
 export default function Signup() {
+    const { setUser, setToken } = useStateContext();
     const nameRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmationRef = useRef();
     const [image, setImage] = useState(null);
     const [error, setError] = useState(null);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [categories, setCategories] = useState([]);
 
-    const { setUser, setToken } = useStateContext();
+    useEffect(() => {
+        const getCate = async () => {
+            await axiosClient.get(`/categories`).then(({ data }) => {
+                setCategories(data.categories);
+            });
+        };
+
+        getCate();
+    }, []);
+
+    const handleCategoryChange = (categoryId) => {
+        if (selectedCategories.includes(categoryId)) {
+            setSelectedCategories(
+                selectedCategories.filter((id) => id !== categoryId)
+            );
+        } else {
+            setSelectedCategories([...selectedCategories, categoryId]);
+        }
+    };
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -26,6 +47,11 @@ export default function Signup() {
             "password_confirmation",
             passwordConfirmationRef.current.value
         );
+
+        if (selectedCategories.length > 0) {
+            const categoryIds = selectedCategories.map(Number);
+            formData.append("categories", JSON.stringify(categoryIds));
+        }
 
         await axiosClient
             .post("/signup", formData)
@@ -73,6 +99,25 @@ export default function Signup() {
                         onChange={(ev) => setImage(ev.target.files[0])}
                         placeholder="image"
                     />
+                    <div className="d-flex flex-column">
+                        <label>Select Categories:</label>
+                        {categories.map((category) => (
+                            <label key={category.id}>
+                                <input
+                                    type="checkbox"
+                                    value={category.id}
+                                    checked={selectedCategories.includes(
+                                        category.id
+                                    )}
+                                    onChange={
+                                        () => handleCategoryChange(category.id)
+                                        // console.log(category.id)
+                                    }
+                                />
+                                {category.cate_name}
+                            </label>
+                        ))}
+                    </div>
                     <button className="btn btn-block btn-primary" type="submit">
                         Signup
                     </button>

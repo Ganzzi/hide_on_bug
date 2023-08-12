@@ -31,6 +31,7 @@ class SignupRequest extends FormRequest
                 Password::min(7)->letters()
             ],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'categories' => 'nullable'
         ];
     }
 

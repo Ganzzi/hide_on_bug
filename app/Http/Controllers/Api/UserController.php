@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Subscription;
+use App\Models\UserCategory;
 
 class UserController extends Controller
 {
@@ -20,21 +21,26 @@ class UserController extends Controller
      * @param \App\Models\User   $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user)
+    public function update(Request $request)
     {
+        $_user = Auth::user();
+
         $data = $request->validate([
-            'name' => 'required|string|max:55|min:5',
-            'email' => 'nullable|email|max:255|unique:users,email,' . $user,
+            'name' => 'nullable|string|max:55|min:5',
+            'email' => 'nullable|email|max:255|unique:users,email,' . $_user->id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'bio' => 'required|max:255',
-            'gender' => 'required',
+            'bio' => 'nullable|max:255',
+            'gender' => 'nullable',
             'phone_number' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:4',
+            'categories' => 'nullable'
         ]);
 
-        $_user = User::find($user);
+        if (isset($data['categories'])) {
+            $categories = json_decode($data['categories']);
+        }
 
-        if (!$user) {
+        if (!$_user->id) {
             return response()->json(['error' => 'User not found'], 404);
         }
 
@@ -49,6 +55,17 @@ class UserController extends Controller
         }
 
         $_user->update($data);
+
+        if (isset($categories)) {
+            DB::table('user_categories')->where('user_id', $_user->id)->delete();
+
+            foreach ($categories as $categoryId) {
+                $userCategory = new UserCategory();
+                $userCategory->user_id = $_user->id;
+                $userCategory->category_id = $categoryId;
+                $userCategory->save();
+            }
+        }
 
         return response()->json($_user);
     }
