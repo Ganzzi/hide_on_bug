@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import ModalVideo from "react-modal-video";
 import "react-modal-video/scss/modal-video.scss";
 
@@ -61,11 +62,10 @@ export default function Providers ()
                     alignItems: "center",
                 }}
             >
-                <h1>Films of {service_name}</h1>
+             <i ><h3 > <FontAwesomeIcon icon={faBookmark} /> Films of <i className="text-danger">{service_name}</i> </h3></i>    
                 <button
                     className="btn-add"
-                    onClick={() =>
-                    {
+                    onClick={() => {
                         navigate(`/admin/providers/${providerId}/films/new`, {
                             state: {
                                 providerId: providerId,
@@ -74,7 +74,7 @@ export default function Providers ()
                         });
                     }}
                 >
-                    Add new
+                  <i>Add new Film</i>   
                 </button>
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>

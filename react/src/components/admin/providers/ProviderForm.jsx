@@ -92,9 +92,9 @@ export default function ProviderForm() {
     };
 
     return (
-        <div className="d-flex flex-column">
-            {providerId && <h1>Update provider: {provider.provider_name}</h1>}
-            {!providerId && <h1>New provider</h1>}
+        <div className="d-flex flex-column align-items-center m-5">
+            {providerId && <i><h3>Update Provider: <i className="text-danger">{provider.provider_name}</i>  </h3></i> }
+            {!providerId && <i><h3 >Add New Provider</h3></i> }
             <div className="card animated fadeInDown">
                 {loading && <div className="text-center">Loading...</div>}
                 {errors && (
@@ -105,7 +105,7 @@ export default function ProviderForm() {
                     </div>
                 )}
                 {!loading && (
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={onSubmit} className="m-3">
                         <input
                             value={provider.provider_name}
                             onChange={(ev) =>
@@ -136,9 +136,9 @@ export default function ProviderForm() {
                             }
                         />
 
-                        <button
-                            className="btn btn-outline-success"
-                            style={{ width: "100px" }}
+                        <button  
+                            className="btn btn-outline-dark mt-4"
+                            style={{ width: "100px", marginLeft:"40%"}}
                         >
                             Save
                         </button>
