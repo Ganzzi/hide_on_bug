@@ -255,8 +255,6 @@ class ProviderController extends Controller
             'provider_name' => 'required',
             'provider_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $providers = new StreamServiceProvider();
-        $providers->provider_name = $request->provider_name;
 
         if ($validator->fails()) {
             return response()->json(
@@ -269,11 +267,19 @@ class ProviderController extends Controller
         } else {
             if ($request->hasFile('provider_logo')) {
                 $image = $request->file('provider_logo');
-                $imageName =  $image->getClientOriginalName();
-                $image->move(public_path('images'), $imageName);
-                $providers->provider_logo = $imageName;
+                $imageName = time() . '_' . $image->getClientOriginalName(); // Adding timestamp to avoid name conflicts
+                $image->storeAs('images', $imageName, 'public'); // Store image in storage/app/public/images
+                $imagePath = $imageName; // Relative path to the stored image
             }
+
+            $providers = new StreamServiceProvider();
+            $providers->provider_name = $request->provider_name;
+            if (isset($imagePath)) {
+                $providers->provider_logo = $imagePath;
+            }
+
             $providers->save();
+
             if ($providers) {
                 return response()->json(
                     [
@@ -294,6 +300,7 @@ class ProviderController extends Controller
             }
         }
     }
+
     public function destroy($id)
     {
         $provider = StreamServiceProvider::find($id);

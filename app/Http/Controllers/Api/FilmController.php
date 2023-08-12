@@ -69,20 +69,22 @@ class FilmController extends Controller
         }
 
         // Step 2: Get the streaming provider details
-        $provider = DB::table('stream_service_providers')->where('id', $film->stream_service_provider_id)->get();
+        $provider = DB::table('stream_service_providers')->where('id', $film->stream_service_provider_id)->first();
 
         // Step 3: Check if the film is in user's favorites
         $user = Auth::user();
+        $user_id = $user->id;
+
         $isFavorite = DB::table('favorites')
-            ->where('user_id', $user->id)
+            ->where('user_id', $user_id)
             ->where('film_id', $filmId)
             ->exists();
 
         // Step 4: Get the user's rating for the film
-        $userRating = DB::table('ratings')
-            ->where('user_id', $user->id)
+        $userRatings = DB::table('ratings')
+            ->where('user_id', $user_id)
             ->where('film_id', $filmId)
-            ->value('rating'); // Get the single value
+            ->get();
 
         // Step 5: Calculate the average rating for the film
         $averageRating = DB::table('ratings')
@@ -93,10 +95,11 @@ class FilmController extends Controller
             'film' => $film,
             'provider' => $provider,
             'is_favorite' => $isFavorite,
-            'user_rating' => $userRating,
+            'user_ratings' => $userRatings,
             'average_rating' => $averageRating
         ]);
     }
+
 
 
     // function to search film with a keyword

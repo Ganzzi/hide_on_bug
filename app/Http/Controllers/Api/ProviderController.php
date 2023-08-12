@@ -46,14 +46,18 @@ class ProviderController extends Controller
         }
     }
 
-    public function getProviders()
+    public function getProviders(Request $request)
     {
-        $user = Auth::user();
+        $user_id = $request->get('user_id');
 
-        $providers = $user->providers;
+        $providers = Subscription::where('user_id', $user_id)
+            ->join('stream_service_providers', 'subscriptions.provider_id', '=', 'stream_service_providers.id')
+            ->select('stream_service_providers.*')
+            ->get();
 
         return response()->json(['providers' => $providers]);
     }
+
 
     public function subscribeToService(Request $request)
     {
