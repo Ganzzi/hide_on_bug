@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { logo } from "../../assets";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faMobileScreen } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +11,9 @@ import {faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+    const [token, setToken] = useState(null);
+const [user, setUser] = useState({});
+
     const navigate = useNavigate();
      // function to logout
      const onLogout = async (ev) => {
