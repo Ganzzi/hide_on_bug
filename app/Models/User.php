@@ -71,4 +71,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(WatchList::class)->onDelete('cascade');
     }
+
+    public function user_categories()
+    {
+        return $this->hasMany(UserCategory::class);
+    }
 }

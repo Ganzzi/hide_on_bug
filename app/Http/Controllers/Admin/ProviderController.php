@@ -11,230 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ProviderController extends Controller
 {
-    // /**
-    //  * Display a listing of the resource.
-    //  */
-    // public function index()
-    // {
-    //     $providers = StreamServiceProvider::all();
-    //     if ($providers->count() > 0) {
-    //         return response()->json([
-    //             "status" => 200,
-    //             "data" => $providers,
-    //             "message" => "Get all providers successfully"
-    //         ], 200);
-    //     } else {
-    //         return response()->json([
-    //             "status" => 404,
-    //             "message" => "No records found"
-    //         ], 404);
-    //     }
-    //     return response()->json($providers);
-    // }
-
-    // /**
-    //  * Store a newly created resource in storage.
-    //  */
-    // public function store(Request $request)
-    // {
-    //     // $validator = Validator::make($request->all(), [
-    //     //     'service_name' => 'required|string',
-    //     //     'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //     // ]);
-
-    //     // if ($validator->fails()) {
-    //     //     return response()->json([
-    //     //         "status" => 400,
-    //     //         "errors" => $validator->messages()
-    //     //     ], 400);
-    //     // }
-
-    //     // $existingProvider = StreamServiceProvider::where('service_name', $request->service_name)
-    //     //     ->first();
-
-    //     // if ($existingProvider) {
-    //     //     return response()->json([
-    //     //         "status" => 409,
-    //     //         "message" => "Provider with the same user and service name already exists"
-    //     //     ], 409);
-    //     // }
-
-    //     // if ($request->hasFile('logo')) {
-    //     //     $logoPath = $request->file('logo')->store('public/images');
-    //     //     $logoUrl = url(Storage::url($logoPath));
-    //     // }
-
-    //     // $provider = StreamServiceProvider::create([
-    //     //     'service_name' => $request->service_name,
-    //     //     'logo' => $logoUrl ?? null,
-    //     // ]);
-
-    //     // if ($provider) {
-    //     //     return response()->json([
-    //     //         "status" => 201,
-    //     //         "data" => $provider,
-    //     //         "message" => "Provider added successfully"
-    //     //     ], 201);
-    //     // } else {
-    //     //     return response()->json([
-    //     //         "status" => 500,
-    //     //         "message" => "Something went wrong!!"
-    //     //     ], 500);
-    //     // }
-
-
-    //     $data = $request->validate([
-    //         'service_name' => 'required|string',
-    //         'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //     ]);
-
-    //     // Update common fields
-    //     $data['service_name'] = $request->input('service_name');
-    //     $data['logo'] = $request->input('logo');
-
-    //     if ($request->hasFile('logo')) {
-    //         $uploadedLogo = $request->file('logo');
-    //         $logoName = $uploadedLogo->getClientOriginalName();
-    //         //$logoPath = $uploadedLogo->storeAs('', $logoName);
-    //         $data['logo'] = $logoName;
-    //     }
-
-    //     $provider = new StreamServiceProvider;
-    //     $provider->fill($data);
-    //     $provider->save();
-
-    //     return response()->json($provider, 201);
-    // }
-    // /**
-    //  * Display the specified resource.
-    //  */
-    // public function show(string $id)
-    // {
-    //     // $provider = StreamServiceProvider::findOrFail($id);
-    //     // return response()->json([$provider]);
-    // }
-
-    // public function update(Request $request, $id)
-    // {
-    //     // $validator = Validator::make($request->all(), [
-    //     //     'service_name' => 'required|string',
-    //     //     'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Change 'required' to 'nullable'
-    //     // ]);
-
-    //     // if ($validator->fails()) {
-    //     //     return response()->json([
-    //     //         'status' => 400,
-    //     //         'errors' => $validator->messages()
-    //     //     ], 400);
-    //     // } else {
-    //     //     $provider = StreamServiceProvider::find($id);
-    //     //     if (!$provider) {
-    //     //         return response()->json([
-    //     //             'status' => 404,
-    //     //             'message' => "Provider not found"
-    //     //         ], 404);
-    //     //     }
-
-    //     //     // Update provider's fields
-    //     //     $data = $request->only('service_name'); // Update only 'service_name'
-
-    //     //     if ($request->hasFile('logo')) {
-    //     //         $uploadedLogo = $request->file('logo');
-
-    //     //         // Validate if the uploaded file is an image
-    //     //         if (!$uploadedLogo->isValid() || !in_array($uploadedLogo->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
-    //     //             return response()->json([
-    //     //                 'status' => 400,
-    //     //                 'errors' => [
-    //     //                     'logo' => ['The logo field must be a valid image in JPEG, PNG, JPG, or GIF format.']
-    //     //                 ]
-    //     //             ], 400);
-    //     //         }
-
-    //     //         $logoName = $uploadedLogo->getClientOriginalName();
-    //     //         $logoPath = $uploadedLogo->storeAs('logos', $logoName, 'public'); // Adjust storage path
-    //     //         $data['logo'] = $logoPath;
-    //     //     }
-
-    //     //     $provider->update($data);
-
-    //     //     return response()->json([
-    //     //         'status' => 200,
-    //     //         'data' => $provider,
-    //     //         'message' => "Update provider successfully"
-    //     //     ], 200);
-    //     // }
-
-    //     $provider = StreamServiceProvider::find($id);
-    //     if (!$provider) {
-    //         return response()->json([
-    //             "status" => 404,
-    //             "message" => "No record found"
-    //         ], 404);
-    //     }
-    //     if ($request->logo) {
-    //         $validate = $request->validate([
-    //             'service_name' => 'required|string',
-    //             //'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //         ]);
-    //     }
-
-    //     $provider->service_name = $request->service_name;
-    //     $provider->logo = $request->logo;
-
-    //     if ($request->hasFile('images')) {
-    //         if ($provider->logo) {
-    //             $destination = public_path($provider->logo);
-    //             if (File::exists($destination)) {
-    //                 File::delete($destination);
-    //             }
-    //         }
-    //         $image = $request->file('images');
-    //         $imageName = $image->getClientOriginalName();
-    //         $image->move(public_path('images'), $imageName);
-    //         $provider->image = $imageName;
-    //     }
-    //     $provider->save();
-    //     if ($provider) {
-    //         return response()->json(
-    //             [
-    //                 "status" => 200,
-    //                 "data" => $provider,
-    //                 'message' => 'Product created successfully'
-    //             ],
-    //             200
-    //         );
-    //     } else {
-    //         return response()->json(
-    //             [
-    //                 "status" => 500,
-    //                 'message' => 'Error server'
-    //             ],
-    //             500
-    //         );
-    //     }
-    // }
-    // /**
-    //  * Remove the specified resource from storage.
-    //  */
-
-    // public function destroy($id)
-    // {
-    //     $provider = StreamServiceProvider::findOrFail($id);
-
-    //     if (!$provider) {
-    //         return response()->json([
-    //             'status' => 404,
-    //             'message' => 'no record found'
-    //         ], 404);
-    //     }
-    //     $provider->delete();
-    //     return response()->json([
-    //         'status' => 200, // Đã sửa từ 404 thành 200
-    //         'message' => 'provider deleted successfully'
-    //     ], 200);
-    // }
-
     public function index()
     {
         $providers = StreamServiceProvider::all()->load('films')->load('users');
@@ -266,26 +42,25 @@ class ProviderController extends Controller
             );
         } else {
             if ($request->hasFile('provider_logo')) {
-                $image = $request->file('provider_logo');
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Adding timestamp to avoid name conflicts
-                $image->storeAs('images', $imageName, 'public'); // Store image in storage/app/public/images
-                $imagePath = $imageName; // Relative path to the stored image
+                $provider_logo = $request->file('provider_logo');
+                $imageName = time() . '_' . $provider_logo->getClientOriginalName();
+                $provider_logo->move(public_path('images'), $imageName);
             }
 
-            $providers = new StreamServiceProvider();
-            $providers->provider_name = $request->provider_name;
-            if (isset($imagePath)) {
-                $providers->provider_logo = $imagePath;
+            $provider = new StreamServiceProvider();
+            $provider->provider_name = $request->provider_name;
+            if (isset($imageName)) {
+                $provider->provider_logo = $imageName;
             }
 
-            $providers->save();
+            $provider->save();
 
-            if ($providers) {
+            if ($provider) {
                 return response()->json(
                     [
                         "status" => 201,
-                        "data" => $providers,
-                        'message' => 'providers created successfully'
+                        "data" => $provider,
+                        'message' => 'Provider created successfully'
                     ],
                     201
                 );
@@ -293,7 +68,7 @@ class ProviderController extends Controller
                 return response()->json(
                     [
                         "status" => 500,
-                        'message' => 'Error server'
+                        'message' => 'Internal Server Error'
                     ],
                     500
                 );

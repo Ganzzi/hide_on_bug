@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
+import React from "react";
 
-export default function FilmForm() {
+export default function FilmForm ()
+{
     const navigate = useNavigate();
     const { filmId } = useParams();
     const [categories, setCategories] = useState([]);
@@ -20,12 +22,15 @@ export default function FilmForm() {
     const [service_name, setService_name] = useState("");
     const [selectedCategories, setSelectedCategories] = useState([]);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         setProviderId(location.state?.providerId);
         setService_name(location.state.service_name);
 
-        const getCate = async () => {
-            await axiosClient.get(`/admin/categories`).then(({ data }) => {
+        const getCate = async () =>
+        {
+            await axiosClient.get(`/admin/categories`).then(({ data }) =>
+            {
                 setCategories(data.categories);
             });
         };
@@ -38,17 +43,21 @@ export default function FilmForm() {
     const { setAlerts } = useStateContext();
     const [selectedImage, setSlectedImage] = useState();
 
-    const handleCategoryChange = (categoryId) => {
-        if (selectedCategories.includes(categoryId)) {
+    const handleCategoryChange = (categoryId) =>
+    {
+        if (selectedCategories.includes(categoryId))
+        {
             setSelectedCategories(
                 selectedCategories.filter((id) => id !== categoryId)
             );
-        } else {
+        } else
+        {
             setSelectedCategories([...selectedCategories, categoryId]);
         }
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e) =>
+    {
         const file = e.target.files[0];
         file.preview = URL.createObjectURL(file);
         setSlectedImage(file);
@@ -73,7 +82,8 @@ export default function FilmForm() {
     //     }, []);
     // }
 
-    const onSubmit = async (ev) => {
+    const onSubmit = async (ev) =>
+    {
         ev.preventDefault();
 
         const formdata = new FormData();
@@ -87,10 +97,12 @@ export default function FilmForm() {
         formdata.append("premiere_date", film.premiere_date);
         formdata.append("categories", JSON.stringify(categoryIds));
 
-        if (filmId) {
+        if (filmId)
+        {
             await axiosClient
                 .post(`/admin/film_update/${filmId}`, formdata)
-                .then(() => {
+                .then(() =>
+                {
                     setAlerts({
                         type: "info",
                         message: "provider was successfully updated",
@@ -98,16 +110,20 @@ export default function FilmForm() {
                     });
                     navigate("/admin/providers/" + providerId + "/films");
                 })
-                .catch((err) => {
+                .catch((err) =>
+                {
                     const response = err.response;
-                    if (response && response.status === 422) {
+                    if (response && response.status === 422)
+                    {
                         setErrors(response.data.errors);
                     }
                 });
-        } else {
+        } else
+        {
             await axiosClient
                 .post("/admin/films", formdata)
-                .then(() => {
+                .then(() =>
+                {
                     setAlerts({
                         type: "info",
                         message: "provider was successfully updated",
@@ -115,9 +131,11 @@ export default function FilmForm() {
                     });
                     navigate(`/admin/providers/${providerId}`);
                 })
-                .catch((err) => {
+                .catch((err) =>
+                {
                     const response = err.response;
-                    if (response && response.status === 422) {
+                    if (response && response.status === 422)
+                    {
                         setErrors(response.data.errors);
                     }
                 });
@@ -153,14 +171,17 @@ export default function FilmForm() {
                             }
                             placeholder="Name"
                         />
-                        {selectedImage && (
-                            <img
-                                src={selectedImage.preview}
-                                alt=""
-                                width={80}
-                                height={80}
-                            />
-                        )}
+                        <div>
+                            <label htmlFor="text">Video image:</label>
+                            {selectedImage && (
+                                <img
+                                    src={selectedImage.preview}
+                                    alt=""
+                                    width={80}
+                                    height={80}
+                                />
+                            )}
+                        </div>
 
                         <input
                             type="file"

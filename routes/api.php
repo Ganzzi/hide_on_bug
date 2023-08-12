@@ -37,14 +37,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/watchlists', ApiWatchlistController::class);
 
     // not done
-    Route::post("/update_profile", [ApiUserController::class, 'update']);
+    Route::post("/update_profile/{user}", [ApiUserController::class, 'update']);
 
     // nhan
     Route::post('/watchlist_add_delete_film', [ApiWatchlistController::class, 'add_or_delete_film_to_watch_list']);
     Route::get('/films/{filmId}', [ApiFilmController::class, "watchFilm"]);
     Route::post('/films',  [ApiFilmController::class,  "searchFilm"]);
-    Route::get('/recommended_films',  [ApiFilmController::class,  "getRecommendFilms"]);
-    //
+    // Route::post('/recommended_films/{filmId}',  [ApiFilmController::class,  "getRecommendedFilms"]);
+    Route::get('/recommended_films',  [ApiFilmController::class,  "getRecommendedFilms"]);
+
+    // Route::get('/recommended_films',  [ApiFilmController::class,  "getRecommendFilms1"]); //cach khac
+    // //
 
     Route::get('/getHistory', [ApiUserController::class, 'getUserHistory']);
     // Route::get('/getSubcriptions', [ApiUserController::class, 'getAllSubcriptions']);
