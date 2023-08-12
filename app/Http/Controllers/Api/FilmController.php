@@ -113,4 +113,9 @@ class FilmController extends Controller
             return response()->json(['films' => $searchedFilms]);
         }
     }
+
+    // public function show()
+    // {
+
+    // }
 }

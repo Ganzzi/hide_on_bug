@@ -234,11 +234,11 @@ export default function Homescreen ()
                             </MenuItem>
                             <hr />
                             <h5 className="text-center"> Privacy & Contact </h5>
-                            <div class="d-flex flex-column bd-highlight mb-3">
+                            <div className="d-flex flex-column bd-highlight mb-3">
                                 <a href="" className="text-decoration-none">
                                     {" "}
                                     <div
-                                        class="p-2 bd-highlight"
+                                        className="p-2 bd-highlight"
                                         onClick={() =>
                                         {
                                             navigate("contact");

@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
+import React from "react";
 
-export default function UserForm() {
+export default function UserForm ()
+{
     const navigate = useNavigate();
     let { userId } = useParams();
     const [user, setUser] = useState({
@@ -21,24 +23,30 @@ export default function UserForm() {
     const [loading, setLoading] = useState(false);
     const { setAlerts } = useStateContext();
     const [selectedImage, setSlectedImage] = useState();
-    const handleImageChange = (e) => {
+    const handleImageChange = (e) =>
+    {
         const file = e.target.files[0];
         file.preview = URL.createObjectURL(file);
         setSlectedImage(file);
     };
 
-    if (userId) {
-        useEffect(() => {
+    if (userId)
+    {
+        useEffect(() =>
+        {
             setLoading(true);
-            const getUserData = async () => {
+            const getUserData = async () =>
+            {
                 await axiosClient
                     .get(`/admin/users/${userId}`)
-                    .then(({ data }) => {
+                    .then(({ data }) =>
+                    {
                         setLoading(false);
                         const tempData = { ...data };
                         setUser(tempData);
                     })
-                    .catch(() => {
+                    .catch(() =>
+                    {
                         setLoading(false);
                     });
             };
@@ -47,12 +55,15 @@ export default function UserForm() {
         }, []);
     }
 
-    const onSubmit = async (ev) => {
+    const onSubmit = async (ev) =>
+    {
         ev.preventDefault();
-        if (userId) {
+        if (userId)
+        {
             await axiosClient
                 .put(`/admin/users/${userId}`, user)
-                .then(() => {
+                .then(() =>
+                {
                     setAlerts({
                         type: "info",
                         message: "user was successfully updated",
@@ -60,13 +71,16 @@ export default function UserForm() {
                     });
                     navigate("/admin/users");
                 })
-                .catch((err) => {
+                .catch((err) =>
+                {
                     const response = err.response;
-                    if (response && response.status === 422) {
+                    if (response && response.status === 422)
+                    {
                         setErrors(response.data.errors);
                     }
                 });
-        } else {
+        } else
+        {
             const formdata = new FormData();
             formdata.append("name", user.name);
             formdata.append("role_id", user.role_id);
@@ -80,7 +94,8 @@ export default function UserForm() {
 
             await axiosClient
                 .post("/admin/users", formdata)
-                .then(() => {
+                .then(() =>
+                {
                     setAlerts({
                         type: "info",
                         message: "user was successfully updated",
@@ -88,9 +103,11 @@ export default function UserForm() {
                     });
                     navigate("/admin/users");
                 })
-                .catch((err) => {
+                .catch((err) =>
+                {
                     const response = err.response;
-                    if (response && response.status === 422) {
+                    if (response && response.status === 422)
+                    {
                         setErrors(response.data.errors);
                     }
                 });
@@ -144,7 +161,7 @@ export default function UserForm() {
                                 height={80}
                             />
                         )}
-                        {!id && (
+                        {!userId && (
                             <input
                                 type="file"
                                 onChangeCapture={handleImageChange}

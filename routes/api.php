@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\FilmController as ApiFilmController;
 use App\Http\Controllers\Api\ProviderController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
 use App\Http\Controllers\Api\WatchlistController as ApiWatchlistController;
+use Spatie\FlareClient\Api;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/update_favorite", [ApiUserController::class, 'favoriteFilm']);
     Route::apiResource('/watchlists', ApiWatchlistController::class);
 
+    Route::get('/films', [ApiFilmController::class, ' watchFilm']);
     // not done
     Route::post("/update_profile", [ApiUserController::class, 'update']);
 
@@ -112,6 +114,6 @@ Route::post('/upload-video', function (Request $request) {
     }
 });
 
-Route::get('/films', [FilmController::class, 'index']);
+//Route::get('/films', [FilmController::class, 'index']);
 // Route::get('/providers', [ProviderController::class, 'index']);
 // Route::post('/providers', [ProviderController::class, 'store']);

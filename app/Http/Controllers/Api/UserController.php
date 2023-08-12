@@ -20,6 +20,12 @@ class UserController extends Controller
      * @param \App\Models\User   $user
      * @return \Illuminate\Http\Response
      */
+
+    public function show($user)
+    {
+        return response()->json(User::find($user));
+    }
+
     public function update(Request $request, $user)
     {
         $data = $request->validate([

@@ -4,14 +4,14 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import
-    {
-        FaHeart,
-        FaRegStar,
-        FaStar,
-        FaPlusCircle,
-        FaSpellCheck,
-        FaClipboardCheck,
-    } from "react-icons/fa";
+{
+    FaHeart,
+    FaRegStar,
+    FaStar,
+    FaPlusCircle,
+    FaSpellCheck,
+    FaClipboardCheck,
+} from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import axiosClient from "../../../utils/axios";
 import RatingModal from "./RatingModal";
@@ -139,3 +139,8 @@ const Video = () =>
 };
 
 export default Video;
+function setIsFavorited (arg0)
+{
+    throw new Error("Function not implemented.");
+}
+
