@@ -92,17 +92,17 @@ export default function Users() {
                                 <tr key={u.id}>
                                     <td>{u.id}</td>
                                     <td>
+
                                         <img
                                             src={
-                                                `${
-                                                    import.meta.env
-                                                        .VITE_BASE_URL
-                                                }/api/images/` + u.image
+                                                `${import.meta.env.VITE_BASE_URL
+                                                }/api/images/user${u.id}.${u.imageExtension}` // Sử dụng thuộc tính "u.imageExtension"
                                             }
                                             width={50}
                                             height={50}
                                             alt=""
                                         />
+
                                     </td>
                                     <td>{u.name}</td>
                                     <td>{u.email}</td>
