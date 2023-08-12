@@ -24,8 +24,10 @@ import UpdateProfileModal from "./home/Profile/UpdateProfileModal";
 import Video from "./home/video/Video";
 import Contact from "./home/Contact";
 import RatingModal from "./home/video/RatingModal";
+import AddWatchListModal from "./home/HomeParent/AddWatchListModal";
 
 export {
+  AddWatchListModal,
   Login,
   Video,
   Signup,

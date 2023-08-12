@@ -43,7 +43,7 @@ const Video = () => {
                 setData(data.film);
                 setProviderData(data.provider[0]);
                 setRating(data.average_rating ? data.average_rating : 0);
-                setUserRating(data.user_ratings[0].rating);
+                setUserRating(data.user_ratings.rating);
             });
         };
 

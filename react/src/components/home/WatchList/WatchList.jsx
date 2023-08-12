@@ -8,7 +8,22 @@ const WatchList = () => {
     const { watchlistId } = useParams();
     const navigate = useNavigate();
 
+    const [sortState, setSortState] = useState("asc");
     const [films, setfilms] = useState([]);
+
+    useEffect(() => {
+        if (sortState == "asc") {
+            const sortedFilms = films.sort(
+                (a, b) => new Date(a.created_at) - new Date(b.created_at)
+            );
+            setfilms(sortedFilms);
+        } else {
+            const sortedFilmsDescending = films.sort(
+                (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            setfilms(sortedFilmsDescending);
+        }
+    }, [sortState]);
 
     useEffect(() => {
         const getWatlistVideo = async () => {
@@ -39,8 +54,18 @@ const WatchList = () => {
                         Filter:
                     </h3>
                     <div className="btn-css">
-                        <button className="big-button">Latest</button>
-                        <button className="big-button">Oldest</button>
+                        <button
+                            className="big-button"
+                            onClick={() => setSortState("asc")}
+                        >
+                            Latest
+                        </button>
+                        <button
+                            className="big-button"
+                            onClick={() => setSortState("des")}
+                        >
+                            Oldest
+                        </button>
                     </div>
 
                     {/* Project One */}

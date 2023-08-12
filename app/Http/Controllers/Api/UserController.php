@@ -26,8 +26,6 @@ class UserController extends Controller
             'name' => 'required|string|max:55|min:5',
             'email' => 'nullable|email|unique:users,email|max:255|regex:/\w{1,}@\w{1,}\.\w{2,5}/i',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'bio' => 'required|max:255',
-            'gender' => 'required',
         ]);
 
         if (isset($data['image'])) {
@@ -148,9 +146,9 @@ class UserController extends Controller
         return response()->json(['message' => 'Film added to history'], 201);
     }
 
-    public function getUserHistory(Request $request)
+    public function getUserHistory()
     {
-        $user_id = $request->input('user_id');
+        $user_id = Auth::user()->id;
 
         $userHistory = DB::table('histories')
             ->join('films', 'films.id', '=', 'histories.film_id')

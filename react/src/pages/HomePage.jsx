@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, Navigate, useNavigate } from "react-router-dom";
-import { Header } from "../components";
+import { AddWatchListModal, Header } from "../components";
 
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../utils/axios";
@@ -22,19 +22,26 @@ export default function Homescreen() {
     const [searchData, setSearchData] = useState([]);
     const [watchlists, setWatchlists] = useState([]);
     const [userProvider, setUserProvider] = useState([]);
+    const [showAddWatchListModal, setShowAddWatchListModal] = useState(false);
 
     const navigate = useNavigate();
 
     const [showAlert, setShowAlert] = useState(true);
 
-    useEffect(() => {
-        const getWatlistVideo = async () => {
-            await axiosClient.get("watchlists").then(({ data }) => {
-                console.log(data);
-                setWatchlists(data);
-            });
-        };
+    const handleAddWatchList = async () => {
+        setShowAddWatchListModal(true);
+    };
 
+    const handleAddWatchListSuccess = async () => {
+        await getWatlistVideo();
+    };
+    const getWatlistVideo = async () => {
+        await axiosClient.get("watchlists").then(({ data }) => {
+            console.log(data);
+            setWatchlists(data);
+        });
+    };
+    useEffect(() => {
         const getSubcribed = async () => {
             await axiosClient.get("getProviders").then(({ data }) => {
                 console.log(data);
@@ -100,7 +107,6 @@ export default function Homescreen() {
         <div id="homeLayout" className="">
             {/* Home Page Header */}
             <Header />
-
             <div className="container-fluid">
                 <div className="row">
                     <div className="sideBar-Home col-3 d-flex flex-column">
@@ -118,13 +124,27 @@ export default function Homescreen() {
                                 </i>
                             </MenuItem>
                             <SubMenu label="Watch List">
+                                {showAddWatchListModal ? (
+                                    <AddWatchListModal
+                                        onSuccess={handleAddWatchListSuccess}
+                                        onClose={() =>
+                                            setShowAddWatchListModal(false)
+                                        }
+                                    />
+                                ) : (
+                                    <MenuItem
+                                        onClick={() => handleAddWatchList()}
+                                    >
+                                        Add new watch list
+                                    </MenuItem>
+                                )}
                                 {watchlists.map((item, index) => (
                                     <MenuItem
                                         onClick={() => {
                                             navigate(`watchList/${item.id}`);
                                         }}
                                     >
-                                        {watchlists[0].watch_list_name}
+                                        {item.watch_list_name}
                                     </MenuItem>
                                 ))}
                             </SubMenu>
@@ -175,41 +195,6 @@ export default function Homescreen() {
                                 Profile{" "}
                             </MenuItem>
                             <hr />
-                            <h5 className="text-center">
-                                {" "}
-                                Other Service Of StreamTrace{" "}
-                            </h5>
-                            <MenuItem>
-                                {" "}
-                                <i className="m-1">
-                                    <FontAwesomeIcon
-                                        icon={faStar}
-                                        color="yellow"
-                                    />
-                                </i>{" "}
-                                A Week Premium{" "}
-                            </MenuItem>
-                            <MenuItem>
-                                {" "}
-                                <i className="m-1">
-                                    <FontAwesomeIcon
-                                        icon={faStar}
-                                        color="yellow"
-                                    />
-                                </i>{" "}
-                                A Month Premium{" "}
-                            </MenuItem>
-                            <MenuItem>
-                                {" "}
-                                <i className="m-1">
-                                    <FontAwesomeIcon
-                                        icon={faStar}
-                                        color="yellow"
-                                    />
-                                </i>{" "}
-                                A Year Premium{" "}
-                            </MenuItem>
-                            <hr />
                             <h5 className="text-center"> Privacy & Contact </h5>
                             <div class="d-flex flex-column bd-highlight mb-3">
                                 <a href="" className="text-decoration-none">
@@ -247,7 +232,6 @@ export default function Homescreen() {
                     )}
                 </div>
             </div>
-
             {/* Alert */}
             {showAlert && alerts.type && (
                 <div
