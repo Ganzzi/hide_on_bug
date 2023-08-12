@@ -10,32 +10,57 @@ use Illuminate\Support\Facades\Auth;
 
 class FilmController extends Controller
 {
-    public function getRecommendFilms($filmId)
+    public function getRecommendedFilms(Request $request)
     {
-        // Tìm phim dựa trên $filmId
-        $film = Film::find($filmId);
-
-        if (!$film) {
-            return response()->json(['error' => 'Không tìm thấy phim'], 404);
+        // Lấy thông tin người dùng đã đăng nhập
+        $user = Auth::user();
+    
+        if (!$user) {
+            return response()->json(['error' => 'Không tìm thấy người dùng'], 404);
         }
-
-        // Lấy danh sách các category của phim đang xem
-        $filmCategories = $film->categories;
-
-        if ($filmCategories->isEmpty()) {
-            return response()->json(['message' => 'Phim không thuộc bất kỳ category nào'], 200);
+    
+        // Lấy danh sách category_id mà người dùng đã lựa chọn
+        $userCategories = $user->user_categories;
+    
+        if (!$userCategories) {
+            return response()->json(['message' => 'Người dùng không có bất kỳ danh mục nào'], 200);
         }
-
-        // Lấy danh sách phim có chung category với phim đang xem
-        $recommendedFilms = Film::whereHas('categories', function ($query) use ($filmCategories) {
-            $query->whereIn('category_id', $filmCategories->pluck('id'));
+    
+        $userCategoryIds = $userCategories->pluck('category_id');
+    
+        // Tìm các phim có chung danh mục với người dùng và sắp xếp theo rating
+        $recommendedFilms = Film::whereHas('categories', function ($query) use ($userCategoryIds) {
+            $query->whereIn('category_id', $userCategoryIds);
         })
-            ->where('id', '<>', $film->id) // Loại trừ phim đang xem
-            ->orderBy('premiere_date', 'desc') // Sắp xếp theo ngày ra mắt giảm dần
-            ->get();
-
+        ->leftJoin('ratings', 'films.id', '=', 'ratings.film_id')
+        ->with(['serviceProvider', 'categories'])
+        ->select(
+            'films.id',
+            'films.stream_service_provider_id',
+            DB::raw('AVG(ratings.rating) as avg_rating'),
+            'films.film_name',
+            'films.video'
+        )
+        ->groupBy('films.id', 'films.stream_service_provider_id', 'films.film_name', 'films.video')
+        ->orderBy('avg_rating', 'desc')
+        ->get();
+    
+        // Bổ sung thông tin vào kết quả trả về
+        $recommendedFilms->transform(function ($film) {
+            $film->provider_name = $film->serviceProvider->provider_name;
+            $film->provider_logo = $film->serviceProvider->provider_logo;
+            $film->video = $film->video;
+            $film->cate_name = $film->categories->implode('cate_name', ', ');
+            $film->film_name = $film->film_name;
+            return $film;
+        });
+    
         return response()->json(['recommended_films' => $recommendedFilms], 200);
     }
+    
+    
+
+
 
     public function getRecommendFilms1(Request $request)
     {
