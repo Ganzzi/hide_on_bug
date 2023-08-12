@@ -1,8 +1,10 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import {
+import
+{
     Login,
     NotFound,
     Signup,
+    //Logout,
     Users,
     UserForm,
     Home,
@@ -21,6 +23,7 @@ import {
 import { Dashboard, GuestPage, HomePage } from "./pages";
 import { Navigation } from "react-minimal-side-navigation";
 import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
+import React from "react";
 
 const router = createBrowserRouter([
     {
@@ -39,6 +42,10 @@ const router = createBrowserRouter([
                 path: "/signup",
                 element: <Signup />,
             },
+            // {
+            //     path: "/logout",
+            //     element: <Logout />,
+            // },
         ],
     },
     {
@@ -65,12 +72,12 @@ const router = createBrowserRouter([
                 path: "/contact",
                 element: <Contact />,
             },
-            
+
             {
                 path: "/subcribed/:providerId",
                 element: <Subcribed />,
             },
-           
+
             {
                 path: "/video/:videoId",
                 element: <Video />,

@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import ModalVideo from "react-modal-video";
+import "react-modal-video/scss/modal-video.scss";
+
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 import { formatDateTime } from "../../../utils/index.js";
 
-export default function Providers() {
+export default function Providers ()
+{
     const [films, setFilms] = useState([]);
     const [loading, setLoading] = useState(false);
     const { setAlerts } = useStateContext();
@@ -16,17 +20,30 @@ export default function Providers() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [currentVideo, setCurrentVideo] = useState("");
+
+    const openModal = (video) =>
+    {
+        setCurrentVideo(video);
+        setIsOpen(true);
+    };
+
+    useEffect(() =>
+    {
         setFilms(location?.state.films);
         setProviderId(location?.state.providerId);
         setService_name(location.state.service_name);
     }, []);
 
-    const onDeleteClick = async (filmId) => {
-        if (!window.confirm("Are you sure you want to delete this provider?")) {
+    const onDeleteClick = async (filmId) =>
+    {
+        if (!window.confirm("Are you sure you want to delete this provider?"))
+        {
             return;
         }
-        await axiosClient.delete(`/admin/films/${filmId}`).then(async () => {
+        await axiosClient.delete(`/admin/films/${filmId}`).then(async () =>
+        {
             setAlerts({
                 type: "info",
                 message: "Provider was successfully deleted",
@@ -47,7 +64,7 @@ export default function Providers() {
             >
              <i ><h3 > <FontAwesomeIcon icon={faBookmark} /> Films of <i className="text-danger">{service_name}</i> </h3></i>    
                 <button
-                    className="btn-add bg-black"
+                    className="btn-add"
                     onClick={() => {
                         navigate(`/admin/providers/${providerId}/films/new`, {
                             state: {
@@ -68,7 +85,7 @@ export default function Providers() {
                     <thead className="thead-dark" style={{ width: "100%" }}>
                         <tr>
                             <th style={{ paddingRight: "7rem" }}>ID</th>
-                            <th style={{ paddingRight: "7rem" }}>Image</th>
+                            <th style={{ paddingRight: "7rem" }}>Video</th>
                             <th style={{ paddingRight: "7rem" }}>Film Name</th>
                             <th style={{ paddingRight: "7rem" }}>
                                 Premiere Date
@@ -94,19 +111,38 @@ export default function Providers() {
                                 <tr key={_film.id}>
                                     <td>{_film.id}</td>
                                     <td>
-                                        <img
+                                        {/* <video width="50" height="50" controls>
                                             src={
-                                                `${
-                                                    import.meta.env
-                                                        .VITE_BASE_URL
-                                                }/api/images/` +
-                                                _film.film_poster
+                                                `${import.meta.env
+                                                    .VITE_BASE_URL
+                                                }/api/video/` +
+                                                _film.video
                                             }
-                                            width={50}
-                                            height={50}
-                                            alt=""
+                                        </video> */}
+
+
+
+
+                                        <div
+                                            onClick={() => openModal(_film.video)}
+                                            style={{ cursor: "pointer" }}
+                                        >
+                                            <img
+                                                src={`${import.meta.env.VITE_BASE_URL}/api/images/` + _film.film_poster}
+                                                width={50}
+                                                height={50}
+                                                alt=""
+                                            />
+                                        </div>
+                                        <ModalVideo
+                                            channel="custom"
+                                            isOpen={isOpen && currentVideo === _film.video}
+                                            url={`${import.meta.env.VITE_BASE_URL}/api/videos/${_film.video}`}
+                                            onClose={() => setIsOpen(false)}
                                         />
+
                                     </td>
+
                                     <td>{_film.film_name}</td>
                                     <td>
                                         {" "}
@@ -116,7 +152,8 @@ export default function Providers() {
                                     <td>
                                         <button
                                             className="btn-edit"
-                                            onClick={() => {
+                                            onClick={() =>
+                                            {
                                                 navigate(
                                                     `/admin/providers/${_film.stream_service_provider_id}/films/${_film.id}`,
                                                     {

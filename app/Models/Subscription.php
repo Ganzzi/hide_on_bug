@@ -14,5 +14,7 @@ class Subscription extends Model
         'billing_amount',
     ];
 
+    protected $dates = ['expire_date'];
+
     use HasFactory;
 }

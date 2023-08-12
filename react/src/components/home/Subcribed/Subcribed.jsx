@@ -7,6 +7,10 @@ const Subcribed = () => {
     const { providerId } = useParams();
     const [provider, setProvider] = useState(null);
     const [films, setfilms] = useState([]);
+    const [subscribed, setSubscribed] = useState(false);
+    const [subscribedCount, setSubscribedCount] = useState(0);
+    const [expireDateCurrent, setExpireDateCurrent] = useState(null);
+    const [expireDate, setExpireDate] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,14 +20,57 @@ const Subcribed = () => {
                 .then(({ data }) => {
                     setProvider(data.provider);
                     setfilms(data.films);
+                    setSubscribed(data.subscribed);
+                    setSubscribedCount(data.subscribed_user_count);
+                    setExpireDateCurrent(data.subscription_expiry_date);
+                    setExpireDate(data.subscription_expiry_date);
                 });
         };
 
         getWatlistVideo();
     }, [providerId]);
 
+    const formatDate = (date) => {
+        if (!date) return "";
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
+
+    const handleExtendSubscription = async () => {
+        await axiosClient
+            .post("updatepay", {
+                provider_id: providerId,
+            })
+            .then(() => {
+                const newExpireDate = new Date(expireDate);
+                newExpireDate.setMonth(newExpireDate.getMonth() + 1);
+                // console.log(newExpireDate);
+                setExpireDate(formatDate(newExpireDate));
+            });
+    };
+
+    const handleSubscribeOrUnSubcribe = async () => {
+        await axiosClient
+            .post("subcribeOrUnsubcribe", {
+                provider_id: providerId,
+            })
+            .then(() => {
+                if (subscribed) {
+                    setExpireDate(expireDateCurrent);
+                }
+                setSubscribed(!subscribed);
+            });
+    };
+
     return (
-        <div className="home-container ">
+        <div
+            className="home-container "
+            style={{
+                color: "white",
+            }}
+        >
             <div className="d-flex flex-column  justify-content-center  my-3 rounded-top backgr ">
                 <div className="d-flex flex-row  m-3">
                     <img
@@ -47,15 +94,35 @@ const Subcribed = () => {
                                     </cite>
                                 </figcaption>
                             )}
-                            {/* <figcaption className="blockquote-footer mt-2">
+                            <figcaption className="blockquote-footer mt-2">
                                 Subscribers:{" "}
-                                <cite title="Source Title">20N</cite>
-                            </figcaption> */}
+                                <cite title="Source Title">
+                                    {subscribedCount} Subcribers
+                                </cite>
+                            </figcaption>
                             <figcaption className="blockquote-footer mt-2">
                                 Videos:{" "}
                                 <cite title="Source Title">{films.length}</cite>
                             </figcaption>
+
+                            <button
+                                className="btn btn-danger"
+                                onClick={handleSubscribeOrUnSubcribe}
+                            >
+                                {!subscribed ? "Subcribe" : "Unsubcribe"}
+                            </button>
                         </div>
+                        {subscribed && (
+                            <div className="d-flex flex-row">
+                                <p>Expire Date: {expireDate}</p>
+                                <button
+                                    onClick={handleExtendSubscription}
+                                    className="btn btn-primary"
+                                >
+                                    Extend Subscription
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
