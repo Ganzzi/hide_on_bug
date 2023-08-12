@@ -46,11 +46,6 @@ export default function dashboard ()
         });
     };
 
-    function handleAlertClose ()
-    {
-        throw new Error("Function not implemented.");
-    }
-
     return (
         <div id="dashboardLayout">
             {/* Aside place */}

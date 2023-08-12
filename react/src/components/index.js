@@ -23,9 +23,7 @@ import Subcribed from "./home/Subcribed/Subcribed";
 import UpdateProfileModal from "./home/Profile/UpdateProfileModal";
 import Video from "./home/video/Video";
 import Contact from "./home/Contact";
-
-
-
+import RatingModal from "./home/video/RatingModal";
 
 export {
   Login,
@@ -49,4 +47,5 @@ export {
   Filmss,
   UpdateProfileModal,
   Contact,
+  RatingModal,
 };

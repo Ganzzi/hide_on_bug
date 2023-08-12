@@ -6,21 +6,13 @@ import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../utils/axios";
 
 import { formatDateTime } from "../utils";
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
-import { faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-
-
-
-
-
-
-
-
 
 export default function Homescreen ()
 {
@@ -30,10 +22,36 @@ export default function Homescreen ()
     const [searchRequest, setSearchRequest] = useState("");
     const [showSearchResponse, setShowSearchResponse] = useState(false);
     const [searchData, setSearchData] = useState([]);
+    const [watchlists, setWatchlists] = useState([]);
+    const [userProvider, setUserProvider] = useState([]);
 
     const navigate = useNavigate();
 
     const [showAlert, setShowAlert] = useState(true);
+
+    useEffect(() =>
+    {
+        const getWatlistVideo = async () =>
+        {
+            await axiosClient.get("watchlists").then(({ data }) =>
+            {
+                console.log(data);
+                setWatchlists(data);
+            });
+        };
+
+        const getSubcribed = async () =>
+        {
+            await axiosClient.get("getProviders").then(({ data }) =>
+            {
+                console.log(data);
+                setUserProvider(data.providers);
+            });
+        };
+
+        getSubcribed();
+        getWatlistVideo();
+    }, []);
 
     // useEffect to show alert in home page
     useEffect(() =>
@@ -96,8 +114,6 @@ export default function Homescreen ()
         return <Navigate to={"/admin"} />;
     }
 
-
-
     return (
         <div id="homeLayout" className="">
             {/* Home Page Header */}
@@ -108,66 +124,152 @@ export default function Homescreen ()
                     <div className="sideBar-Home col-3 d-flex flex-column">
                         {/* sideBar-Home  */}
 
-
                         <Menu className="Menu">
                             <hr />
-                            <MenuItem onClick={() =>
-                            {
-                                navigate('home')
-                            }}> <i className="m-2">  <FontAwesomeIcon icon={faHome} /></i>Home </MenuItem>
-                            <SubMenu label="Watch List" >
-                                <MenuItem onClick={() =>
+                            <MenuItem
+                                onClick={() =>
                                 {
-                                    navigate('watchList/' + 1)
-                                }}> Wl1 </MenuItem>
-                                <MenuItem onClick={() =>
-                                {
-                                    navigate('watchList/' + 2)
-                                }}> WL2 </MenuItem>
+                                    navigate("home");
+                                }}
+                            >
+                                <i className="m-2">
+                                    <FontAwesomeIcon icon={faHome} />
+                                </i>
+                            </MenuItem>
+                            <SubMenu label="Watch List">
+                                {watchlists.map((item, index) => (
+                                    <MenuItem
+                                        onClick={() =>
+                                        {
+                                            navigate(`watchList/${item.id}`);
+                                        }}
+                                    >
+                                        {watchlists[0].watch_list_name}
+                                    </MenuItem>
+                                ))}
                             </SubMenu>
-                            <MenuItem onClick={() =>
-                            {
-                                navigate('history')
-                            }}><i className="m-1"><FontAwesomeIcon icon={faArrowRotateLeft} /></i> History </MenuItem>
-                            <MenuItem onClick={() =>
-                            {
-                                navigate('subcribed/' + 1)
-                            }}> Subcribed </MenuItem>
-                            <MenuItem onClick={() =>
-                            {
-                                navigate('profile')
-                            }}> <i className="m-1"><FontAwesomeIcon icon={faUserPlus} /></i> Profile </MenuItem>
+                            <MenuItem
+                                onClick={() =>
+                                {
+                                    navigate("history");
+                                }}
+                            >
+                                <i className="m-1">
+                                    <FontAwesomeIcon icon={faArrowRotateLeft} />
+                                </i>{" "}
+                                History{" "}
+                            </MenuItem>
+                            <SubMenu label="Subcribed">
+                                {userProvider.map((item, index) => (
+                                    <MenuItem
+                                        onClick={() =>
+                                        {
+                                            navigate(`subcribed/${item.id}`);
+                                        }}
+                                    >
+                                        <div className="d-flex flex-row">
+                                            <img
+                                                src={
+                                                    `http://127.0.0.1:8000/api/images/` +
+                                                    item.provider_logo
+                                                }
+                                                style={{
+                                                    width: 30,
+                                                    height: 30,
+                                                    borderRadius: 30,
+                                                }}
+                                                alt=""
+                                            />
+                                            {item?.provider_name}
+                                        </div>
+                                    </MenuItem>
+                                ))}
+                            </SubMenu>
+                            <MenuItem
+                                onClick={() =>
+                                {
+                                    navigate("profile");
+                                }}
+                            >
+                                {" "}
+                                <i className="m-1">
+                                    <FontAwesomeIcon icon={faUserPlus} />
+                                </i>{" "}
+                                Profile{" "}
+                            </MenuItem>
                             <hr />
-                            <h5 className="text-center"> Other Service Of StreamTrace </h5>
-                            <MenuItem> <i className="m-1"><FontAwesomeIcon icon={faStar} color="yellow" /></i> A Week Premium </MenuItem>
-                            <MenuItem> <i className="m-1"><FontAwesomeIcon icon={faStar} color="yellow" /></i> A Month Premium </MenuItem>
-                            <MenuItem> <i className="m-1"><FontAwesomeIcon icon={faStar} color="yellow" /></i> A Year Premium </MenuItem>
+                            <h5 className="text-center">
+                                {" "}
+                                Other Service Of StreamTrace{" "}
+                            </h5>
+                            <MenuItem>
+                                {" "}
+                                <i className="m-1">
+                                    <FontAwesomeIcon
+                                        icon={faStar}
+                                        color="yellow"
+                                    />
+                                </i>{" "}
+                                A Week Premium{" "}
+                            </MenuItem>
+                            <MenuItem>
+                                {" "}
+                                <i className="m-1">
+                                    <FontAwesomeIcon
+                                        icon={faStar}
+                                        color="yellow"
+                                    />
+                                </i>{" "}
+                                A Month Premium{" "}
+                            </MenuItem>
+                            <MenuItem>
+                                {" "}
+                                <i className="m-1">
+                                    <FontAwesomeIcon
+                                        icon={faStar}
+                                        color="yellow"
+                                    />
+                                </i>{" "}
+                                A Year Premium{" "}
+                            </MenuItem>
                             <hr />
                             <h5 className="text-center"> Privacy & Contact </h5>
-                            <div className="d-flex flex-column bd-highlight mb-3">
-
-                                <a href="" className="text-decoration-none">  <div className="p-2 bd-highlight" onClick={() =>
-                                {
-                                    navigate('contact')
-                                }}>Contact Us</div> </a>
-                                <div className="p-2 bd-highlight">HotLine: +0123256789</div>
-                                <div className="p-2 bd-highlight">Address: 590 CMT8 District 3</div>
-                                <div className="mt-3"><p> © 2023 StreamTrace, Inc. All Rights Reserved</p></div>
-
-
-
-
-
+                            <div class="d-flex flex-column bd-highlight mb-3">
+                                <a href="" className="text-decoration-none">
+                                    {" "}
+                                    <div
+                                        class="p-2 bd-highlight"
+                                        onClick={() =>
+                                        {
+                                            navigate("contact");
+                                        }}
+                                    >
+                                        Contact Us
+                                    </div>{" "}
+                                </a>
+                                <div className="p-2 bd-highlight">
+                                    HotLine: +0123256789
+                                </div>
+                                <div className="p-2 bd-highlight">
+                                    Address: 590 CMT8 District 3
+                                </div>
+                                <div className="mt-3">
+                                    <p>
+                                        {" "}
+                                        © 2023 StreamTrace, Inc. All Rights
+                                        Reserved
+                                    </p>
+                                </div>
                             </div>
-
-
-
                         </Menu>
-
                     </div>
-                    {/* Main content */} {user.role_id != 1 && <div className="col-9"><Outlet /></div>}
+                    {/* Main content */}{" "}
+                    {user.role_id != 1 && (
+                        <div className="col-9">
+                            <Outlet />
+                        </div>
+                    )}
                 </div>
-
             </div>
 
             {/* Alert */}

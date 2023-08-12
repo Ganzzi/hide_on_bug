@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { FaHeart, FaRegStar, FaStar, FaPlusCircle } from "react-icons/fa";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import
+    {
+        FaHeart,
+        FaRegStar,
+        FaStar,
+        FaPlusCircle,
+        FaSpellCheck,
+        FaClipboardCheck,
+    } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import axiosClient from "../../../utils/axios";
+import RatingModal from "./RatingModal";
 
 const Video = () =>
 {
@@ -14,16 +23,25 @@ const Video = () =>
     const [data, setData] = useState([]);
 
 
-    // useEffect(() => {
-    //     const getVideo = async () => {
-    //         await axiosClient.get(`/films/${videoId}`).then(({ data }) => {
-    //             console.log(data);
-    //             setData(data);
-    //         })
-    //     }
+    const favoriteFilm = async () =>
+    {
+        await axiosClient
+            .post("update_favorite", {
+                film_id: data.id,
+            })
+            .then(() =>
+            {
+                setIsFavorited(!isFavorited);
+            });
+    };
 
-    //     getVideo()
-    // }, [])
+    const handleRatingSubmit = async (rating) =>
+    {
+        await axiosClient.post("update_rating", {
+            film_id: data.id,
+            rating: rating,
+        });
+    };
 
     const settings = {
         dots: true,
@@ -38,7 +56,7 @@ const Video = () =>
                 {/* video widget */}
                 <div className="p-2 d-flex flex-column align-items-center m-3">
                     <ReactPlayer className="video border border-white  "
-                        url="http://127.0.0.1:8001/api/videos/video1.mp4"
+                        url="http://127.0.0.1:8000/api/videos/video1.mp4"
                         controls
                     />
                 </div>

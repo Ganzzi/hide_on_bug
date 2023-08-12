@@ -36,6 +36,16 @@ class UserController extends Controller
             'password' => bcrypt($data['password']),
             'role_id' => $data['role_id']
         ]);
+        $categories = json_decode($request->input('categories'));
+
+        //
+        $userId = new User;
+
+        $userId->fill($data);
+        $userId->save();
+        foreach ($categories as $categoryId) {
+            $userId->categories()->attach($categoryId);
+        }
 
         return response(new UserResource($user), 200);
     }

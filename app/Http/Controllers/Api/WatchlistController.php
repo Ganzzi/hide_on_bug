@@ -18,21 +18,8 @@ class WatchListController extends Controller
     {
         $user = Auth::user();
 
-        $WatchLists = WatchList::where('user_id', $user->id)->get();
+        $WatchLists = DB::table('watch_lists')->get();
 
-        // $WatchLists = WatchList::all();
-        if ($WatchLists->count() > 0) {
-            return response()->json([
-                "status" => 200,
-                "data" => $WatchLists,
-                "message" => "Get all WatchLists successfully"
-            ], 200);
-        } else {
-            return response()->json([
-                "status" => 404,
-                "message" => "No records found"
-            ], 404);
-        }
         return response()->json($WatchLists);
     }
 
@@ -43,7 +30,7 @@ class WatchListController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|int',
-            'name' => 'required|string',
+            'watch_list_name' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -53,29 +40,30 @@ class WatchListController extends Controller
             ], 400);
         }
 
-        // Kiểm tra xem đã tồn tại bản ghi nào có user_id và service_name tương tự chưa
-        $existingWatchList = WatchList::where('name', $request->name)
+        // Kiểm tra xem đã tồn tại bản ghi nào có user_id và watch_list_name tương tự chưa
+        $existingWatchList = WatchList::where('user_id', $request->user_id)
+            ->where('watch_list_name', $request->watch_list_name)
             ->first();
 
         if ($existingWatchList) {
             return response()->json([
                 "status" => 409, // Conflict status code
-                "message" => "WatchList name with the same user and WatchList name already exists"
+                "message" => "WatchList with the same user and name already exists"
             ], 409);
         }
 
-        $provider = WatchList::create($request->all());
+        $newWatchList = WatchList::create($request->all());
 
-        if ($provider) {
+        if ($newWatchList) {
             return response()->json([
                 "status" => 201,
-                "data" => $provider,
-                "message" => "WatchList name added successfully"
+                "data" => $newWatchList,
+                "message" => "WatchList added successfully"
             ], 201);
         } else {
             return response()->json([
                 "status" => 500,
-                "message" => "Something went wrong!!"
+                "message" => "Something went wrong"
             ], 500);
         }
     }
@@ -83,7 +71,6 @@ class WatchListController extends Controller
     /**
      * Display the specified resource.
      */
-    // anh nhan lam lai, get tat ca film thuoc ve watch list
     public function show(string $id)
     {
         $WatchLists = WatchList::with('films')->findOrFail($id);
@@ -97,7 +84,7 @@ class WatchListController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|int',
-            'name' => 'required|string',
+            'watch_list_name' => 'required|string',
         ]);
 
         if ($validator->fails()) {

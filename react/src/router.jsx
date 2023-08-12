@@ -4,7 +4,7 @@ import
     Login,
     NotFound,
     Signup,
-    // Logout,
+    //Logout,
     Users,
     UserForm,
     Home,
@@ -42,10 +42,10 @@ const router = createBrowserRouter([
                 path: "/signup",
                 element: <Signup />,
             },
-            {
-                path: "/logout",
-                element: <Logout />,
-            },
+            // {
+            //     path: "/logout",
+            //     element: <Logout />,
+            // },
         ],
     },
     {
