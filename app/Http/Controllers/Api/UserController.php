@@ -110,9 +110,9 @@ class UserController extends Controller
                 // Add any other fields you have in the pivot table
             ]);
 
-        return response()->json(['message' => 'Rating added']);
+            return response()->json(['message' => 'Rating added']);
+        }
     }
-}
 
     function updateCategory(Request $request)
     {
@@ -219,14 +219,12 @@ class UserController extends Controller
         if ($user) {
             // Lấy tất cả các mục yêu thích của người dùng từ bảng "favorite"
             $favorites = DB::table('favorites')
-            ->join('films', 'favorites.film_id', '=', 'films.id')
-            ->where('favorites.user_id', $user->id)
-            ->select('films.id','films.film_name', 'films.film_poster')
-            ->get();
+                ->join('films', 'favorites.film_id', '=', 'films.id')
+                ->where('favorites.user_id', $user->id)
+                ->select('films.id', 'films.film_name', 'films.film_poster')
+                ->get();
 
             return response()->json($favorites);
-
+        }
     }
-}
-
 }

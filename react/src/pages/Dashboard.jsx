@@ -4,16 +4,21 @@ import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../utils/axios";
 import { BiUser, BiLogOut, BiUserCheck } from "react-icons/Bi";
 import { BsFillChatDotsFill, BsFillFilePostFill } from "react-icons/Bs";
+import { formatDateTime } from "../utils";
 
-export default function dashboard() {
+export default function dashboard ()
+{
     const { user, token, setUser, setToken, alerts, showAlert } =
         useStateContext();
     const [userDataFetched, setUserDataFetched] = useState(false);
 
     // useEffect to get data base on token
-    useEffect(() => {
-        if (token) {
-            axiosClient.get("/user").then(({ data }) => {
+    useEffect(() =>
+    {
+        if (token)
+        {
+            axiosClient.get("/user").then(({ data }) =>
+            {
                 setUser(data);
                 setUserDataFetched(true);
             });
@@ -21,21 +26,30 @@ export default function dashboard() {
     }, [token]);
 
     // protected navigation
-    if (!token) {
+    if (!token)
+    {
         return <Navigate to={"/"} />;
-    } else if (token && user.role_id != 1 && userDataFetched) {
+    } else if (token && user.role_id != 1 && userDataFetched)
+    {
         return <Navigate to={"/posts"} />;
     }
 
     // function to logout
-    const onLogout = (ev) => {
+    const onLogout = (ev) =>
+    {
         ev.preventDefault();
 
-        axiosClient.post("/logout").then(() => {
+        axiosClient.post("/logout").then(() =>
+        {
             setToken(null);
             setUser({});
         });
     };
+
+    function handleAlertClose ()
+    {
+        throw new Error("Function not implemented.");
+    }
 
     return (
         <div id="dashboardLayout">
@@ -118,13 +132,12 @@ export default function dashboard() {
                     <div
                         className="alert-admin"
                         style={{
-                            backgroundColor: `${
-                                alerts.type == "info"
-                                    ? "#00ccff"
-                                    : alerts.type == "warming"
+                            backgroundColor: `${alerts.type == "info"
+                                ? "#00ccff"
+                                : alerts.type == "warming"
                                     ? "#FFCC99"
                                     : alerts.type == "error" && "#CC0000"
-                            }`,
+                                }`,
                         }}
                     >
                         <div className="alert-content">

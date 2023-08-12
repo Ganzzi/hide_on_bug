@@ -4,21 +4,27 @@ import { Link } from "react-router-dom";
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 import { formatDateTime } from "../../../utils";
+import React from "react";
 
-export default function Users() {
+export default function Users ()
+{
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const { setAlerts } = useStateContext();
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         getUsers();
     }, []);
 
-    const onDeleteClick = async (user) => {
-        if (!window.confirm("Are you sure you want to delete this user?")) {
+    const onDeleteClick = async (user) =>
+    {
+        if (!window.confirm("Are you sure you want to delete this user?"))
+        {
             return;
         }
-        await axiosClient.delete(`/admin/users/${user.id}`).then(async () => {
+        await axiosClient.delete(`/admin/users/${user.id}`).then(async () =>
+        {
             setAlerts({
                 type: "info",
                 message: "user was successfully deleted",
@@ -28,15 +34,18 @@ export default function Users() {
         });
     };
 
-    const getUsers = async () => {
+    const getUsers = async () =>
+    {
         setLoading(true);
         await axiosClient
             .get("/admin/users")
-            .then(({ data }) => {
+            .then(({ data }) =>
+            {
                 setLoading(false);
                 setUsers(data.data);
             })
-            .catch(() => {
+            .catch(() =>
+            {
                 setLoading(false);
             });
     };
@@ -56,9 +65,9 @@ export default function Users() {
                         justifycontent: "space-between",
                     }}
                 ></h1>
-                <Link className="btn-add" to="/admin/users/new">
+                {/* <Link className="btn-add" to="/admin/users/new">
                     Add new
-                </Link>
+                </Link> */}
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>
                 <table
@@ -94,9 +103,8 @@ export default function Users() {
                                     <td>
                                         <img
                                             src={
-                                                `${
-                                                    import.meta.env
-                                                        .VITE_BASE_URL
+                                                `${import.meta.env
+                                                    .VITE_BASE_URL
                                                 }/api/images/` + u.image
                                             }
                                             width={50}

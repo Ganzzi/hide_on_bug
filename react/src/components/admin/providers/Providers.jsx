@@ -4,28 +4,35 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 import { formatDateTime } from "../../../utils/index.js";
+import React from "react";
 
-export default function Providers() {
+export default function Providers ()
+{
     const [providers, setProviders] = useState([]);
     const [loading, setLoading] = useState(false);
     const { setAlerts } = useStateContext();
 
     const navigate = useNavigate();
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         getProviders();
     }, []);
 
-    const onDeleteClick = async (providerId) => {
-        if (!window.confirm("Are you sure you want to delete this provider?")) {
+    const onDeleteClick = async (providerId) =>
+    {
+        if (!window.confirm("Are you sure you want to delete this provider?"))
+        {
             return;
         }
         // Rest of your delete logic
-        try {
+        try
+        {
             const response = await axiosClient.delete(
                 `/admin/providers/${providerId}`
             );
-            if (response.status === 200) {
+            if (response.status === 200)
+            {
                 // Remove the deleted provider from the providers state
                 setProviders((prevProviders) =>
                     prevProviders.filter(
@@ -38,12 +45,14 @@ export default function Providers() {
                         message: "Provider deleted successfully",
                     },
                 ]);
-            } else {
+            } else
+            {
                 setAlerts([
                     { type: "error", message: "Failed to delete provider" },
                 ]);
             }
-        } catch (error) {
+        } catch (error)
+        {
             setAlerts([
                 {
                     type: "error",
@@ -53,15 +62,18 @@ export default function Providers() {
         }
     };
 
-    const getProviders = async () => {
+    const getProviders = async () =>
+    {
         setLoading(true);
         await axiosClient
             .get("/admin/providers")
-            .then(({ data }) => {
+            .then(({ data }) =>
+            {
                 setLoading(false);
                 setProviders(data);
             })
-            .catch(() => {
+            .catch(() =>
+            {
                 setLoading(false);
             });
     };
@@ -123,10 +135,9 @@ export default function Providers() {
                                     <td>
                                         <img
                                             src={
-                                                `${
-                                                    import.meta.env
-                                                        .VITE_BASE_URL
-                                                }/images/` +
+                                                `${import.meta.env
+                                                    .VITE_BASE_URL
+                                                }/api/images/` +
                                                 _provider.provider_logo
                                             }
                                             width={50}
@@ -134,9 +145,10 @@ export default function Providers() {
                                             alt=""
                                         />
                                     </td>
-                                    <td>{_provider.users.length} subcribers</td>
+                                    <td>{_provider.users.length} subcribers </td>
                                     <td
-                                        onClick={() => {
+                                        onClick={() =>
+                                        {
                                             navigate(
                                                 `/admin/providers/${_provider.id}/films`,
                                                 {
