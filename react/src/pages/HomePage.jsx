@@ -34,14 +34,13 @@ export default function Homescreen() {
             });
         };
 
-        const getSubcribed = async () => {
-            await axiosClient.get("watchlists").then(({ data }) => {
-                console.log(data);
-                setWatchlists(data);
-            });
-        };
+        // const getSubcribed = async () => {
+        //     await axiosClient.get("providers").then(({ data }) => {
+        //         console.log(data);
+        //     });
+        // };
 
-        getSubcribed();
+        // getSubcribed();
         getWatlistVideo();
     }, []);
 
