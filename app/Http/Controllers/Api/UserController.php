@@ -110,9 +110,9 @@ class UserController extends Controller
                 // Add any other fields you have in the pivot table
             ]);
 
-        return response()->json(['message' => 'Rating added']);
+            return response()->json(['message' => 'Rating added']);
+        }
     }
-}
 
     function updateCategory(Request $request)
     {
@@ -148,18 +148,20 @@ class UserController extends Controller
         return response()->json(['message' => 'Film added to history'], 201);
     }
 
-    public function getUserHistory()
+    public function getUserHistory(Request $request)
     {
-        // identify user
-        $user = Auth::user();
+        $user_id = $request->input('user_id');
 
-        // Retrieve user's history from the database
         $userHistory = DB::table('histories')
-            ->where('user_id', $user->id)
+            ->join('films', 'films.id', '=', 'histories.film_id')
+            ->join('stream_service_providers', 'stream_service_providers.id', '=', 'films.stream_service_provider_id')
+            ->select('histories.*', 'films.film_name', 'films.film_poster', 'films.video', 'stream_service_providers.provider_name', 'stream_service_providers.provider_logo')
+            ->where('histories.user_id', $user_id)
             ->get();
 
         return response()->json(['user_history' => $userHistory], 200);
     }
+
     /**
      * View user's history for a film.
      */
@@ -219,14 +221,12 @@ class UserController extends Controller
         if ($user) {
             // Lấy tất cả các mục yêu thích của người dùng từ bảng "favorite"
             $favorites = DB::table('favorites')
-            ->join('films', 'favorites.film_id', '=', 'films.id')
-            ->where('favorites.user_id', $user->id)
-            ->select('films.id','films.film_name', 'films.film_poster')
-            ->get();
+                ->join('films', 'favorites.film_id', '=', 'films.id')
+                ->where('favorites.user_id', $user->id)
+                ->select('films.id', 'films.film_name', 'films.film_poster')
+                ->get();
 
             return response()->json($favorites);
-
+        }
     }
-}
-
 }

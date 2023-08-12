@@ -48,6 +48,7 @@ class ProviderController extends Controller
 
     public function getProviders(Request $request)
     {
+        //$user_id = Auth::user()->id;
         $user_id = $request->get('user_id');
 
         $providers = Subscription::where('user_id', $user_id)

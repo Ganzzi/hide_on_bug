@@ -18,7 +18,7 @@ class WatchListController extends Controller
     {
         $user = Auth::user();
 
-        $WatchLists = WatchList::where('user_id', $user->id)->get();
+        $WatchLists = DB::table('watch_lists')->get();
 
         return response()->json($WatchLists);
     }
@@ -30,7 +30,7 @@ class WatchListController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|int',
-            'name' => 'required|string',
+            'watch_list_name' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -40,29 +40,30 @@ class WatchListController extends Controller
             ], 400);
         }
 
-        // Kiểm tra xem đã tồn tại bản ghi nào có user_id và service_name tương tự chưa
-        $existingWatchList = WatchList::where('name', $request->name)
+        // Kiểm tra xem đã tồn tại bản ghi nào có user_id và watch_list_name tương tự chưa
+        $existingWatchList = WatchList::where('user_id', $request->user_id)
+            ->where('watch_list_name', $request->watch_list_name)
             ->first();
 
         if ($existingWatchList) {
             return response()->json([
                 "status" => 409, // Conflict status code
-                "message" => "WatchList name with the same user and WatchList name already exists"
+                "message" => "WatchList with the same user and name already exists"
             ], 409);
         }
 
-        $provider = WatchList::create($request->all());
+        $newWatchList = WatchList::create($request->all());
 
-        if ($provider) {
+        if ($newWatchList) {
             return response()->json([
                 "status" => 201,
-                "data" => $provider,
-                "message" => "WatchList name added successfully"
+                "data" => $newWatchList,
+                "message" => "WatchList added successfully"
             ], 201);
         } else {
             return response()->json([
                 "status" => 500,
-                "message" => "Something went wrong!!"
+                "message" => "Something went wrong"
             ], 500);
         }
     }
@@ -83,7 +84,7 @@ class WatchListController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|int',
-            'name' => 'required|string',
+            'watch_list_name' => 'required|string',
         ]);
 
         if ($validator->fails()) {

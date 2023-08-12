@@ -81,9 +81,8 @@ class FilmController extends Controller
 
         // Step 4: Get the user's rating for the film
         $userRatings = DB::table('ratings')
-            ->where('user_id', $user_id)
             ->where('film_id', $filmId)
-            ->get();
+            ->count(); // Count the number of ratings
 
         // Step 5: Calculate the average rating for the film
         $averageRating = DB::table('ratings')
@@ -98,8 +97,6 @@ class FilmController extends Controller
             'average_rating' => $averageRating
         ]);
     }
-
-
 
     // function to search film with a keyword
     public function searchFilm(Request $request)
