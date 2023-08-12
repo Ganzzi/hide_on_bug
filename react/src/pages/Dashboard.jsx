@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../utils/axios";
@@ -40,31 +42,39 @@ export default function dashboard() {
     return (
         <div id="dashboardLayout">
             {/* Aside place */}
-            <aside>
+            <aside className="border">
                 {/* admin name, image */}
-                <div
+                <div  
                     style={{
-                        fontFamily: "fantasy",
+                        fontFamily: "serif",
                         fontSize: "30px",
                         paddingLeft: "0px",
+                        color:"black",
                     }}
                 >
                     {user?.image && (
-                        <img
+                        <img className="m-5"
                             src={
-                                `${import.meta.env.VITE_BASE_URL}/api/images/` +
-                                user.image
+                                `${import.meta.env.VITE_BASE_URL}/api/images/kfc.png` 
+                               
                             }
                             alt=""
-                            style={{ width: "80px", height: "80px" }}
+                            style={{ width: "80px", height: "80px", borderRadius:"100px" }}
                         />
                     )}
-                    ADMIN
+                  <i className="m-5">Admin</i> 
                 </div>
-
+                   <hr  style={{
+                        
+                        color:"black",
+                    }}/>
                 <div className="d-flex flex-column">
-                    <Link to={"/admin/users"}>Users</Link>
-                    <Link to={"/admin/providers"}>Providers</Link>
+                    <Link to={"/admin/users"}> <h5>  <FontAwesomeIcon icon={faUser} className="mr-2" /> User</h5> </Link>
+                    <hr  style={{
+                        
+                        color:"black",
+                    }}/>
+                    <Link to={"/admin/providers"}><h5>List Provider</h5></Link>
                 </div>
             </aside>
 
@@ -72,31 +82,37 @@ export default function dashboard() {
             <div className="container">
                 {/* header */}
                 <div id="head">
-                    <header className="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+                    <header className="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom ">
                         <a className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                             <svg className="bi me-2" width="80" height="32">
                                 <use xlinkHref="#bootstrap" />
                             </svg>
-                            <span
+                            
+                          <i>  <span
                                 className="fs-2"
                                 style={{
-                                    fontFamily: "fantasy",
+                                    fontFamily: "serif",
 
                                     fontWeight: "bold",
 
                                     paddingBottom: "10rem",
                                 }}
                             >
-                                spaceshare
-                            </span>
+                                StreamTrace - Admin
+                            </span></i> 
                         </a>
                         <ul className="nav nav-pills">
+                            <h4 className="m-3" style={{
+                                      fontFamily:"serif"
+                                    }}>Logout</h4>
                             <li className="nav-item">
+                                
                                 <a
                                     href="#"
                                     className="nav-link active"
                                     aria-current="page"
                                     style={{
+                                        backgroundColor:"black",
                                         border: "solid thin black",
                                         borderRadius: "30px",
                                         padding: 10,

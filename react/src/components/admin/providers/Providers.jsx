@@ -81,8 +81,8 @@ export default function Providers() {
                         justifycontent: "space-between",
                     }}
                 ></h1>
-                <Link className="btn-add" to="/admin/providers/new">
-                    Add new
+                <Link className="btn-add bg-black" to="/admin/providers/new">
+                   <i>Add New Provider</i>  
                 </Link>
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>
@@ -135,7 +135,7 @@ export default function Providers() {
                                         />
                                     </td>
                                     <td>{_provider.users.length} subcribers</td>
-                                    <td
+                                    <td className="film_hover"
                                         onClick={() => {
                                             navigate(
                                                 `/admin/providers/${_provider.id}/films`,

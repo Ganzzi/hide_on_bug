@@ -40,47 +40,49 @@ class FilmController extends Controller
 
     public function store(StoreRequest $request)
     {
+        $data = $request->validated();
 
         if (isset($data['categories'])) {
-            $categories = json_decode($request->input('categories'));
+            $categories = json_decode($data['categories']);
+
             if (!is_array($categories)) {
-                return response()->json(['error' => 'Categories must be an array dkmm'], 422);
+                return response()->json(['error' => 'Categories must be an array'], 422);
             }
         }
 
-        $data = $request->validated();
+        $film = new Film;
 
-        $data['stream_service_provider_id'] = $request->input('stream_service_provider_id');
-        $data['film_name'] = $request->input('film_name');
-        $data['premiere_date'] = $request->input('premiere_date');
+        $film->fill([
+            'stream_service_provider_id' => $data['stream_service_provider_id'],
+            'film_name' => $data['film_name'],
+            'premiere_date' => $data['premiere_date'],
+        ]);
 
         if ($request->hasFile('film_poster')) {
-            $uploadedVideo = $request->file('film_poster');
-            $videoName = $uploadedVideo->getClientOriginalName();
-            $videoPath = $uploadedVideo->storeAs('public/videos', $videoName);
-            $data['film_poster'] = $videoName;
+            $uploadedPoster = $request->file('film_poster');
+            $posterName = $uploadedPoster->getClientOriginalName();
+            $posterPath = $uploadedPoster->storeAs('public/videos', $posterName);
+            $film->film_poster = $posterName;
         }
 
         if ($request->hasFile('video')) {
             $uploadedVideo = $request->file('video');
             $videoName = $uploadedVideo->getClientOriginalName();
             $videoPath = $uploadedVideo->storeAs('public/images', $videoName);
-            $data['video'] = $videoName;
+            $film->video = $videoName;
         }
 
-        $film = new Film;
-
-        $film->fill($data);
         $film->save();
 
-        $categories = json_decode($request->input('categories'));
-
-        foreach ($categories as $categoryId) {
-            $film->categories()->attach($categoryId);
+        if (isset($categories)) {
+            foreach ($categories as $categoryId) {
+                $film->categories()->attach($categoryId);
+            }
         }
 
         return response()->json($film, 201);
     }
+
 
     public function update_film(Request $request, string $id)
     {

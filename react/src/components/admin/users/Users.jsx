@@ -56,8 +56,8 @@ export default function Users() {
                         justifycontent: "space-between",
                     }}
                 ></h1>
-                <Link className="btn-add" to="/admin/users/new">
-                    Add new
+                <Link className="btn-add bg-dark" to="/admin/users/new">
+                   <i>Add New User</i>
                 </Link>
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>

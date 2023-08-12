@@ -10,21 +10,33 @@ use Illuminate\Support\Facades\Auth;
 
 class FilmController extends Controller
 {
-    public function getRecommendFilms(Request $request, $film_id)
+    public function getRecommendFilms($filmId)
     {
-        $category_id = $request->category_id;
+        // Tìm phim dựa trên $filmId
+        $film = Film::find($filmId);
 
-        $relatedFilmIds = DB::table('film_categories')
-            ->where('category_id', $category_id)
-            ->where('film_id', '!=', $film_id) // Exclude the current film
-            ->pluck('film_id'); // Get an array of related film IDs
+        if (!$film) {
+            return response()->json(['error' => 'Không tìm thấy phim'], 404);
+        }
 
-        $recommends = DB::table('films')
-            ->whereIn('id', $relatedFilmIds)
+        // Lấy danh sách các category của phim đang xem
+        $filmCategories = $film->categories;
+
+        if ($filmCategories->isEmpty()) {
+            return response()->json(['message' => 'Phim không thuộc bất kỳ category nào'], 200);
+        }
+
+        // Lấy danh sách phim có chung category với phim đang xem
+        $recommendedFilms = Film::whereHas('categories', function ($query) use ($filmCategories) {
+            $query->whereIn('category_id', $filmCategories->pluck('id'));
+        })
+            ->where('id', '<>', $film->id) // Loại trừ phim đang xem
+            ->orderBy('premiere_date', 'desc') // Sắp xếp theo ngày ra mắt giảm dần
             ->get();
 
-        return response()->json(['recommend_films' => $recommends]);
+        return response()->json(['recommended_films' => $recommendedFilms], 200);
     }
+
 
     // function for user to watch a film - get provider infor, subcribe, rating, favorite,...
     // public function watchFilm($filmId)
@@ -47,20 +59,21 @@ class FilmController extends Controller
         }
 
         // Step 2: Get the streaming provider details
-        $provider = DB::table('stream_service_providers')->where('id', $film->stream_service_provider_id)->get();
+        $provider = DB::table('stream_service_providers')->where('id', $film->stream_service_provider_id)->first();
 
         // Step 3: Check if the film is in user's favorites
         $user = Auth::user();
+        $user_id = $user->id;
+
         $isFavorite = DB::table('favorites')
-            ->where('user_id', $user->id)
+            ->where('user_id', $user_id)
             ->where('film_id', $filmId)
             ->exists();
 
         // Step 4: Get the user's rating for the film
-        $userRating = DB::table('ratings')
-            ->where('user_id', $user->id)
+        $userRatings = DB::table('ratings')
             ->where('film_id', $filmId)
-            ->value('rating'); // Get the single value
+            ->count(); // Count the number of ratings
 
         // Step 5: Calculate the average rating for the film
         $averageRating = DB::table('ratings')
@@ -71,11 +84,10 @@ class FilmController extends Controller
             'film' => $film,
             'provider' => $provider,
             'is_favorite' => $isFavorite,
-            'user_rating' => $userRating,
+            'user_ratings' => $userRatings,
             'average_rating' => $averageRating
         ]);
     }
-
 
     // function to search film with a keyword
     public function searchFilm(Request $request)

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import axiosClient from "../../../utils/axios.js";
 import { useStateContext } from "../../../contexts/ContextProvider.jsx";
 import { formatDateTime } from "../../../utils/index.js";
@@ -44,9 +45,9 @@ export default function Providers() {
                     alignItems: "center",
                 }}
             >
-                <h1>Films of {service_name}</h1>
+             <i ><h3 > <FontAwesomeIcon icon={faBookmark} /> Films of <i className="text-danger">{service_name}</i> </h3></i>    
                 <button
-                    className="btn-add"
+                    className="btn-add bg-black"
                     onClick={() => {
                         navigate(`/admin/providers/${providerId}/films/new`, {
                             state: {
@@ -56,7 +57,7 @@ export default function Providers() {
                         });
                     }}
                 >
-                    Add new
+                  <i>Add new Film</i>   
                 </button>
             </div>
             <div className="card animated fadeInDown" style={{ left: "5rem" }}>

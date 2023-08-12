@@ -125,14 +125,14 @@ export default function FilmForm() {
     };
 
     return (
-        <div className="d-flex flex-column">
+        <div className="d-flex flex-column align-items-center justify-content-center m-5">
             {filmId && (
-                <h1>
-                    Update film {film.name} of provider {service_name}
-                </h1>
+                <i>    <h3>
+                    Update film {film.name} of provider  <i className="text-danger">{service_name}</i>
+                </h3></i>
             )}
-            {!filmId && <h1>New film for provider {service_name}</h1>}
-            <div className="card animated fadeInDown">
+            {!filmId && <i><h3>Add New film for provider <i className="text-danger">{service_name}</i></h3></i>}
+            <div className="card animated fadeInDown   ">
                 {loading && <div className="text-center">Loading...</div>}
                 {errors && (
                     <div className="alert">
@@ -142,8 +142,10 @@ export default function FilmForm() {
                     </div>
                 )}
                 {!loading && (
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={onSubmit} className="m-5">
+                        <label htmlFor="name">Name:</label>
                         <input
+
                             value={film.film_name}
                             onChange={(ev) =>
                                 setFilm({
@@ -161,7 +163,7 @@ export default function FilmForm() {
                                 height={80}
                             />
                         )}
-
+                        <label htmlFor="image">Image:</label>
                         <input
                             type="file"
                             placeholder="Image"
@@ -206,8 +208,8 @@ export default function FilmForm() {
                         <div>
                             <label>Select Categories:</label>
                             {categories.map((category) => (
-                                <label key={category.id}>
-                                    <input
+                                <label key={category.id} style={{marginLeft:"30px",marginTop:"20px"}} >
+                                    <input   
                                         type="checkbox"
                                         value={category.id}
                                         checked={selectedCategories.includes(
@@ -240,8 +242,8 @@ export default function FilmForm() {
                         </div> */}
 
                         <button
-                            className="btn btn-outline-success"
-                            style={{ width: "100px" }}
+                            className="btn btn-outline-dark "
+                            style={{ width: "100px",marginLeft:"40%",marginTop:"5%",paddingLeft:"2%",paddingRight:"2%" }}
                         >
                             Save
                         </button>

@@ -255,8 +255,6 @@ class ProviderController extends Controller
             'provider_name' => 'required',
             'provider_logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $providers = new StreamServiceProvider();
-        $providers->provider_name = $request->provider_name;
 
         if ($validator->fails()) {
             return response()->json(
@@ -268,18 +266,25 @@ class ProviderController extends Controller
             );
         } else {
             if ($request->hasFile('provider_logo')) {
-                $image = $request->file('provider_logo');
-                $imageName =  $image->getClientOriginalName();
-                $image->move(public_path('images'), $imageName);
-                $providers->provider_logo = $imageName;
+                $provider_logo = $request->file('provider_logo');
+                $imageName = time() . '_' . $provider_logo->getClientOriginalName();
+                $provider_logo->move(public_path('images'), $imageName);
             }
-            $providers->save();
-            if ($providers) {
+
+            $provider = new StreamServiceProvider();
+            $provider->provider_name = $request->provider_name;
+            if (isset($imageName)) {
+                $provider->provider_logo = $imageName;
+            }
+
+            $provider->save();
+
+            if ($provider) {
                 return response()->json(
                     [
                         "status" => 201,
-                        "data" => $providers,
-                        'message' => 'providers created successfully'
+                        "data" => $provider,
+                        'message' => 'Provider created successfully'
                     ],
                     201
                 );
@@ -287,13 +292,14 @@ class ProviderController extends Controller
                 return response()->json(
                     [
                         "status" => 500,
-                        'message' => 'Error server'
+                        'message' => 'Internal Server Error'
                     ],
                     500
                 );
             }
         }
     }
+
     public function destroy($id)
     {
         $provider = StreamServiceProvider::find($id);
